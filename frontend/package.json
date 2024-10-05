@@ -1,0 +1,56 @@
+{
+  "name": "@mucnhedbox/hr-department-database",
+  "version": "1.0.0",
+  "description": "База данных отдела кадров для управления информацией о сотрудниках, их должностях, зарплатах и других HR-процессах",
+  "main": "index.js",
+  "scripts": {
+    "dev": "webpack serve --mode development --env mode=development --open",
+    "start:dev:server": "json-server --watch ./json-server/db.json -p 8000",
+    "start:dev": "concurrently \"npx webpack serve\" \"npm run start:dev:server\"",
+    "build:prod": "webpack  --env mode=production",
+    "build:dev": "webpack  --env mode=development"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/munchedbox23/hr-department-database.git"
+  },
+  "author": "munchedbox",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/munchedbox23/hr-department-database/issues"
+  },
+  "homepage": "https://github.com/munchedbox23/hr-department-database#readme",
+  "devDependencies": {
+    "@babel/core": "^7.25.2",
+    "@babel/preset-env": "^7.25.7",
+    "@babel/preset-react": "^7.25.7",
+    "@babel/preset-typescript": "^7.25.7",
+    "@pmmmwh/react-refresh-webpack-plugin": "^0.5.15",
+    "@svgr/webpack": "^8.1.0",
+    "@types/babel__core": "^7.20.5",
+    "@types/circular-dependency-plugin": "^5.0.8",
+    "@types/node": "^22.7.4",
+    "@types/react": "^18.3.11",
+    "@types/react-dom": "^18.3.0",
+    "@types/webpack": "^5.28.5",
+    "@types/webpack-dev-server": "^4.7.2",
+    "babel-loader": "^9.2.1",
+    "circular-dependency-plugin": "^5.2.2",
+    "css-loader": "^7.1.2",
+    "file-loader": "^6.2.0",
+    "fork-ts-checker-webpack-plugin": "^9.0.2",
+    "html-webpack-plugin": "^5.6.0",
+    "mini-css-extract-plugin": "^2.9.1",
+    "style-loader": "^4.0.0",
+    "ts-loader": "^9.5.1",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.6.2",
+    "webpack": "^5.95.0",
+    "webpack-cli": "^5.1.4",
+    "webpack-dev-server": "^5.1.0"
+  },
+  "dependencies": {
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
+  }
+}
