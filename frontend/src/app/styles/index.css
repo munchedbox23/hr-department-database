@@ -1,0 +1,54 @@
+@import "./reset.css";
+@import "./variables/global.css";
+
+@font-face {
+  font-family: "Noto Sans";
+  src: url("../../shared/assets//fonts/NotoSans.woff") format("woff");
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Noto Sans";
+  src: url("../../shared/assets/fonts/NotoSans-Bold.woff") format("woff");
+  font-weight: bold;
+}
+
+@font-face {
+  font-family: "Droid Sans";
+  src: url("../../shared/assets/fonts/DroidSans.ttf") format("ttf");
+}
+
+@font-face {
+  font-family: "Segoe UI";
+  src: url("../../shared/assets/fonts/Segoe UI.ttf") format("ttf");
+}
+
+* {
+  scroll-behavior: smooth;
+  list-style: none;
+  scroll-padding-top: 2rem;
+  text-decoration: none;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+    "Noto Sans", sans-serif;
+  outline-color: #0af;
+}
+
+:-webkit-scrollbar {
+  width: 8px; /* ширина scrollbar */
+  height: 8px;
+}
+
+::-webkit-scrollbar-thumb {
+  border-radius: var(--borderRadius-16); /* закругление */
+  background-color: var(--palette-blue75);
+}
+
+body {
+  font-size: var(--component-badge-size-xs-height);
+  font-weight: 400;
+  min-height: 100vh;
+  position: relative;
+  color: var(--palette-black);
+  background-color: var(--palette-white);
+}
