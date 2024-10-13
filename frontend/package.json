@@ -1,5 +1,5 @@
 {
-  "name": "@mucnhedbox/hr-department-database",
+  "name": "@munchedbox/hr-department-database",
   "version": "1.0.0",
   "description": "База данных отдела кадров для управления информацией о сотрудниках, их должностях, зарплатах и других HR-процессах",
   "main": "index.js",
@@ -37,7 +37,7 @@
     "@types/webpack-dev-server": "^4.7.2",
     "babel-loader": "^9.2.1",
     "circular-dependency-plugin": "^5.2.2",
-    "css-loader": "^7.1.2",
+    "css-loader": "^6.6.0",
     "file-loader": "^6.2.0",
     "fork-ts-checker-webpack-plugin": "^9.0.2",
     "framer-motion": "^11.11.1",
