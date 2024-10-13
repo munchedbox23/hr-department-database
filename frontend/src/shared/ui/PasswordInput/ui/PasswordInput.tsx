@@ -7,6 +7,7 @@ interface PasswordInputProps {
   onChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
   name: string;
   label: string;
+  autoComplete?: "off" | "new-password" | "current-password";
 }
 
 export const PasswordInput = ({
@@ -14,6 +15,7 @@ export const PasswordInput = ({
   onChange,
   name,
   label,
+  autoComplete = "off",
 }: PasswordInputProps) => {
   const [showPassword, setShowPassword] = useState(false);
 
@@ -31,7 +33,7 @@ export const PasswordInput = ({
       name={name}
       label={label}
       onChange={onChange}
-      autoComplete="current-password"
+      autoComplete={autoComplete}
       value={value}
       sx={{ height: "48px", marginBottom: "16px" }}
       InputProps={{

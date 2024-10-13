@@ -1,11 +1,12 @@
 import { AuthLayout } from "@/app/layouts/AuthLayout";
 import { createBrowserRouter } from "react-router-dom";
-import { LoginPage } from "@/pages/LoginPage";
+import { AuthorizationPage } from "@/pages/AuthorizationPage";
+import { appRoutes } from "@/shared/const/routes";
 
 export const router = createBrowserRouter([
   {
     path: "/",
     element: <AuthLayout />,
-    children: [{ path: "/login", element: <LoginPage /> }],
+    children: [{ path: appRoutes.auth(), element: <AuthorizationPage /> }],
   },
 ]);

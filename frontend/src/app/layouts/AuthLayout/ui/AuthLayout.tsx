@@ -24,7 +24,10 @@ export const AuthLayout = () => {
             display: "flex",
             flexDirection: "column",
             alignItems: "center",
-            gap: "70px",
+            gap: {
+              xs: "25px",
+              xl: "55px",
+            },
           }}
         >
           <Box

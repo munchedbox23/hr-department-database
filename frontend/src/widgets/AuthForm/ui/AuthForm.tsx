@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Box, Tabs, Tab, Typography, Paper } from "@mui/material";
 import { LoginForm } from "@/features/authentication/login";
+import { RegisterForm } from "@/features/authentication/registration";
 
 interface AuthFormProps {
   title: string;
@@ -24,7 +25,7 @@ export const AuthForm: React.FC<AuthFormProps> = ({ title, initialTab }) => {
         margin: "auto",
         padding: 2,
         backgroundColor: "rgba(0, 0, 0, 0.03)",
-        boxShadow: "0 4px 20px rgba(0, 0, 0, 0.1)",
+        boxShadow: "0px 5px 10px 2px rgba(34, 60, 80, 0.2)",
       }}
     >
       <Typography
@@ -41,7 +42,7 @@ export const AuthForm: React.FC<AuthFormProps> = ({ title, initialTab }) => {
       </Tabs>
       <Box sx={{ padding: 2, display: "flex", justifyContent: "center" }}>
         {tabValue === 0 && <LoginForm />}
-        {tabValue === 1 && <div>Регистрация</div>}
+        {tabValue === 1 && <RegisterForm />}
       </Box>
     </Paper>
   );
