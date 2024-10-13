@@ -10,8 +10,8 @@ export const AuthLayout = () => {
       maxWidth="xs"
       sx={{
         display: "flex",
-        justifyContent: "center",
-        alignItems: "flex-start",
+        flexDirection: "column",
+        alignItems: "center",
         margin: "0 auto",
         width: "100vw",
         height: "100vh",
@@ -22,30 +22,40 @@ export const AuthLayout = () => {
         <Box
           sx={{
             display: "flex",
-            flexDirection: "row",
+            flexDirection: "column",
             alignItems: "center",
-            gap: "10px",
+            gap: "70px",
           }}
         >
-          <Storage
+          <Box
             sx={{
-              fontSize: 60,
-              background: "linear-gradient(45deg, #2196F3 30%, #21CBF3 90%)",
-              borderRadius: "50%",
-              padding: "10px",
-              color: "white",
-            }}
-          />
-          <Typography
-            variant="h5"
-            sx={{
-              fontWeight: "bold",
-              color: "#1976D2",
-              textShadow: "1px 1px 2px rgba(0,0,0,0.1)",
+              display: "flex",
+              flexDirection: "row",
+              alignItems: "center",
+              gap: "10px",
             }}
           >
-            База данных
-          </Typography>
+            <Storage
+              sx={{
+                fontSize: 60,
+                background: "linear-gradient(45deg, #2196F3 30%, #21CBF3 90%)",
+                borderRadius: "50%",
+                padding: "10px",
+                color: "white",
+              }}
+            />
+            <Typography
+              variant="h5"
+              sx={{
+                fontWeight: "bold",
+                color: "#1976D2",
+                textShadow: "1px 1px 2px rgba(0,0,0,0.1)",
+              }}
+            >
+              База данных
+            </Typography>
+          </Box>
+
           <Outlet />
         </Box>
       </Suspense>
