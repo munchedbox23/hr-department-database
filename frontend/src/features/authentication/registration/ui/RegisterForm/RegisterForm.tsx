@@ -1,7 +1,10 @@
 import { useForm } from "@/shared/lib/hooks/useForm";
-import { Button, FormControl, TextField } from "@mui/material";
-import { RegisterSchema } from "../../model/types/register-types";
+import { Box, Button, TextField } from "@mui/material";
+import { RegisterSchema } from "../../model/types/registerTypes";
 import { PasswordInput } from "@/shared/ui/PasswordInput";
+import { FormEvent } from "react";
+import { useNavigate } from "react-router-dom";
+import { useRegisterMutation } from "../../api/registerApi";
 
 export const RegisterForm = () => {
   const { formState, handleChange } = useForm<RegisterSchema>({
@@ -10,8 +13,32 @@ export const RegisterForm = () => {
     password: "",
   });
 
+  const [register] = useRegisterMutation();
+  const navigate = useNavigate();
+
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    try {
+      await register(formState)
+        .unwrap()
+        .then(() => navigate("/", { replace: true }));
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
-    <FormControl onSubmit={() => 1}>
+    <Box
+      component="form"
+      onSubmit={handleSubmit}
+      sx={{
+        display: "flex",
+        flexDirection: "column",
+        gap: "16px",
+        width: "100%",
+        maxWidth: "280px",
+      }}
+    >
       <TextField
         type="text"
         name="name"
@@ -19,7 +46,7 @@ export const RegisterForm = () => {
         autoComplete="off"
         onChange={handleChange}
         value={formState.name}
-        sx={{ height: "48px", marginBottom: "16px" }}
+        sx={{ height: "48px" }}
       />
       <TextField
         type="email"
@@ -28,7 +55,7 @@ export const RegisterForm = () => {
         onChange={handleChange}
         autoComplete="off"
         value={formState.email}
-        sx={{ height: "48px", marginBottom: "16px" }}
+        sx={{ height: "48px" }}
       />
       <PasswordInput
         name="password"
@@ -40,6 +67,6 @@ export const RegisterForm = () => {
       <Button type="submit" variant="outlined">
         Зарегистрироваться
       </Button>
-    </FormControl>
+    </Box>
   );
 };

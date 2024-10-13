@@ -35,7 +35,7 @@ export const PasswordInput = ({
       onChange={onChange}
       autoComplete={autoComplete}
       value={value}
-      sx={{ height: "48px", marginBottom: "16px" }}
+      sx={{ height: "48px" }}
       InputProps={{
         endAdornment: (
           <InputAdornment position="end">

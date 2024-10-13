@@ -1,16 +1,42 @@
 import { useForm } from "@/shared/lib/hooks/useForm";
-import { Button, FormControl, TextField } from "@mui/material";
-import { LoginSchema } from "../../model/types/login-types";
+import { Box, Button, TextField } from "@mui/material";
+import { LoginSchema } from "../../model/types/loginTypes";
 import { PasswordInput } from "@/shared/ui/PasswordInput";
+import { useLoginMutation } from "../../api/loginApi";
+import { useNavigate } from "react-router-dom";
 
 export const LoginForm = () => {
   const { formState, handleChange } = useForm<LoginSchema>({
     email: "",
     password: "",
   });
+  const navigate = useNavigate();
+
+  const [login] = useLoginMutation();
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    try {
+      await login(formState)
+        .unwrap()
+        .then(() => navigate("/", { replace: true }));
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   return (
-    <FormControl onSubmit={() => 1}>
+    <Box
+      component="form"
+      onSubmit={handleSubmit}
+      sx={{
+        display: "flex",
+        flexDirection: "column",
+        gap: "30px",
+        width: "100%",
+        maxWidth: "280px",
+      }}
+    >
       <TextField
         type="email"
         name="email"
@@ -18,7 +44,7 @@ export const LoginForm = () => {
         onChange={handleChange}
         autoComplete="email"
         value={formState.email}
-        sx={{ height: "48px", marginBottom: "16px" }}
+        sx={{ height: "35px" }}
       />
       <PasswordInput
         name="password"
@@ -26,9 +52,9 @@ export const LoginForm = () => {
         onChange={handleChange}
         value={formState.password}
       />
-      <Button type="submit" variant="outlined">
+      <Button type="submit" variant="outlined" sx={{ width: "100%" }}>
         Войти
       </Button>
-    </FormControl>
+    </Box>
   );
 };
