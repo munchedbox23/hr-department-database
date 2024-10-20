@@ -1,6 +1,9 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { apiUrl } from "@/shared/const/apiUrl";
-import { IRegisterResponse, IRegisterRequest } from "../model/types/registerTypes";
+import {
+  IRegisterResponse,
+  IRegisterRequest,
+} from "../model/types/registerTypes";
 import { setCookie } from "@/shared/lib/cookie/cookieRequest";
 
 export const registerApi = createApi({
@@ -14,9 +17,12 @@ export const registerApi = createApi({
       async onQueryStarted(arg, { queryFulfilled }) {
         try {
           const { data } = await queryFulfilled;
-          setCookie("accessToken", data.accessToken.split("Bearer ")[1], { path: "/" });
+          setCookie("accessToken", data.accessToken.split("Bearer ")[1], {
+            path: "/",
+          });
           setCookie("refreshToken", data.refreshToken, { path: "/" });
         } catch (error) {
+          console.error("Registration failed:", error);
         }
       },
     }),

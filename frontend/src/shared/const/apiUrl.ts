@@ -1,12 +1,7 @@
 interface IApiUrl {
   baseUrl: string;
   authBaseUrl: string;
-  auth: {
-    login: string;
-    register: string;
-    logout: string;
-    refreshToken: string;
-  };
+  auth: Record<string, string>;
 }
 
 export const apiUrl: IApiUrl = {
@@ -17,5 +12,6 @@ export const apiUrl: IApiUrl = {
     register: "/auth/register",
     logout: "/auth/logout",
     refreshToken: "/auth/token",
+    userData: "/auth/user",
   },
 };
