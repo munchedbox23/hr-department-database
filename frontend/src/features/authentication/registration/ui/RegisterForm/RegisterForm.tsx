@@ -1,8 +1,7 @@
 import { useForm } from "@/shared/lib/hooks/useForm";
-import { Box, Button, TextField } from "@mui/material";
+import { Box, Button, CircularProgress, TextField } from "@mui/material";
 import { RegisterSchema } from "../../model/types/registerTypes";
 import { PasswordInput } from "@/shared/ui/PasswordInput";
-<<<<<<< HEAD
 import { FormEvent, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useRegisterMutation } from "../../api/registerApi";
@@ -11,11 +10,7 @@ import {
   validatePassword,
   validateEmail,
 } from "@/shared/lib/validate";
-=======
-import { FormEvent } from "react";
-import { useNavigate } from "react-router-dom";
-import { useRegisterMutation } from "../../api/registerApi";
->>>>>>> 0e373a5d793c896994ea620a62d2e1a3464afa70
+import { appRoutes } from "@/shared/const/routes";
 
 export const RegisterForm = () => {
   const { formState, handleChange } = useForm<RegisterSchema>({
@@ -24,7 +19,6 @@ export const RegisterForm = () => {
     password: "",
   });
 
-<<<<<<< HEAD
   const [errors, setErrors] = useState<RegisterSchema>({
     name: "",
     email: "",
@@ -45,21 +39,16 @@ export const RegisterForm = () => {
     return !passwordError && !emailError && !usernameError;
   };
 
-=======
->>>>>>> 0e373a5d793c896994ea620a62d2e1a3464afa70
-  const [register] = useRegisterMutation();
+  const [register, { isLoading: isUserRegister }] = useRegisterMutation();
   const navigate = useNavigate();
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-<<<<<<< HEAD
     if (!validateForm()) return;
-=======
->>>>>>> 0e373a5d793c896994ea620a62d2e1a3464afa70
     try {
       await register(formState)
         .unwrap()
-        .then(() => navigate("/", { replace: true }));
+        .then(() => navigate(appRoutes.home(), { replace: true }));
     } catch (error) {
       console.log(error);
     }
@@ -84,13 +73,9 @@ export const RegisterForm = () => {
         autoComplete="off"
         onChange={handleChange}
         value={formState.name}
-<<<<<<< HEAD
         sx={{ minHeight: "35px" }}
         error={!!errors.name}
         helperText={errors.name}
-=======
-        sx={{ height: "48px" }}
->>>>>>> 0e373a5d793c896994ea620a62d2e1a3464afa70
       />
       <TextField
         type="email"
@@ -99,13 +84,9 @@ export const RegisterForm = () => {
         onChange={handleChange}
         autoComplete="off"
         value={formState.email}
-<<<<<<< HEAD
         sx={{ minHeight: "35px" }}
         error={!!errors.email}
         helperText={errors.email}
-=======
-        sx={{ height: "48px" }}
->>>>>>> 0e373a5d793c896994ea620a62d2e1a3464afa70
       />
       <PasswordInput
         name="password"
@@ -113,14 +94,14 @@ export const RegisterForm = () => {
         onChange={handleChange}
         value={formState.password}
         autoComplete="new-password"
-<<<<<<< HEAD
         error={!!errors.password}
         helperText={errors.password}
-=======
->>>>>>> 0e373a5d793c896994ea620a62d2e1a3464afa70
       />
-      <Button type="submit" variant="outlined">
-        Зарегистрироваться
+      <Button type="submit" variant="outlined" disabled={isUserRegister}>
+        {isUserRegister && (
+          <CircularProgress size={24} sx={{ marginRight: 1 }} />
+        )}
+        {!isUserRegister && "Зарегистрироваться"}
       </Button>
     </Box>
   );

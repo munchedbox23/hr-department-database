@@ -1,17 +1,14 @@
 export enum AppRoutes {
-<<<<<<< HEAD
   AUTH = "authorization",
-  NOT_FOUND = "not-found",
-=======
-  AUTH = "/authorization",
-  NOT_FOUND = "/not-found",
->>>>>>> 0e373a5d793c896994ea620a62d2e1a3464afa70
+  NOT_FOUND = "*",
 }
 
 export const getRouteAuth = () => `/${AppRoutes.AUTH}`;
-export const getRouteNotFound = () => `/${AppRoutes.NOT_FOUND}`;
+export const getRouteNotFound = () => `${AppRoutes.NOT_FOUND}`;
+export const getRouteHome = () => `/`;
 
 export const appRoutes = {
+  home: getRouteHome,
   auth: getRouteAuth,
   notFound: getRouteNotFound,
 };
