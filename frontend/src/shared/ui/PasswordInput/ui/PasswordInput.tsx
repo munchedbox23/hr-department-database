@@ -8,6 +8,8 @@ interface PasswordInputProps {
   name: string;
   label: string;
   autoComplete?: "off" | "new-password" | "current-password";
+  error?: boolean;
+  helperText?: string;
 }
 
 export const PasswordInput = ({
@@ -16,6 +18,8 @@ export const PasswordInput = ({
   name,
   label,
   autoComplete = "off",
+  error,
+  helperText,
 }: PasswordInputProps) => {
   const [showPassword, setShowPassword] = useState(false);
 
@@ -34,8 +38,10 @@ export const PasswordInput = ({
       label={label}
       onChange={onChange}
       autoComplete={autoComplete}
+      error={error}
+      helperText={helperText}
       value={value}
-      sx={{ height: "48px" }}
+      sx={{ minHeight: "35px" }}
       InputProps={{
         endAdornment: (
           <InputAdornment position="end">

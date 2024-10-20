@@ -5,7 +5,7 @@ import { appRoutes } from "@/shared/const/routes";
 
 export const router = createBrowserRouter([
   {
-    path: "/",
+    path: appRoutes.auth(),
     element: <AuthLayout />,
     children: [{ path: appRoutes.auth(), element: <AuthorizationPage /> }],
   },

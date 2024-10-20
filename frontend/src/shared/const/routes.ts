@@ -1,6 +1,6 @@
 export enum AppRoutes {
-  AUTH = "/authorization",
-  NOT_FOUND = "/not-found",
+  AUTH = "authorization",
+  NOT_FOUND = "not-found",
 }
 
 export const getRouteAuth = () => `/${AppRoutes.AUTH}`;

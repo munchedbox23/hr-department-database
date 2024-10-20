@@ -4,6 +4,8 @@ import { LoginSchema } from "../../model/types/loginTypes";
 import { PasswordInput } from "@/shared/ui/PasswordInput";
 import { useLoginMutation } from "../../api/loginApi";
 import { useNavigate } from "react-router-dom";
+import { validateEmail, validatePassword } from "@/shared/lib/validate";
+import { useState } from "react";
 
 export const LoginForm = () => {
   const { formState, handleChange } = useForm<LoginSchema>({
@@ -12,10 +14,27 @@ export const LoginForm = () => {
   });
   const navigate = useNavigate();
 
+  const [errors, setErrors] = useState<LoginSchema>({
+    email: "",
+    password: "",
+  });
   const [login] = useLoginMutation();
+
+  const validateForm = () => {
+    const passwordError = validatePassword(formState.password ?? "");
+    const emailError = validateEmail(formState.email ?? "");
+
+    setErrors({
+      password: passwordError || "",
+      email: emailError || "",
+    });
+
+    return !passwordError && !emailError;
+  };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    if (!validateForm()) return;
     try {
       await login(formState)
         .unwrap()
@@ -32,7 +51,7 @@ export const LoginForm = () => {
       sx={{
         display: "flex",
         flexDirection: "column",
-        gap: "30px",
+        gap: "15px",
         width: "100%",
         maxWidth: "280px",
       }}
@@ -44,13 +63,17 @@ export const LoginForm = () => {
         onChange={handleChange}
         autoComplete="email"
         value={formState.email}
-        sx={{ height: "35px" }}
+        sx={{ minHeight: "35px" }}
+        error={!!errors.email}
+        helperText={errors.email}
       />
       <PasswordInput
         name="password"
         label="Пароль"
         onChange={handleChange}
         value={formState.password}
+        error={!!errors.password}
+        helperText={errors.password}
       />
       <Button type="submit" variant="outlined" sx={{ width: "100%" }}>
         Войти
