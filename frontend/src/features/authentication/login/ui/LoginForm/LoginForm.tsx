@@ -1,11 +1,12 @@
 import { useForm } from "@/shared/lib/hooks/useForm";
-import { Box, Button, TextField } from "@mui/material";
+import { Box, Button, CircularProgress, TextField } from "@mui/material";
 import { LoginSchema } from "../../model/types/loginTypes";
 import { PasswordInput } from "@/shared/ui/PasswordInput";
 import { useLoginMutation } from "../../api/loginApi";
 import { useNavigate } from "react-router-dom";
 import { validateEmail, validatePassword } from "@/shared/lib/validate";
 import { useState } from "react";
+import { appRoutes } from "@/shared/const/routes";
 
 export const LoginForm = () => {
   const { formState, handleChange } = useForm<LoginSchema>({
@@ -18,7 +19,7 @@ export const LoginForm = () => {
     email: "",
     password: "",
   });
-  const [login] = useLoginMutation();
+  const [login, { isLoading: isUserLogin }] = useLoginMutation();
 
   const validateForm = () => {
     const passwordError = validatePassword(formState.password ?? "");
@@ -38,7 +39,7 @@ export const LoginForm = () => {
     try {
       await login(formState)
         .unwrap()
-        .then(() => navigate("/", { replace: true }));
+        .then(() => navigate(appRoutes.home(), { replace: true }));
     } catch (error) {
       console.log(error);
     }
@@ -75,8 +76,14 @@ export const LoginForm = () => {
         error={!!errors.password}
         helperText={errors.password}
       />
-      <Button type="submit" variant="outlined" sx={{ width: "100%" }}>
-        Войти
+      <Button
+        type="submit"
+        variant="outlined"
+        sx={{ width: "100%", postion: "relative" }}
+        disabled={isUserLogin}
+      >
+        {isUserLogin && <CircularProgress size={24} sx={{ marginRight: 1 }} />}
+        {!isUserLogin && "Войти"}
       </Button>
     </Box>
   );

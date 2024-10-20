@@ -1,5 +1,5 @@
 import { useForm } from "@/shared/lib/hooks/useForm";
-import { Box, Button, TextField } from "@mui/material";
+import { Box, Button, CircularProgress, TextField } from "@mui/material";
 import { RegisterSchema } from "../../model/types/registerTypes";
 import { PasswordInput } from "@/shared/ui/PasswordInput";
 import { FormEvent, useState } from "react";
@@ -10,6 +10,7 @@ import {
   validatePassword,
   validateEmail,
 } from "@/shared/lib/validate";
+import { appRoutes } from "@/shared/const/routes";
 
 export const RegisterForm = () => {
   const { formState, handleChange } = useForm<RegisterSchema>({
@@ -38,7 +39,7 @@ export const RegisterForm = () => {
     return !passwordError && !emailError && !usernameError;
   };
 
-  const [register] = useRegisterMutation();
+  const [register, { isLoading: isUserRegister }] = useRegisterMutation();
   const navigate = useNavigate();
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
@@ -47,7 +48,7 @@ export const RegisterForm = () => {
     try {
       await register(formState)
         .unwrap()
-        .then(() => navigate("/", { replace: true }));
+        .then(() => navigate(appRoutes.home(), { replace: true }));
     } catch (error) {
       console.log(error);
     }
@@ -96,8 +97,11 @@ export const RegisterForm = () => {
         error={!!errors.password}
         helperText={errors.password}
       />
-      <Button type="submit" variant="outlined">
-        Зарегистрироваться
+      <Button type="submit" variant="outlined" disabled={isUserRegister}>
+        {isUserRegister && (
+          <CircularProgress size={24} sx={{ marginRight: 1 }} />
+        )}
+        {!isUserRegister && "Зарегистрироваться"}
       </Button>
     </Box>
   );
