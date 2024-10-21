@@ -12,7 +12,9 @@ import {
   Tooltip,
   MenuItem,
 } from "@mui/material";
+import { Link } from "react-router-dom";
 import { Menu as MenuIcon, Storage } from "@mui/icons-material";
+import { appRoutes } from "@/shared/const/routes";
 
 const pages = ["Учет отпусков", "Управление должностями", "Учет сотрудников"];
 const settings = ["Profile", "Account", "Dashboard", "Logout"];
@@ -33,39 +35,41 @@ const AppHeader: React.FC = () => {
   const handleCloseUserMenu = () => setAnchorElUser(null);
 
   const renderLogo = (isMobile: boolean) => (
-    <>
-      <Storage
-        sx={{
-          display: {
-            xs: isMobile ? "flex" : "none",
-            md: isMobile ? "none" : "flex",
-          },
-          mr: 1,
-        }}
-      />
-      <Typography
-        variant={isMobile ? "h5" : "h6"}
-        noWrap
-        component="a"
-        href="#app-bar-with-responsive-menu"
-        sx={{
-          mr: 2,
-          display: {
-            xs: isMobile ? "flex" : "none",
-            md: isMobile ? "none" : "flex",
-          },
-          flexGrow: isMobile ? 1 : 0,
-          fontFamily: "monospace",
-          fontWeight: 700,
-          letterSpacing: ".3rem",
-          color: "inherit",
-          textDecoration: "none",
-        }}
-      >
-        База данных
-      </Typography>
-    </>
+    <Link to={appRoutes.home()}>
+      <Box sx={{ display: "flex", alignItems: "center", paddingBottom: "5px" }}>
+        <Storage
+          sx={{
+            display: {
+              xs: "none",
+              md: isMobile ? "none" : "flex",
+            },
+            mr: 1,
+          }}
+        />
+        <Typography
+          variant={isMobile ? "h5" : "h6"}
+          noWrap
+          component="div"
+          sx={{
+            mr: 2,
+            display: {
+              xs: "none",
+              md: isMobile ? "none" : "flex",
+            },
+            flexGrow: isMobile ? 1 : 0,
+            fontFamily: "monospace",
+            fontWeight: 700,
+            letterSpacing: ".3rem",
+            color: "inherit",
+            textDecoration: "none",
+          }}
+        >
+          База данных
+        </Typography>
+      </Box>
+    </Link>
   );
+
   const renderNavMenu = () => (
     <Box sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}>
       <IconButton
@@ -119,7 +123,7 @@ const AppHeader: React.FC = () => {
 
   const renderUserMenu = () => (
     <Box sx={{ flexGrow: 0 }}>
-      <Tooltip title="Open settings">
+      <Tooltip title="Открыть настройки">
         <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
           <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
         </IconButton>

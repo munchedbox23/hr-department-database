@@ -1,5 +1,5 @@
 import React from "react";
-import { Box, Button, Typography } from "@mui/material";
+import { Box, Button, Typography, Paper } from "@mui/material";
 import { motion } from "framer-motion";
 
 export const WelcomePage: React.FC = () => {
@@ -7,42 +7,92 @@ export const WelcomePage: React.FC = () => {
     <Box
       sx={{
         display: "flex",
+        flexDirection: { xs: "column", md: "row" },
         justifyContent: "space-between",
         alignItems: "center",
-        height: "100vh",
-        padding: "20px",
+        height: "100%",
+        padding: { xs: "10px", sm: "20px" },
       }}
     >
-      <Box sx={{ flex: 1, textAlign: "center" }}>
-        <Typography variant="h1">
-          Добро пожаловать в Базу данных отдела кадров
-        </Typography>
-        <Typography variant="body1">
-          Эта система поможет вам управлять данными сотрудников эффективно и
-          удобно.
-        </Typography>
-        <Button variant="contained" color="primary">
-          Войти
-        </Button>
+      <Box sx={{ flex: 1, padding: { xs: "10px", sm: "20px" } }}>
+        <Paper
+          elevation={3}
+          sx={{
+            padding: { xs: "20px", sm: "40px" },
+            borderRadius: "10px",
+            background: "#ffffff",
+            textAlign: "center",
+            maxWidth: { xs: "100%", md: "500px" }, 
+            width: "100%",
+            marginRight: { md: "20px" }, 
+            marginBottom: { xs: "20px", md: 0 }, 
+          }}
+        >
+          <motion.div
+            initial={{ opacity: 0, y: -50 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+          >
+            <Typography
+              variant="h4" 
+              sx={{
+                fontWeight: 600,
+                marginBottom: "20px",
+                color: "#1976D2",
+                fontSize: { xs: "1.8rem", sm: "2rem", md: "2.5rem" }, 
+              }}
+            >
+              Добро пожаловать в Базу данных отдела кадров
+            </Typography>
+            <Typography
+              variant="body1"
+              sx={{ marginBottom: "20px", color: "#616161" }}
+            >
+              Эта система поможет вам управлять данными сотрудников эффективно и
+              удобно.
+            </Typography>
+            <Button
+              variant="contained"
+              color="primary"
+              size="large"
+              sx={{ marginTop: "20px" }}
+            >
+              Начать работу
+            </Button>
+          </motion.div>
+        </Paper>
       </Box>
       <motion.div
         initial={{ opacity: 0, x: 100 }}
         animate={{ opacity: 1, x: 0 }}
-        transition={{ duration: 0.5 }}
+        transition={{ duration: 0.6 }}
         style={{
           flex: 1,
-          background: "lightblue",
-          height: "100%",
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
         }}
       >
-        <Box sx={{ textAlign: "center" }}>
-          <Typography variant="h6" sx={{ marginTop: "20px" }}>
-            Управляйте данными сотрудников с легкостью и эффективностью.
-          </Typography>
-        </Box>
+        <picture>
+          <source
+            srcSet="https://www.mivlgu.ru/iop/pluginfile.php/102473/course/overviewfiles/1622258785_4-phonoteka_org-p-baza-dannikh-art-krasivo-4.jpg"
+            type="image/webp"
+          />
+          <source
+            srcSet="https://www.mivlgu.ru/iop/pluginfile.php/102473/course/overviewfiles/1622258785_4-phonoteka_org-p-baza-dannikh-art-krasivo-4.jpg"
+            type="image/jpeg"
+          />
+          <img
+            src="https://www.mivlgu.ru/iop/pluginfile.php/102473/course/overviewfiles/1622258785_4-phonoteka_org-p-baza-dannikh-art-krasivo-4.jpg"
+            alt="HR Database Visualization"
+            style={{
+              maxWidth: "100%",
+              height: "auto",
+              borderRadius: "10px",
+              boxShadow: "0 4px 8px rgba(0, 0, 0, 0.2)",
+            }}
+          />
+        </picture>
       </motion.div>
     </Box>
   );
