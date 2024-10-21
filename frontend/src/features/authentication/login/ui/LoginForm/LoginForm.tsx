@@ -39,7 +39,8 @@ export const LoginForm = () => {
     try {
       await login(formState)
         .unwrap()
-        .then(() => navigate(appRoutes.home(), { replace: true }));
+        .then(() => navigate(appRoutes.home(), { replace: true })
+        );
     } catch (error) {
       console.log(error);
     }
@@ -79,7 +80,7 @@ export const LoginForm = () => {
       <Button
         type="submit"
         variant="outlined"
-        sx={{ width: "100%", postion: "relative" }}
+        sx={{ width: "100%", position: "relative" }}
         disabled={isUserLogin}
       >
         {isUserLogin && <CircularProgress size={24} sx={{ marginRight: 1 }} />}
