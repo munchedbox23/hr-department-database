@@ -6,13 +6,18 @@ import { NotFoundPage } from "@/pages/NotFoundPage";
 import { MainLayout } from "@/app/layouts/MainLayout";
 import { WelcomePage } from "@/pages/WelcomePage";
 import { OnlyAuth, OnlyUnAuth } from "../ui/WithProtectedRoute";
+import { EmployeeTablePage } from "@/pages/Employees";
 
 export const router = createBrowserRouter([
   {
     path: appRoutes.home(),
-    element: <OnlyAuth component={<MainLayout />} />,
+    element: <MainLayout />,
     children: [
       { index: true, element: <OnlyAuth component={<WelcomePage />} /> },
+      {
+        path: appRoutes.employees(),
+        element: <OnlyAuth component={<EmployeeTablePage />} />,
+      },
     ],
   },
   {

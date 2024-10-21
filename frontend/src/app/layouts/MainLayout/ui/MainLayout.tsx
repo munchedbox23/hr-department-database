@@ -1,7 +1,8 @@
-import { FC } from "react";
+import { FC, Suspense } from "react";
 import { Box, Container } from "@mui/material";
 import { Outlet } from "react-router-dom";
 import { AppHeader } from "@/widgets/Header";
+import { Loader } from "@/shared/ui/Loader";
 
 export const MainLayout: FC = () => {
   return (
@@ -10,12 +11,17 @@ export const MainLayout: FC = () => {
       <Box
         component="main"
         sx={{
-          width: "100vw",
+          width: "100%",
           position: "relative",
-          height: "calc(100vh - 75px)",
+          minHeight: "calc(100vh - 75px)",
+          height: "auto",
+          maxHeight: "100%",
           background: "linear-gradient(135deg, #E3F2FD 0%, #BBDEFB 100%)",
           backgroundSize: "cover",
           backgroundPosition: "center",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
         }}
       >
         <Container
@@ -26,7 +32,9 @@ export const MainLayout: FC = () => {
             position: "relative",
           }}
         >
-          <Outlet />
+          <Suspense fallback={<Loader />}>
+            <Outlet />
+          </Suspense>
         </Container>
         <Box
           sx={{

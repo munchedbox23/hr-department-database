@@ -16,9 +16,16 @@ import { Link } from "react-router-dom";
 import { Menu as MenuIcon, Storage } from "@mui/icons-material";
 import { appRoutes } from "@/shared/const/routes";
 import { LogoutUserButton } from "@/features/authentication/logout";
+import { useAppSelector } from "@/app/providers/StoreProvider";
 
-const pages = ["Учет отпусков", "Управление должностями", "Учет сотрудников"];
-const settings = ["Profile", "Account", "Dashboard"];
+const pages = [
+  { name: "Отпуска", route: appRoutes.vacations },
+  { name: "Командировки", route: appRoutes.businessTrips },
+  { name: "Сотрудники", route: appRoutes.employees },
+  { name: "Трудовые договора", route: appRoutes.laborContracts },
+  { name: "Штатное расписание", route: appRoutes.staffing },
+  { name: "Посещаемость", route: appRoutes.attendance },
+];
 
 const AppHeader: React.FC = () => {
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(
@@ -27,6 +34,8 @@ const AppHeader: React.FC = () => {
   const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(
     null
   );
+
+  const user = useAppSelector((store) => store.user.user); // Directly assign user
 
   const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) =>
     setAnchorElNav(event.currentTarget);
@@ -100,8 +109,8 @@ const AppHeader: React.FC = () => {
         sx={{ display: { xs: "block", md: "none" } }}
       >
         {pages.map((page) => (
-          <MenuItem key={page} onClick={handleCloseNavMenu}>
-            <Typography sx={{ textAlign: "center" }}>{page}</Typography>
+          <MenuItem key={page.name} onClick={handleCloseNavMenu}>
+            <Typography sx={{ textAlign: "center" }}>{page.name}</Typography>
           </MenuItem>
         ))}
       </Menu>
@@ -110,14 +119,15 @@ const AppHeader: React.FC = () => {
 
   const renderDesktopMenu = () => (
     <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
-      {pages.map((page) => (
-        <Button
-          key={page}
-          onClick={handleCloseNavMenu}
-          sx={{ my: 2, color: "white", display: "block" }}
-        >
-          {page}
-        </Button>
+      {pages.map(({ name, route }) => (
+        <Link to={route()} key={name} style={{ textDecoration: "none" }}>
+          <Button
+            onClick={handleCloseNavMenu}
+            sx={{ my: 2, color: "white", display: "block" }}
+          >
+            {name}
+          </Button>
+        </Link>
       ))}
     </Box>
   );
@@ -126,7 +136,7 @@ const AppHeader: React.FC = () => {
     <Box sx={{ flexGrow: 0 }}>
       <Tooltip title="Открыть настройки">
         <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-          <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
+          <Avatar alt="Remy Sharp" />
         </IconButton>
       </Tooltip>
       <Menu
@@ -145,12 +155,18 @@ const AppHeader: React.FC = () => {
         open={Boolean(anchorElUser)}
         onClose={handleCloseUserMenu}
       >
-        {settings.map((setting) => (
-          <MenuItem key={setting} onClick={handleCloseUserMenu}>
-            <Typography sx={{ textAlign: "center" }}>{setting}</Typography>
-          </MenuItem>
-        ))}
         <MenuItem onClick={handleCloseUserMenu}>
+          <Box sx={{ textAlign: "center", width: "100%" }}>
+            <Typography>Вы вошли под именем</Typography>
+            <Typography sx={{ fontWeight: 700 }}>
+              {user?.name || "Гость"}
+            </Typography>
+          </Box>
+        </MenuItem>
+        <MenuItem
+          onClick={handleCloseUserMenu}
+          sx={{ justifyContent: "center" }}
+        >
           <LogoutUserButton />
         </MenuItem>
       </Menu>
@@ -158,7 +174,7 @@ const AppHeader: React.FC = () => {
   );
 
   return (
-    <AppBar position="static" sx={{ height: "75px" }}>
+    <AppBar position="sticky" sx={{ height: "75px" }}>
       <Container maxWidth="xl" sx={{ height: "100%" }}>
         <Toolbar disableGutters sx={{ height: "100%" }}>
           {renderLogo(false)}
