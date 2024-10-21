@@ -1,25 +1,26 @@
 import { useForm } from "@/shared/lib/hooks/useForm";
 import { Box, Button, CircularProgress, TextField } from "@mui/material";
-import { RegisterSchema } from "../../model/types/registerTypes";
 import { PasswordInput } from "@/shared/ui/PasswordInput";
 import { FormEvent, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useRegisterMutation } from "../../api/registerApi";
 import {
   validateUsername,
   validatePassword,
   validateEmail,
 } from "@/shared/lib/validate";
 import { appRoutes } from "@/shared/const/routes";
+import { checkUserAuth, useRegisterMutation } from "@/entities/user";
+import { IUserRegister } from "@/entities/user";
+import { useAppDispatch } from "@/app/providers/StoreProvider";
 
 export const RegisterForm = () => {
-  const { formState, handleChange } = useForm<RegisterSchema>({
+  const { formState, handleChange } = useForm<IUserRegister>({
     name: "",
     email: "",
     password: "",
   });
-
-  const [errors, setErrors] = useState<RegisterSchema>({
+  const dispatch = useAppDispatch();
+  const [errors, setErrors] = useState<IUserRegister>({
     name: "",
     email: "",
     password: "",
@@ -48,7 +49,11 @@ export const RegisterForm = () => {
     try {
       await register(formState)
         .unwrap()
-        .then(() => navigate(appRoutes.home(), { replace: true }));
+        .then(() => {
+          dispatch(checkUserAuth()).then(() =>
+            navigate(appRoutes.home(), { replace: true })
+          );
+        });
     } catch (error) {
       console.log(error);
     }

@@ -1,21 +1,23 @@
 import { useForm } from "@/shared/lib/hooks/useForm";
 import { Box, Button, CircularProgress, TextField } from "@mui/material";
-import { LoginSchema } from "../../model/types/loginTypes";
 import { PasswordInput } from "@/shared/ui/PasswordInput";
-import { useLoginMutation } from "../../api/loginApi";
+import { checkUserAuth, useLoginMutation } from "@/entities/user";
 import { useNavigate } from "react-router-dom";
 import { validateEmail, validatePassword } from "@/shared/lib/validate";
 import { useState } from "react";
 import { appRoutes } from "@/shared/const/routes";
+import { IUserLogin } from "@/entities/user";
+import { useAppDispatch } from "@/app/providers/StoreProvider";
 
 export const LoginForm = () => {
-  const { formState, handleChange } = useForm<LoginSchema>({
+  const { formState, handleChange } = useForm<IUserLogin>({
     email: "",
     password: "",
   });
   const navigate = useNavigate();
+  const dispatch = useAppDispatch();
 
-  const [errors, setErrors] = useState<LoginSchema>({
+  const [errors, setErrors] = useState<IUserLogin>({
     email: "",
     password: "",
   });
@@ -39,8 +41,11 @@ export const LoginForm = () => {
     try {
       await login(formState)
         .unwrap()
-        .then(() => navigate(appRoutes.home(), { replace: true })
-        );
+        .then(() => {
+          dispatch(checkUserAuth()).then(() =>
+            navigate(appRoutes.home(), { replace: true })
+          );
+        });
     } catch (error) {
       console.log(error);
     }

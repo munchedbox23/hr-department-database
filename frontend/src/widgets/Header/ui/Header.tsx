@@ -15,9 +15,10 @@ import {
 import { Link } from "react-router-dom";
 import { Menu as MenuIcon, Storage } from "@mui/icons-material";
 import { appRoutes } from "@/shared/const/routes";
+import { LogoutUserButton } from "@/features/authentication/logout";
 
 const pages = ["Учет отпусков", "Управление должностями", "Учет сотрудников"];
-const settings = ["Profile", "Account", "Dashboard", "Logout"];
+const settings = ["Profile", "Account", "Dashboard"];
 
 const AppHeader: React.FC = () => {
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(
@@ -149,6 +150,9 @@ const AppHeader: React.FC = () => {
             <Typography sx={{ textAlign: "center" }}>{setting}</Typography>
           </MenuItem>
         ))}
+        <MenuItem onClick={handleCloseUserMenu}>
+          <LogoutUserButton />
+        </MenuItem>
       </Menu>
     </Box>
   );
