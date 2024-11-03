@@ -1,10 +1,13 @@
 export type Employee = {
-  firstName: string;
-  lastName: string;
-  email: string;
-  jobTitle: string;
-  salary: number;
-  startDate: string;
-  signatureCatchPhrase: string;
-  avatar: string;
+  ТабельныйНомер: number;
+  ФИО: string;
+  Пол: string;
+  КодДолжности: number;
+  Стаж: string;
+  Телефон: string;
+  Прописка: string;
+  Образование: string;
+  ДатаПриема: string;
+  Почта: string;
+  СемейноеПоложение: string;
 };
