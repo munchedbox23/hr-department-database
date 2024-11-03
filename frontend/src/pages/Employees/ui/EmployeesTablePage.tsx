@@ -108,7 +108,7 @@ export const data = [
   },
 ];
 
-const EmployeeTablePage = () => {
+export const EmployeeTablePage = () => {
   const columns = useMemo(
     () => [
       {
@@ -157,5 +157,3 @@ const EmployeeTablePage = () => {
     </Container>
   );
 };
-
-export default EmployeeTablePage;

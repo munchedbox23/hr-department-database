@@ -1,12 +1,12 @@
 import { AuthLayout } from "@/app/layouts/AuthLayout";
-import { createBrowserRouter } from "react-router-dom";
+import { createBrowserRouter, Navigate } from "react-router-dom";
 import { AuthorizationPage } from "@/pages/AuthorizationPage";
 import { appRoutes } from "@/shared/const/routes";
 import { NotFoundPage } from "@/pages/NotFoundPage";
 import { MainLayout } from "@/app/layouts/MainLayout";
 import { WelcomePage } from "@/pages/WelcomePage";
 import { OnlyAuth, OnlyUnAuth } from "../ui/WithProtectedRoute";
-import { EmployeeTablePage } from "@/pages/Employees";
+import { EmployeesTablePage } from "@/pages/Employees";
 
 export const router = createBrowserRouter([
   {
@@ -16,7 +16,7 @@ export const router = createBrowserRouter([
       { index: true, element: <OnlyAuth component={<WelcomePage />} /> },
       {
         path: appRoutes.employees(),
-        element: <OnlyAuth component={<EmployeeTablePage />} />,
+        element: <OnlyAuth component={<EmployeesTablePage />} />,
       },
     ],
   },
@@ -32,6 +32,6 @@ export const router = createBrowserRouter([
   },
   {
     path: appRoutes.notFound(),
-    element: <NotFoundPage />,
+    element: <Navigate to={appRoutes.auth()} replace />,
   },
 ]);

@@ -24,7 +24,7 @@ const pages = [
   { name: "Сотрудники", route: appRoutes.employees },
   { name: "Трудовые договора", route: appRoutes.laborContracts },
   { name: "Штатное расписание", route: appRoutes.staffing },
-  { name: "Посещаемость", route: appRoutes.attendance },
+  { name: "Табель учета рабочего времени", route: appRoutes.attendance },
 ];
 
 const AppHeader: React.FC = () => {
@@ -35,7 +35,7 @@ const AppHeader: React.FC = () => {
     null
   );
 
-  const user = useAppSelector((store) => store.user.user); // Directly assign user
+  const user = useAppSelector((store) => store.user.user); 
 
   const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) =>
     setAnchorElNav(event.currentTarget);

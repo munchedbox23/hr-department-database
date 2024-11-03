@@ -1,6 +1,7 @@
 import React from "react";
 import { Box, Button, Typography, Paper } from "@mui/material";
 import { motion } from "framer-motion";
+import dataBaseImage from "@/shared/assets/images/dataBase.jpeg";
 
 export const WelcomePage: React.FC = () => {
   return (
@@ -22,10 +23,10 @@ export const WelcomePage: React.FC = () => {
             borderRadius: "10px",
             background: "#ffffff",
             textAlign: "center",
-            maxWidth: { xs: "100%", md: "500px" }, 
+            maxWidth: { xs: "100%", md: "500px" },
             width: "100%",
-            marginRight: { md: "20px" }, 
-            marginBottom: { xs: "20px", md: 0 }, 
+            marginRight: { md: "20px" },
+            marginBottom: { xs: "20px", md: 0 },
           }}
         >
           <motion.div
@@ -34,12 +35,12 @@ export const WelcomePage: React.FC = () => {
             transition={{ duration: 0.6 }}
           >
             <Typography
-              variant="h4" 
+              variant="h4"
               sx={{
                 fontWeight: 600,
                 marginBottom: "20px",
                 color: "#1976D2",
-                fontSize: { xs: "1.8rem", sm: "2rem", md: "2.5rem" }, 
+                fontSize: { xs: "1.8rem", sm: "2rem", md: "2.5rem" },
               }}
             >
               Добро пожаловать в Базу данных отдела кадров
@@ -74,20 +75,13 @@ export const WelcomePage: React.FC = () => {
         }}
       >
         <picture>
-          <source
-            srcSet="https://www.mivlgu.ru/iop/pluginfile.php/102473/course/overviewfiles/1622258785_4-phonoteka_org-p-baza-dannikh-art-krasivo-4.jpg"
-            type="image/webp"
-          />
-          <source
-            srcSet="https://www.mivlgu.ru/iop/pluginfile.php/102473/course/overviewfiles/1622258785_4-phonoteka_org-p-baza-dannikh-art-krasivo-4.jpg"
-            type="image/jpeg"
-          />
+          <source srcSet={dataBaseImage} type="image/jpeg" />
           <img
-            src="https://www.mivlgu.ru/iop/pluginfile.php/102473/course/overviewfiles/1622258785_4-phonoteka_org-p-baza-dannikh-art-krasivo-4.jpg"
+            src={dataBaseImage}
             alt="HR Database Visualization"
             style={{
               maxWidth: "100%",
-              height: "auto",
+              maxHeight: "50%",
               borderRadius: "10px",
               boxShadow: "0 4px 8px rgba(0, 0, 0, 0.2)",
             }}

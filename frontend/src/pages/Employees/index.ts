@@ -1,2 +1,3 @@
-import EmployeeTablePage from "./ui/EmployeesTablePage";
-export { EmployeeTablePage };
+import { EmployeesTablePageLazy } from "./ui/EmployeesTablePage.lazy";
+
+export { EmployeesTablePageLazy as EmployeesTablePage };
