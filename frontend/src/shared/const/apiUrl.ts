@@ -5,7 +5,7 @@ interface IApiUrl {
 }
 
 export const apiUrl: IApiUrl = {
-  baseUrl: "http://localhost:8080",
+  baseUrl: "http://51.250.32.70:8080/api",
   authBaseUrl: "https://norma.nomoreparties.space/api",
   auth: {
     login: "/auth/login",

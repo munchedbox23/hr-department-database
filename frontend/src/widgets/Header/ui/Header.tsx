@@ -22,7 +22,7 @@ const pages = [
   { name: "Отпуска", route: appRoutes.vacations },
   { name: "Командировки", route: appRoutes.businessTrips },
   { name: "Сотрудники", route: appRoutes.employees },
-  { name: "Трудовые договора", route: appRoutes.laborContracts },
+  { name: "Трудовые договоры", route: appRoutes.laborContracts },
   { name: "Штатное расписание", route: appRoutes.staffing },
   { name: "Табель учета рабочего времени", route: appRoutes.attendance },
 ];
