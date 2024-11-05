@@ -6,8 +6,12 @@ import { NotFoundPage } from "@/pages/NotFoundPage";
 import { MainLayout } from "@/app/layouts/MainLayout";
 import { WelcomePage } from "@/pages/WelcomePage";
 import { OnlyAuth, OnlyUnAuth } from "../ui/WithProtectedRoute";
-import { EmployeeTablePage } from "@/pages/Employees";
-
+import { EmployeesTablePage } from "@/pages/Employees";
+import { StaffingSchedulePage } from "@/pages/StaffingSchedule";
+import { WorkHoursPage } from "@/pages/WorkHoursPage";
+import { OrdersPage } from "@/pages/OrderPage";
+import { TripsPage } from "@/pages/TripsPage";
+import { VacationPage } from "@/pages/VacationPage";
 export const router = createBrowserRouter([
   {
     path: appRoutes.home(),
@@ -16,7 +20,27 @@ export const router = createBrowserRouter([
       { index: true, element: <OnlyAuth component={<WelcomePage />} /> },
       {
         path: appRoutes.employees(),
-        element: <OnlyAuth component={<EmployeeTablePage />} />,
+        element: <OnlyAuth component={<EmployeesTablePage />} />,
+      },
+      {
+        path: appRoutes.staffing(),
+        element: <OnlyAuth component={<StaffingSchedulePage />} />,
+      },
+      {
+        path: appRoutes.attendance(),
+        element: <OnlyAuth component={<WorkHoursPage />} />,
+      },
+      {
+        path: appRoutes.laborContracts(),
+        element: <OnlyAuth component={<OrdersPage />} />,
+      },
+      {
+        path: appRoutes.businessTrips(),
+        element: <OnlyAuth component={<TripsPage />} />,
+      },
+      {
+        path: appRoutes.vacations(),
+        element: <OnlyAuth component={<VacationPage />} />,
       },
     ],
   },
