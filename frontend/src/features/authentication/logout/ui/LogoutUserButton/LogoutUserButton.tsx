@@ -13,11 +13,14 @@ export const LogoutUserButton: FC = () => {
 
   const handleLogout = async () => {
     try {
-      await logout().unwrap();
-
-      dispatch(resetUser());
-      dispatch(checkUserAuth());
-      navigate(appRoutes.auth(), { replace: true });
+      await logout()
+        .unwrap()
+        .then(() => {
+          dispatch(resetUser());
+          dispatch(checkUserAuth()).then(() => {
+            navigate(appRoutes.auth(), { replace: true });
+          });
+        });
     } catch (error) {
       console.error("Ошибка при выходе", error);
     }

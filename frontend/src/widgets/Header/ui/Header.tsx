@@ -22,9 +22,9 @@ const pages = [
   { name: "Отпуска", route: appRoutes.vacations },
   { name: "Командировки", route: appRoutes.businessTrips },
   { name: "Сотрудники", route: appRoutes.employees },
-  { name: "Трудовые договора", route: appRoutes.laborContracts },
+  { name: "Трудовые договоры", route: appRoutes.laborContracts },
   { name: "Штатное расписание", route: appRoutes.staffing },
-  { name: "Посещаемость", route: appRoutes.attendance },
+  { name: "Табель учета рабочего времени", route: appRoutes.attendance },
 ];
 
 const AppHeader: React.FC = () => {
@@ -35,7 +35,7 @@ const AppHeader: React.FC = () => {
     null
   );
 
-  const user = useAppSelector((store) => store.user.user); // Directly assign user
+  const user = useAppSelector((store) => store.user.user); 
 
   const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) =>
     setAnchorElNav(event.currentTarget);
@@ -174,7 +174,7 @@ const AppHeader: React.FC = () => {
   );
 
   return (
-    <AppBar position="sticky" sx={{ height: "75px" }}>
+    <AppBar position="sticky" sx={{ height: "75px", zIndex: 1100 }}>
       <Container maxWidth="xl" sx={{ height: "100%" }}>
         <Toolbar disableGutters sx={{ height: "100%" }}>
           {renderLogo(false)}

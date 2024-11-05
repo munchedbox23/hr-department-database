@@ -8,7 +8,9 @@
     "start:dev:server": "json-server --watch ./json-server/db.json -p 8000",
     "start:dev": "concurrently \"npx webpack serve\" \"npm run start:dev:server\"",
     "build:prod": "webpack  --env mode=production",
-    "build:dev": "webpack  --env mode=development"
+    "build:dev": "webpack  --env mode=development",
+    "predeploy": "npm run build:dev",
+    "deploy": "gh-pages -d build"
   },
   "repository": {
     "type": "git",
@@ -19,7 +21,7 @@
   "bugs": {
     "url": "https://github.com/munchedbox23/hr-department-database/issues"
   },
-  "homepage": "https://github.com/munchedbox23/hr-department-database#readme",
+  "homepage": "https://github.com/munchedbox23/hr-department-database",
   "devDependencies": {
     "@babel/core": "^7.25.2",
     "@babel/plugin-transform-runtime": "^7.25.7",
@@ -30,6 +32,7 @@
     "@svgr/webpack": "^8.1.0",
     "@types/babel__core": "^7.20.5",
     "@types/circular-dependency-plugin": "^5.0.8",
+    "@types/gh-pages": "^6.1.0",
     "@types/node": "^22.7.4",
     "@types/react": "^18.3.11",
     "@types/react-dom": "^18.3.0",
@@ -42,6 +45,7 @@
     "file-loader": "^6.2.0",
     "fork-ts-checker-webpack-plugin": "^9.0.2",
     "framer-motion": "^11.11.1",
+    "gh-pages": "^6.2.0",
     "html-webpack-plugin": "^5.6.0",
     "material-react-table": "^3.0.1",
     "mini-css-extract-plugin": "^2.9.1",
