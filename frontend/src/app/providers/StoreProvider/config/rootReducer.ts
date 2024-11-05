@@ -4,6 +4,9 @@ import { userSlice } from "@/entities/user";
 import { employeesApi } from "@/entities/employee";
 import { ordersApi } from "@/entities/orders";
 import { tripsApi } from "@/entities/trips";
+import { vacationApi } from "@/entities/vacations";
+import { staffingApi } from "@/entities/staffing";
+import { timeSheetApi } from "@/entities/time-sheet";
 
 export const rootReducer = combineReducers({
   user: userSlice,
@@ -11,4 +14,7 @@ export const rootReducer = combineReducers({
   [employeesApi.reducerPath]: employeesApi.reducer,
   [ordersApi.reducerPath]: ordersApi.reducer,
   [tripsApi.reducerPath]: tripsApi.reducer,
+  [vacationApi.reducerPath]: vacationApi.reducer,
+  [staffingApi.reducerPath]: staffingApi.reducer,
+  [timeSheetApi.reducerPath]: timeSheetApi.reducer,
 });

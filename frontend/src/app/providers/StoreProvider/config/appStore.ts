@@ -5,6 +5,10 @@ import { authApi } from "@/entities/user/api/authApi";
 import { employeesApi } from "@/entities/employee";
 import { ordersApi } from "@/entities/orders";
 import { tripsApi } from "@/entities/trips";
+import { vacationApi } from "@/entities/vacations";
+import { staffingApi } from "@/entities/staffing";
+import { timeSheetApi } from "@/entities/time-sheet";
+
 export const store = configureStore({
   reducer: rootReducer,
   middleware: (getDefaultMiddleware) =>
@@ -12,7 +16,10 @@ export const store = configureStore({
       authApi.middleware,
       employeesApi.middleware,
       ordersApi.middleware,
-      tripsApi.middleware
+      tripsApi.middleware,
+      vacationApi.middleware,
+      staffingApi.middleware,
+      timeSheetApi.middleware
     ),
 });
 
