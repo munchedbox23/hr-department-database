@@ -2,8 +2,10 @@ import React from "react";
 import { Box, Button, Typography, Paper } from "@mui/material";
 import { motion } from "framer-motion";
 import dataBaseImage from "@/shared/assets/images/dataBase.jpeg";
+import { useNavigate } from "react-router-dom";
 
 export const WelcomePage: React.FC = () => {
+  const navigate = useNavigate();
   return (
     <Box
       sx={{
@@ -57,6 +59,9 @@ export const WelcomePage: React.FC = () => {
               color="primary"
               size="large"
               sx={{ marginTop: "20px" }}
+              onClick={() => {
+                navigate("/employees");
+              }}
             >
               Начать работу
             </Button>

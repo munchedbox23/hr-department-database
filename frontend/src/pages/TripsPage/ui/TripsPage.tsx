@@ -1,19 +1,17 @@
 import React from "react";
 import { Container, Typography } from "@mui/material";
 import { ListOfItem } from "@/widgets/ListOfItem";
-import {
-  OrderListItem,
-  useGetOrdersQuery,
-} from "@/entities/orders";
+import { TripsItem } from "@/entities/trips";
+import { useGetTripsQuery } from "@/entities/trips";
 import { ListItemSkeleton } from "@/shared/ui/ListItemSkeleton";
-
-export const OrdersPage: React.FC = () => {
-  const { data: orders = [], isLoading } = useGetOrdersQuery();
+import { ShowTrip } from "@/features/show-trip";
+export const TripsPage: React.FC = () => {
+  const { data: trips = [], isLoading } = useGetTripsQuery();
 
   return (
     <Container maxWidth="lg" sx={{ py: 5 }}>
       <Typography variant="h5" fontWeight={700} gutterBottom>
-        Трудовые договоры
+        Командировки
       </Typography>
       {isLoading ? (
         Array.from({ length: 5 }).map((_, index) => (
@@ -21,9 +19,13 @@ export const OrdersPage: React.FC = () => {
         ))
       ) : (
         <ListOfItem
-          items={orders}
-          renderItem={(order) => <OrderListItem order={order} />}
-          getKey={(order) => order.ТабельныйНомер}
+          items={trips}
+          renderItem={(trip) => (
+            <TripsItem trip={trip}>
+              <ShowTrip trip={trip} />
+            </TripsItem>
+          )}
+          getKey={(trip) => trip.НомерЗаписи}
         />
       )}
     </Container>

@@ -10,6 +10,7 @@ import { EmployeesTablePage } from "@/pages/Employees";
 import { StaffingSchedulePage } from "@/pages/StaffingSchedule";
 import { WorkHoursPage } from "@/pages/WorkHoursPage";
 import { OrdersPage } from "@/pages/OrderPage";
+import { TripsPage } from "@/pages/TripsPage";
 
 export const router = createBrowserRouter([
   {
@@ -32,6 +33,10 @@ export const router = createBrowserRouter([
       {
         path: appRoutes.laborContracts(),
         element: <OnlyAuth component={<OrdersPage />} />,
+      },
+      {
+        path: appRoutes.businessTrips(),
+        element: <OnlyAuth component={<TripsPage />} />,
       },
     ],
   },

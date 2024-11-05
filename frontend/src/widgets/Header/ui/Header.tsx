@@ -174,7 +174,7 @@ const AppHeader: React.FC = () => {
   );
 
   return (
-    <AppBar position="sticky" sx={{ height: "75px" }}>
+    <AppBar position="sticky" sx={{ height: "75px", zIndex: 1100 }}>
       <Container maxWidth="xl" sx={{ height: "100%" }}>
         <Toolbar disableGutters sx={{ height: "100%" }}>
           {renderLogo(false)}

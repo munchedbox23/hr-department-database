@@ -58,7 +58,6 @@ export const AuthLayout = () => {
               База данных
             </Typography>
           </Box>
-
           <Outlet />
         </Box>
       </Suspense>
