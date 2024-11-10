@@ -31,8 +31,8 @@ export const ShowTrip = ({ trip }: { trip: ITrip }) => {
       {tripOpen && (
         <ModalWithOverlay
           title="Состав командировки"
-          open={tripOpen}
           onClose={() => setTripOpen(false)}
+          open={tripOpen}
         >
           <ul>
             {tripEmployees?.map((employee) => (
