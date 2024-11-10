@@ -1,4 +1,4 @@
-import { Button, TextField, CircularProgress } from "@mui/material";
+import {  TextField } from "@mui/material";
 import { useForm } from "@/shared/lib/hooks/useForm";
 import { Employee, EmployeePosition } from "@/entities/employee";
 import { useAddEmployeeMutation } from "@/entities/employee";
@@ -68,7 +68,11 @@ export const CreateAnEmployeeForm = ({
   };
 
   return (
-    <BaseForm onSubmit={handleSubmit}>
+    <BaseForm
+      buttonText="Добавить"
+      isLoading={isLoading}
+      onSubmit={handleSubmit}
+    >
       <TextField
         type="text"
         name="ФИО"
@@ -112,7 +116,7 @@ export const CreateAnEmployeeForm = ({
         value={Number(formState.Стаж) || ""}
         variant="outlined"
         onChange={handleChange}
-        inputProps={{ min: 0 }}
+        inputProps={{ min: 0, max: 100 }}
         fullWidth
       />
       <MaskedInput
@@ -193,14 +197,6 @@ export const CreateAnEmployeeForm = ({
         ]}
         onChange={handleChange}
       />
-      <Button
-        type="submit"
-        color="primary"
-        variant="contained"
-        disabled={isLoading}
-      >
-        {isLoading ? <CircularProgress size={24} /> : "Добавить"}
-      </Button>
     </BaseForm>
   );
 };
