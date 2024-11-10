@@ -4,15 +4,14 @@ import {
   useGetEmployeePositionQuery,
 } from "@/entities/employee";
 import { Table } from "@/widgets/Table";
-import { GlobalFilter } from "@/shared/ui/GlobalFilter";
 import { Loader } from "@/shared/ui/Loader";
-import { Container, Typography, Snackbar, Alert } from "@mui/material";
+import { Container, Typography } from "@mui/material";
 import { useMaterialReactTable, MRT_ColumnDef } from "material-react-table";
-import { useMemo, useState } from "react";
+import { useMemo } from "react";
 import { CreateAnEntity } from "@/features/common/create-an-entity";
 import { CreateAnEmployeeForm } from "@/features/employee/createAnEmployee";
 import { NotificationSnackbar } from "@/shared/ui/NotificationSnackbar";
-
+import { useSnackbar } from "@/shared/lib/hooks/useSnackbar";
 export const EmployeeTablePage = () => {
   const { data = [], isLoading } = useGetEmployeesQuery();
   const { data: positions = [] } = useGetEmployeePositionQuery();
@@ -85,26 +84,8 @@ export const EmployeeTablePage = () => {
     []
   );
 
-  const table = useMaterialReactTable({
-    columns,
-    data,
-  });
-
-  const [openSnackbar, setOpenSnackbar] = useState(false);
-
-  const handleCloseSnackbar = (
-    event?: React.SyntheticEvent | Event,
-    reason?: string
-  ) => {
-    if (reason === "clickaway") {
-      return;
-    }
-    setOpenSnackbar(false);
-  };
-
-  const handleEmployeeAdded = () => {
-    setOpenSnackbar(true);
-  };
+  const { openSnackbar, handleCloseSnackbar, handleOpenSnackbar } =
+    useSnackbar();
 
   return isLoading ? (
     <Loader />
@@ -113,10 +94,9 @@ export const EmployeeTablePage = () => {
       <CreateAnEntity title="Добавить сотрудника">
         <CreateAnEmployeeForm
           positions={positions}
-          onEmployeeAdded={handleEmployeeAdded}
+          onEmployeeAdded={handleOpenSnackbar}
         />
       </CreateAnEntity>
-      <GlobalFilter table={table} />
       <Table data={data} columns={columns} />
       <NotificationSnackbar
         open={openSnackbar}

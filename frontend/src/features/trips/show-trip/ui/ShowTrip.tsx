@@ -20,14 +20,16 @@ export const ShowTrip = ({ trip }: { trip: ITrip }) => {
 
   return (
     <>
-      <Button
-        variant="contained"
-        color="primary"
-        onClick={() => setTripOpen(true)}
-        sx={{ marginTop: 2 }}
-      >
-        Показать состав командировки
-      </Button>
+      {tripEmployees && tripEmployees.length > 0 && (
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={() => setTripOpen(true)}
+          sx={{ marginTop: 2 }}
+        >
+          Показать состав командировки
+        </Button>
+      )}
       {tripOpen && (
         <ModalWithOverlay
           title="Состав командировки"

@@ -5,7 +5,7 @@ export interface ITrip {
   Организация: string;
   СДата: string;
   ПоДату: string;
-  КоличествоДней: number;
+  КоличествоДней?: number;
   Цель: string;
 }
 

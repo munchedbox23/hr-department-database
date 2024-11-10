@@ -1,12 +1,18 @@
 import React from "react";
-import { Container, Typography } from "@mui/material";
+import { Container } from "@mui/material";
 import { Table } from "@/widgets/Table";
 import { MRT_ColumnDef } from "material-react-table";
 import { StaffingRecord } from "@/entities/staffing/model/types/types";
 import { useGetStaffingQuery } from "@/entities/staffing";
+import { useGetEmployeePositionQuery } from "@/entities/employee";
+import { CreateStaffingForm } from "@/features/staffing/createStaffing";
+import { CreateAnEntity } from "@/features/common/create-an-entity";
+import { NotificationSnackbar } from "@/shared/ui/NotificationSnackbar";
+import { useSnackbar } from "@/shared/lib/hooks/useSnackbar";
 
 export const StaffingSchedulePage: React.FC = () => {
   const { data: staffingData, isLoading } = useGetStaffingQuery();
+  const { data: positions } = useGetEmployeePositionQuery();
 
   const columns: MRT_ColumnDef<StaffingRecord>[] = [
     {
@@ -36,12 +42,24 @@ export const StaffingSchedulePage: React.FC = () => {
     },
   ];
 
+  const { openSnackbar, handleCloseSnackbar, handleOpenSnackbar } =
+    useSnackbar();
+
   return (
     <Container maxWidth="lg" sx={{ py: 5 }}>
-      <Typography variant="h4" gutterBottom>
-        Штатное расписание
-      </Typography>
+      <CreateAnEntity title="Добавить штатное расписание">
+        <CreateStaffingForm
+          positions={positions || []}
+          onStaffingAdded={handleOpenSnackbar}
+        />
+      </CreateAnEntity>
       <Table columns={columns} data={staffingData || []} />
+      <NotificationSnackbar
+        open={openSnackbar}
+        onClose={handleCloseSnackbar}
+        message="Штатное расписание успешно добавлено!"
+        severity="success"
+      />
     </Container>
   );
 };

@@ -34,7 +34,6 @@ export const TripsItem: React.FC<PropsWithChildren<{ trip: ITrip }>> = ({
               Цель: {Цель}
             </Typography>
           </Box>
-
           <Box mt={2}>{children}</Box>
         </Stack>
       </CardContent>

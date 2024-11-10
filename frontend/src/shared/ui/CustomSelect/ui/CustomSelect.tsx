@@ -4,7 +4,7 @@ import {
   InputLabel,
   Select,
   MenuItem,
-  SelectChangeEvent,
+  SelectChangeEvent
 } from "@mui/material";
 
 interface CustomSelectProps {
@@ -32,6 +32,14 @@ export const CustomSelect: React.FC<CustomSelectProps> = ({
         onChange={onChange}
         label={label}
         fullWidth
+        MenuProps={{
+          PaperProps: {
+            style: {
+              maxHeight: "200px",
+              overflowY: "auto",
+            },
+          },
+        }}
       >
         {options.map((option) => (
           <MenuItem
