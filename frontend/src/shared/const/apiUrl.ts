@@ -5,13 +5,13 @@ interface IApiUrl {
 }
 
 export const apiUrl: IApiUrl = {
-  baseUrl: "http://51.250.38.148:8080/api",
+  baseUrl: "http://130.193.45.106:8080/api",
   authBaseUrl: "https://norma.nomoreparties.space/api",
   auth: {
-    login: "/auth/login",
-    register: "/auth/register",
-    logout: "/auth/logout",
-    refreshToken: "/auth/token",
-    userData: "/auth/user",
+    login: "/login",
+    register: "/register",
+    logout: "/logout",
+    refreshToken: "/token",
+    userData: "/user",
   },
 };

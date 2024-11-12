@@ -1,7 +1,6 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { apiUrl } from "@/shared/const/apiUrl";
 import {
-  IUserAuth,
   IUserLogin,
   IUserRegister,
   IUserResponse,
@@ -15,14 +14,14 @@ import {
 export const authApi = createApi({
   reducerPath: "authApi",
   baseQuery: fetchBaseQuery({
-    baseUrl: apiUrl.authBaseUrl,
+    baseUrl: apiUrl.baseUrl,
   }),
   endpoints: (builder) => ({
     login: builder.mutation<IUserResponse, IUserLogin>({
       query: (body) => ({
         url: apiUrl.auth.login,
         method: "POST",
-        body,
+        body: JSON.stringify(body),
       }),
       async onQueryStarted(_, { queryFulfilled }) {
         try {
@@ -40,7 +39,7 @@ export const authApi = createApi({
       query: (body) => ({
         url: apiUrl.auth.register,
         method: "POST",
-        body,
+        body: JSON.stringify(body),
       }),
       async onQueryStarted(_, { queryFulfilled }) {
         try {
@@ -58,7 +57,7 @@ export const authApi = createApi({
       query: () => ({
         url: apiUrl.auth.logout,
         method: "POST",
-        body: { token: getCookie("refreshToken") },
+        body: JSON.stringify({ token: getCookie("refreshToken") }),
       }),
       async onQueryStarted(_, { queryFulfilled }) {
         try {
@@ -69,12 +68,6 @@ export const authApi = createApi({
           console.error("Logout failed:", error);
         }
       },
-    }),
-    checkUserAuth: builder.query<IUserAuth, void>({
-      query: () => ({
-        url: apiUrl.auth.userData,
-        method: "GET",
-      }),
     }),
   }),
 });
