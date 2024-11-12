@@ -1,2 +1,7 @@
 export type { StaffingRecord } from "./model/types/types";
-export { useGetStaffingQuery, staffingApi } from "./api/staffingApi";
+export {
+  useGetStaffingQuery,
+  useGetDepartmentQuery,
+  useAddStaffingMutation,
+  staffingApi,
+} from "./api/staffingApi";

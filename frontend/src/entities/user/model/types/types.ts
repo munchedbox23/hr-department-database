@@ -3,9 +3,22 @@ export interface IUser {
   name: string;
 }
 
-export interface IUserAuth {
+export interface IUserWithRole extends IUser {
+  role: "admin" | "employee";
+}
+
+export interface IUserAuthWithoutRole extends IUser {
   success: boolean;
   user: IUser;
+}
+
+export interface IUserAuth {
+  success: boolean;
+  user: {
+    email: string;
+    name: string;
+    role: string;
+  };
 }
 
 export interface IUserResponse extends IUserAuth {

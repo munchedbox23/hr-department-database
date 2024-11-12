@@ -9,7 +9,7 @@ export const checkUserAuth = createAsyncThunk<IUserAuth, void>(
   async (_, { rejectWithValue }) => {
     try {
       const response = await fetchWithRefresh<IUserAuth>(
-        `${apiUrl.authBaseUrl}${apiUrl.auth.userData}`,
+        `${apiUrl.baseUrl}${apiUrl.auth.userData}`,
         {
           method: "GET",
           headers: {

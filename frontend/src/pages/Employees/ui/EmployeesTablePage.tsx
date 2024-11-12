@@ -1,13 +1,21 @@
-import { Employee, useGetEmployeesQuery } from "@/entities/employee";
+import {
+  Employee,
+  useGetEmployeesQuery,
+  useGetEmployeePositionQuery,
+} from "@/entities/employee";
 import { Table } from "@/widgets/Table";
-import { GlobalFilter } from "@/shared/ui/GlobalFilter";
 import { Loader } from "@/shared/ui/Loader";
 import { Container, Typography } from "@mui/material";
 import { useMaterialReactTable, MRT_ColumnDef } from "material-react-table";
 import { useMemo } from "react";
-
+import { CreateAnEntity } from "@/features/common/create-an-entity";
+import { CreateAnEmployeeForm } from "@/features/employee/createAnEmployee";
+import { NotificationSnackbar } from "@/shared/ui/NotificationSnackbar";
+import { useSnackbar } from "@/shared/lib/hooks/useSnackbar";
 export const EmployeeTablePage = () => {
   const { data = [], isLoading } = useGetEmployeesQuery();
+  const { data: positions = [] } = useGetEmployeePositionQuery();
+
   const columns = useMemo<MRT_ColumnDef<Employee>[]>(
     () => [
       {
@@ -30,7 +38,7 @@ export const EmployeeTablePage = () => {
       },
       {
         accessorKey: "КодДолжности",
-        header: "Код Должности",
+        header: "Должность",
         size: 150,
       },
       {
@@ -75,18 +83,27 @@ export const EmployeeTablePage = () => {
     ],
     []
   );
-  const table = useMaterialReactTable({
-    columns,
-    data,
-  });
+
+  const { openSnackbar, handleCloseSnackbar, handleOpenSnackbar } =
+    useSnackbar();
 
   return isLoading ? (
     <Loader />
   ) : (
     <Container maxWidth="xl" sx={{ py: 5 }}>
-      <GlobalFilter table={table} />
-      {/* TODO: add actions toolbar */}
+      <CreateAnEntity title="Добавить сотрудника">
+        <CreateAnEmployeeForm
+          positions={positions}
+          onEmployeeAdded={handleOpenSnackbar}
+        />
+      </CreateAnEntity>
       <Table data={data} columns={columns} />
+      <NotificationSnackbar
+        open={openSnackbar}
+        onClose={handleCloseSnackbar}
+        message="Сотрудник успешно добавлен!"
+        severity="success"
+      />
     </Container>
   );
 };

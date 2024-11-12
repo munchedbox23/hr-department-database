@@ -1,9 +1,9 @@
 export interface Vacation {
   НомерЗаписи: number;
-  ТабельныйНомер: number;
+  ТабельныйНомер?: number;
   ВидОтпуска: string;
   ДатаОтпуска: string;
   ДатаОкончания: string;
-  КоличествоДней: number;
+  КоличествоДней?: number;
   Основание: string;
 }

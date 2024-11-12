@@ -1,6 +1,6 @@
 export const validateUsername = (username: string): string | null => {
-  const usernameRegex = /^[a-zA-Z0-9_-]{3,20}$/;
+  const usernameRegex = /^[a-zA-Zа-яА-Я0-9 _-]{3,30}$/;
   return usernameRegex.test(username)
     ? null
-    : "Имя пользователя должно содержать от 3 до 20 символов и может включать буквы, цифры, _ и -";
+    : "Имя должно содержать от 3 до 20 символов и может включать буквы, цифры, пробелы, _ и -";
 };

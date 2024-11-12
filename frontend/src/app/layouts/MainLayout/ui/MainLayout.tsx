@@ -4,6 +4,7 @@ import { Outlet } from "react-router-dom";
 import { AppHeader } from "@/widgets/Header";
 import { Loader } from "@/shared/ui/Loader";
 import { useLogoutMutation } from "@/entities/user";
+import { ModalProvider } from "@/app/providers/ModalProvider";
 
 export const MainLayout: FC = () => {
   const [logout, { isLoading }] = useLogoutMutation();
@@ -38,9 +39,11 @@ export const MainLayout: FC = () => {
               position: "relative",
             }}
           >
-            <Suspense fallback={<Loader />}>
-              <Outlet />
-            </Suspense>
+            <ModalProvider>
+              <Suspense fallback={<Loader />}>
+                <Outlet />
+              </Suspense>
+            </ModalProvider>
           </Container>
           <Box
             sx={{
