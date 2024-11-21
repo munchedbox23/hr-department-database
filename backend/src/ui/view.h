@@ -53,7 +53,7 @@ struct EmployeeInfo {
     std::string job_title;
     std::optional<int> experience;
     std::string number;
-    double salary;
+    int salary;
     std::string education;
 
     friend void tag_invoke(json::value_from_tag, json::value& jv,
@@ -89,7 +89,7 @@ struct EmployeeInfo {
             }
         }
         emp.number = employee.at("КонтактныйТелефон").as_string();
-        emp.salary = employee.at("ЗаработнаяПлата").as_double();
+        emp.salary = employee.at("ЗаработнаяПлата").as_int64();
         emp.education = employee.at("УровеньОбразования").as_string();
 
         return emp;
@@ -100,7 +100,7 @@ struct PayrollSheetInfo {
     int payroll_sheet_id;
     int personnel_number;
     std::string payment_date;
-    double sum;
+    int sum;
     std::string payment_type;
 
     friend void tag_invoke(json::value_from_tag, json::value& jv, const
@@ -121,7 +121,7 @@ payroll_sheet) { ui::detail::PayrollSheetInfo p_sheet;
         p_sheet.payroll_sheet_id = payroll_sheet.at("НомерЗаписи").as_int64();
         p_sheet.personnel_number = payroll_sheet.at("IdСотрудника").as_int64();
         p_sheet.payment_date = payroll_sheet.at("ДатаВыплаты").as_string();
-        p_sheet.sum = payroll_sheet.at("Сумма").as_double();
+        p_sheet.sum = payroll_sheet.at("Сумма").as_int64();
         p_sheet.payment_type = payroll_sheet.at("ТипВыплаты").as_string();
 
         return p_sheet;
@@ -168,7 +168,7 @@ struct StaffingTableInfo {
     std::variant<std::string, int> department;
     std::string job_title;
     int time_job;
-    double salary;
+    int salary;
 
     friend void tag_invoke(json::value_from_tag, json::value& jv,
                            const ui::detail::StaffingTableInfo& staffing_table) {
@@ -190,7 +190,7 @@ struct StaffingTableInfo {
         staf_t.department = static_cast<int>(staffing_table.at("КодОтдела").as_int64());
         staf_t.job_title = staffing_table.at("Должность").as_string();
         staf_t.time_job = staffing_table.at("КоличествоЕдиниц").as_int64();
-        staf_t.salary = staffing_table.at("Оклад").as_double();
+        staf_t.salary = staffing_table.at("Оклад").as_int64();
 
         return staf_t;
     }

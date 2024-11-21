@@ -90,7 +90,7 @@ std::vector<ui::detail::EmployeeInfo> EmployeeRepositoryImpl::Get() const {
     for (auto& [personnel_number, department_id, full_name, job_title,
                 experience, number, salary, education] : resp) {
         ui::detail::EmployeeInfo employee{personnel_number, deps.GetDep(department_id), full_name, job_title,
-                                          experience, number, salary, education};
+                                          experience, number, static_cast<int>(salary), education};
         result.push_back(employee);
     }
 
@@ -121,7 +121,7 @@ std::vector<ui::detail::PayrollSheetInfo> PayrollSheetRepositoryImpl::Get() cons
     for (auto& [payroll_sheet_id, personnel_number, payment_date,
                 sum, payment_type] : resp) {
         ui::detail::PayrollSheetInfo payroll_sheet{payroll_sheet_id, personnel_number,
-                                                   payment_date, sum, payment_type};
+                                                   payment_date, static_cast<int>(sum), payment_type};
         result.push_back(payroll_sheet);
     }
 
@@ -183,7 +183,7 @@ std::vector<ui::detail::StaffingTableInfo> StaffingTableRepositoryImpl::Get() co
     std::vector<ui::detail::StaffingTableInfo> result;
 
     for (auto& [staffing_table_id, department_id, job_title, time_job, salary] : resp) {
-        ui::detail::StaffingTableInfo staffing_table{staffing_table_id, deps.GetDep(department_id), job_title, time_job, salary};
+        ui::detail::StaffingTableInfo staffing_table{staffing_table_id, deps.GetDep(department_id), job_title, time_job, static_cast<int>(salary)};
         result.push_back(staffing_table);
     }
 
@@ -299,7 +299,7 @@ void WorkerImpl::AddEmployee(const domain::Employee& employee) {
         )"_zv,
             employee.GetPersonnelNumber(), employee.GetDepartmentId(), employee.GetFullName(),
             employee.GetJobTitle(), *employee.GetExperience(), employee.GetNumber(),
-            employee.GetSalary(), employee.GetEducation());
+            static_cast<double>(employee.GetSalary()), employee.GetEducation());
     }
     else {
         nontr_.exec_params(
@@ -309,7 +309,7 @@ void WorkerImpl::AddEmployee(const domain::Employee& employee) {
                                VALUES ($1, $2, $3, $4, $5, $6, $7);
         )"_zv,
             employee.GetPersonnelNumber(), employee.GetDepartmentId(), employee.GetFullName(),
-            employee.GetJobTitle(), employee.GetNumber(), employee.GetSalary(),
+            employee.GetJobTitle(), employee.GetNumber(), static_cast<double>(employee.GetSalary()),
             employee.GetEducation());
     }
 }
@@ -329,7 +329,7 @@ void WorkerImpl::AddPayrollSheet(const domain::PayrollSheet& payroll_sheet) {
            Сумма, ТипВыплаты) VALUES ($1, $2, $3, $4, $5);
     )"_zv,
         payroll_sheet.GetPayrollSheetId(), payroll_sheet.GetPersonnelNumber(),
-        payroll_sheet.GetPaymentDate(), payroll_sheet.GetSum(), payroll_sheet.GetPaymentType());
+        payroll_sheet.GetPaymentDate(), static_cast<double>(payroll_sheet.GetSum()), payroll_sheet.GetPaymentType());
 }
 
 void WorkerImpl::UpdatePayrollSheet(const domain::PayrollSheet& payroll_sheet) {
@@ -376,7 +376,7 @@ void WorkerImpl::AddStaffingTable(const domain::StaffingTable& staffing_table) {
                                    VALUES ($1, $2, $3, $4, $5);
     )"_zv,
         staffing_table.GetStaffingTableId(), staffing_table.GetDepartmentId(), staffing_table.GetJobTitle(),
-        staffing_table.GetTimeJob(), staffing_table.GetSalary());
+        staffing_table.GetTimeJob(), static_cast<double>(staffing_table.GetSalary()));
 }
 
 void WorkerImpl::UpdateStaffingTable(const domain::StaffingTable& staffing_table) {
@@ -390,9 +390,9 @@ void WorkerImpl::UpdateStaffingTable(const domain::StaffingTable& staffing_table
 void WorkerImpl::AddTimeSheet(const domain::TimeSheet& time_sheet) {
     nontr_.exec_params(
         R"(
-    INSERT INTO ТабельУчетаРабочегоВремени (НомерЗаписи, ТабельныйНомер, ОтработанноеВремя, Месяц) VALUES ($1, $2, $3, $4);
+    INSERT INTO ТабельУчетаРабочегоВремени (НомерЗаписи, IdСотрудника, КоличествоОтработанныхЧасов, Дата) VALUES ($1, $2, $3, $4);
     )"_zv,
-        time_sheet.GetTimeSheetId(), time_sheet.GetPersonnelNumber(), time_sheet.GetDate(), time_sheet.GetTimeWorked());
+        time_sheet.GetTimeSheetId(), time_sheet.GetPersonnelNumber(), time_sheet.GetTimeWorked(), time_sheet.GetDate());
 }
 
 void WorkerImpl::UpdateTimeSheet(const domain::TimeSheet& time_sheet) {

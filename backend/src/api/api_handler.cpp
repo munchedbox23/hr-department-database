@@ -2,8 +2,6 @@
 
 #include <algorithm>
 
-const double EPSILON = 1e-6;
-
 namespace {
 
 std::string CleanErrorMessage(const std::string& message) {
@@ -24,7 +22,7 @@ std::string GetCurrentDate() {
     const auto now = std::chrono::system_clock::now();
     const auto t_c = std::chrono::system_clock::to_time_t(now);
     std::ostringstream oss;
-    oss << std::put_time(std::gmtime(&t_c), "%Y_%m_%d");
+    oss << std::put_time(std::gmtime(&t_c), "%Y-%m-%d");
     return oss.str();
 }
 
@@ -37,6 +35,7 @@ std::unordered_map<PersonInfo, Tokens, PersonInfoHasher> tokens_;
 std::unordered_map<std::string, PersonInfo> auth_to_person_;
 std::unordered_map<std::string, PersonInfo> refresh_token_to_person_;
 std::deque<std::string> refresh_tokens_;
+std::string last_role_;
 
 bool ApiHandler::CheckEndPath() {
     return req_info_.target == "/"sv || req_info_.target.empty();
@@ -160,14 +159,14 @@ void ApiHandler::HandleAddEmployee() {
     }
 
     if (jv.as_object().if_contains("Стаж")) {
-        int experience = jv.at("Стаж").as_int64();
+        int experience = std::stoi((jv.at("Стаж").as_string()).c_str());
         if (experience < 0) {
             return SendBadRequestResponse("Ошибка Стаж < 0"s);
         }
     }
 
-    double salary = jv.at("ЗаработнаяПлата").as_double();
-    if (salary - EPSILON <= 0) {
+    int salary = jv.at("ЗаработнаяПлата").as_int64();
+    if (salary <= 0) {
         return SendBadRequestResponse("Ошибка ЗаработнаяПлата <= 0"s);
     }
 
@@ -204,8 +203,8 @@ void ApiHandler::HandleAddPayrollSheet() {
         return SendBadRequestResponse("Ошибка ДатаВыплаты > текущей даты"s);
     }
 
-    double sum = jv.at("Сумма").as_double();
-    if (sum - EPSILON <= 0) {
+    int sum = jv.at("Сумма").as_int64();
+    if (sum <= 0) {
         return SendBadRequestResponse("Ошибка Сумма <= 0"s);
     }
 
@@ -258,8 +257,8 @@ void ApiHandler::HandleAddStaffingTable() {
         return SendBadRequestResponse("Ошибка Отдел не существует"s);
     }
 
-    double salary = jv.at("Оклад").as_double();
-    if (salary - EPSILON <= 0) {
+    int salary = jv.at("Оклад").as_int64();
+    if (salary <= 0) {
         return SendBadRequestResponse("Ошибка Оклад <= 0"s);
     }
 
@@ -293,8 +292,8 @@ void ApiHandler::HandleAddTimeSheet() {
 
     std::string date;
     date = jv.at("Дата").as_string();
-    if (date < GetCurrentDate()) {
-        return SendBadRequestResponse("Ошибка Дата < текущей даты"s);
+    if (date > GetCurrentDate()) {
+        return SendBadRequestResponse("Ошибка Дата > текущей даты"s);
     }
 
     ui::detail::TimeSheetInfo time_sheet = json::value_to<ui::detail::TimeSheetInfo>(jv);
@@ -330,7 +329,7 @@ void ApiHandler::HandleAddVacation() {
 
     try {
         application_.GetUseCases().AddVacation(vacation);
-        SendOkResponse({});
+        return SendOkResponse({});
     }
     catch (const std::exception& e) {
         return SendBadRequestResponse(CleanErrorMessage(e.what()));
@@ -452,19 +451,21 @@ void ApiHandler::HandleRegister() {
 
     json::value person = json::parse(req_info_.body);
 
-    if (!person.as_object().contains("email"s) || !person.as_object().contains("password"s) || !person.as_object().contains("name"s)) {
+    if (!person.as_object().contains("email"s) || !person.as_object().contains("password"s) || !person.as_object().contains("name"s) || !person.as_object().contains("role")) {
         return SendBadRequestResponse("Invalid register format"s, "invalidRegister"s);
     }
 
     std::string email;
     std::string password;
     std::string name;
-    std::string role = "employee"s;
+    std::string role;
 
     email = person.at("email").as_string();
     password = person.at("password").as_string();
     name = person.at("name").as_string();
-
+    role = person.at("role").as_string();
+    last_role_ = role;
+	
     std::string access_token = GetUniqueToken();
     std::string refresh_token = GetUniqueToken();
 
@@ -505,7 +506,7 @@ void ApiHandler::HandleLogin() {
 
     std::string email;
     std::string password;
-    std::string role = "employee"s;
+    std::string role = last_role_;
 
     email = person.at("email").as_string();
     password = person.at("password").as_string();

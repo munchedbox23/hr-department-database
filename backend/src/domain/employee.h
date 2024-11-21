@@ -12,7 +12,7 @@ class Employee {
   public:
     Employee(int personnel_number, int department_id, std::string full_name,
              std::string job_title, std::optional<int> experience,
-             std::string number, double salary, std::string education) : personnel_number_(personnel_number)
+             std::string number, int salary, std::string education) : personnel_number_(personnel_number)
                                                                        , department_id_(department_id)
                                                                        , full_name_(std::move(full_name))
                                                                        , job_title_(std::move(job_title))
@@ -45,7 +45,7 @@ class Employee {
         return number_;
     }
 
-    double GetSalary() const noexcept {
+    int GetSalary() const noexcept {
         return salary_;
     }
 
@@ -60,7 +60,7 @@ class Employee {
     std::string job_title_;
     std::optional<int> experience_;
     std::string number_;
-    double salary_;
+    int salary_;
     std::string education_;
 };
 

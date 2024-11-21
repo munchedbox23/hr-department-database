@@ -11,7 +11,7 @@ class Worker;
 class PayrollSheet {
   public:
     PayrollSheet(int payroll_sheet_id, int personnel_number,
-                 std::string payment_date, double sum,
+                 std::string payment_date, int sum,
                  std::string payment_type) : payroll_sheet_id_(payroll_sheet_id)
                                            , personnel_number_(personnel_number)
                                            , payment_date_(std::move(payment_date))
@@ -30,7 +30,7 @@ class PayrollSheet {
         return payment_date_;
     }
 
-    double GetSum() const noexcept {
+    int GetSum() const noexcept {
         return sum_;
     }
 
@@ -42,7 +42,7 @@ class PayrollSheet {
     int payroll_sheet_id_;
     int personnel_number_;
     std::string payment_date_;
-    double sum_;
+    int sum_;
     std::string payment_type_;
 };
 

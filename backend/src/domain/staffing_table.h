@@ -11,7 +11,7 @@ class Worker;
 class StaffingTable {
   public:
     StaffingTable(int staffing_table_id, int department_id, std::string job_title,
-                  int time_job, double salary) : staffing_table_id_(staffing_table_id)
+                  int time_job, int salary) : staffing_table_id_(staffing_table_id)
                                             , department_id_(department_id)
                                             , job_title_(std::move(job_title))
                                             , time_job_(time_job)
@@ -33,7 +33,7 @@ class StaffingTable {
         return time_job_;
     }
 
-    double GetSalary() const noexcept {
+    int GetSalary() const noexcept {
         return salary_;
     }
 
@@ -42,7 +42,7 @@ class StaffingTable {
     int department_id_;
     std::string job_title_;
     int time_job_;
-    double salary_;
+    int salary_;
 };
 
 class StaffingTableRepository {
