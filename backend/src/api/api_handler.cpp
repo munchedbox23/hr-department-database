@@ -546,7 +546,7 @@ void ApiHandler::HandleUpdate() {
     else if (path_part == "/payroll-sheet"s) {
         HandleUpdatePayrollSheet(id);
     }
-    else if (path_part == "/order"s) {
+    else if (path_part == "/personnel-event"s) {
         HandleUpdatePersonnelEvent(id);
     }
     else if (path_part == "/staffing-table"s) {
@@ -971,8 +971,12 @@ void ApiHandler::HandleLogout() {
 }
 
 void ApiHandler::HandleToken() {
-    if (req_info_.method != http::verb::post) {
+    if (req_info_.method != http::verb::post && req_info_.method != http::verb::options) {
         return SendWrongMethodResponseAllowedPost("Wrong method"s, true);
+    }
+
+    if (req_info_.method == http::verb::options) {
+        return HandleOptions();
     }
 
     json::value token = json::parse(req_info_.body);
