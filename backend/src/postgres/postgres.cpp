@@ -74,6 +74,35 @@ int DepartmentRepositoryImpl::GetCount() const {
     return count;
 }
 
+std::unordered_set<std::string> EmployeeRepositoryImpl::GetNumbers() const {
+    auto conn = pool_.GetConnection();
+    pqxx::read_transaction tr(*conn);
+
+    std::string query = "SELECT КонтактныйТелефон FROM Сотрудник"s;
+
+    pqxx::result resp = tr.exec(query);
+
+    std::unordered_set<std::string> numbers;
+
+    for (const auto& row : resp) {
+        std::string number = row["КонтактныйТелефон"].as<std::string>();
+        numbers.insert(number);
+    }
+
+    return numbers;
+}
+
+int EmployeeRepositoryImpl::GetPersonnelNumberForPhoneNumber(const std::string& number) const {
+    auto conn = pool_.GetConnection();
+    pqxx::read_transaction tr(*conn);
+
+    std::string query = "SELECT IdСотрудника FROM Сотрудник WHERE КонтактныйТелефон = '" + number + "'";
+
+    auto id = tr.query_value<int>(query);
+
+    return id;
+}
+
 std::vector<ui::detail::EmployeeInfo> EmployeeRepositoryImpl::Get() const {
     auto conn = pool_.GetConnection();
     pqxx::read_transaction tr(*conn);

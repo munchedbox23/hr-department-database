@@ -111,6 +111,14 @@ struct RequestInfo {
     std::string auth;
 };
 
+inline std::unordered_map<Person, std::string, PersonHasher> persons_;
+inline std::unordered_map<PersonInfo, Tokens, PersonInfoHasher> tokens_;
+inline std::unordered_map<std::string, PersonInfo> auth_to_person_;
+inline std::unordered_map<std::string, PersonInfo> refresh_token_to_person_;
+inline std::deque<std::string> refresh_tokens_;
+inline int personnel_number_{};
+inline std::string last_role_;
+
 class ApiHandler : public std::enable_shared_from_this<ApiHandler> {
   public:
     ApiHandler() = default;
@@ -164,6 +172,15 @@ class ApiHandler : public std::enable_shared_from_this<ApiHandler> {
     void HandleGetStaffingTable();
     void HandleGetTimeSheet();
     void HandleGetVacations();
+
+    void HandleGetPersonalInfo();
+    void HandleGetDepartmentsForPerson();
+    void HandleGetEmployeeForPerson();
+    void HandleGetPayrollSheetForPerson();
+    void HandleGetPersonnelEventForPerson();
+    void HandleGetStaffingTableForPerson();
+    void HandleGetTimeSheetForPerson();
+    void HandleGetVacationForPerson();
 
     /*
     void HandleUpdate();

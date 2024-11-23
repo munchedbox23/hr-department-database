@@ -3,6 +3,7 @@
 #include "../ui/view.h"
 
 #include <memory>
+#include <unordered_set>
 
 namespace domain {
 
@@ -13,13 +14,13 @@ class Employee {
     Employee(int personnel_number, int department_id, std::string full_name,
              std::string job_title, std::optional<int> experience,
              std::string number, int salary, std::string education) : personnel_number_(personnel_number)
-                                                                       , department_id_(department_id)
-                                                                       , full_name_(std::move(full_name))
-                                                                       , job_title_(std::move(job_title))
-                                                                       , experience_(experience)
-                                                                       , number_(std::move(number))
-                                                                       , salary_(salary)
-                                                                       , education_(std::move(education)) {}
+                                                                    , department_id_(department_id)
+                                                                    , full_name_(std::move(full_name))
+                                                                    , job_title_(std::move(job_title))
+                                                                    , experience_(experience)
+                                                                    , number_(std::move(number))
+                                                                    , salary_(salary)
+                                                                    , education_(std::move(education)) {}
 
     int GetPersonnelNumber() const noexcept {
         return personnel_number_;
@@ -71,6 +72,9 @@ class EmployeeRepository {
     virtual std::shared_ptr<domain::Worker> GetWorker() const = 0;
 
     virtual int GetCount() const = 0;
+
+    virtual std::unordered_set<std::string> GetNumbers() const = 0;
+    virtual int GetPersonnelNumberForPhoneNumber(const std::string& number) const = 0;
 
   protected:
     ~EmployeeRepository() = default;

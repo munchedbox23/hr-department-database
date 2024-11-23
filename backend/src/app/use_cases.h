@@ -1,6 +1,7 @@
 #pragma once
 
 #include <string>
+#include <unordered_set>
 #include <vector>
 
 namespace ui {
@@ -61,6 +62,9 @@ class UseCases {
 
     virtual std::string GetDepartment(int id) const = 0;
     virtual int GetDepartmentId(const std::string& dep) const = 0;
+
+    virtual std::unordered_set<std::string> GetNumbers() const = 0;
+    virtual int GetPersonnelNumberForPhoneNumber(const std::string& number) const = 0;
 
   protected:
     ~UseCases() = default;

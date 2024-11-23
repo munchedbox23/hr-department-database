@@ -2,6 +2,8 @@
 
 #include <algorithm>
 
+#include <iostream>
+
 namespace {
 
 std::string CleanErrorMessage(const std::string& message) {
@@ -29,13 +31,6 @@ std::string GetCurrentDate() {
 } // namespace
 
 namespace api_handler {
-
-std::unordered_map<Person, std::string, PersonHasher> persons_;
-std::unordered_map<PersonInfo, Tokens, PersonInfoHasher> tokens_;
-std::unordered_map<std::string, PersonInfo> auth_to_person_;
-std::unordered_map<std::string, PersonInfo> refresh_token_to_person_;
-std::deque<std::string> refresh_tokens_;
-std::string last_role_;
 
 bool ApiHandler::CheckEndPath() {
     return req_info_.target == "/"sv || req_info_.target.empty();
@@ -68,6 +63,11 @@ void ApiHandler::HandleApiResponse() {
     else if (path_part == "/get"s) {
         HandleGet();
     }
+    /*
+    else if (path_part == "/get-personal-info"s) {
+        HandleGetPersonalInfo();
+    }
+    */
     /*
     else if (path_part == "/update"s) {
         HandleUpdate();
@@ -451,7 +451,15 @@ void ApiHandler::HandleRegister() {
 
     json::value person = json::parse(req_info_.body);
 
-    if (!person.as_object().contains("email"s) || !person.as_object().contains("password"s) || !person.as_object().contains("name"s) || !person.as_object().contains("role")) {
+    if (person.as_object().contains("email"s) && person.as_object().contains("password"s) && person.as_object().contains("name"s) && person.as_object().contains("role")) {
+        if (person.at("role").as_string() == "admin"s && person.as_object().contains("number")) {
+            return SendBadRequestResponse("Invalid register format"s, "invalidRegister"s);
+        }
+        else if (person.at("role").as_string() == "employee"s && !person.as_object().contains("number")) {
+            return SendBadRequestResponse("Invalid register format"s, "invalidRegister"s);
+        }
+    }
+    else {
         return SendBadRequestResponse("Invalid register format"s, "invalidRegister"s);
     }
 
@@ -459,13 +467,29 @@ void ApiHandler::HandleRegister() {
     std::string password;
     std::string name;
     std::string role;
+    std::string number;
 
     email = person.at("email").as_string();
     password = person.at("password").as_string();
     name = person.at("name").as_string();
     role = person.at("role").as_string();
     last_role_ = role;
-	
+    if (role == "employee") {
+        number = person.at("number").as_string();
+
+        std::unordered_set<std::string> numbers = application_.GetUseCases().GetNumbers();
+        try {
+            personnel_number_ = application_.GetUseCases().GetPersonnelNumberForPhoneNumber(number);
+        }
+        catch (...) {
+            return SendBadRequestResponse("Неправильный номер"s);
+        }
+
+        if (!numbers.contains(number)) {
+            return SendBadRequestResponse("Сотрудник не найден"s);
+        }
+    }
+
     std::string access_token = GetUniqueToken();
     std::string refresh_token = GetUniqueToken();
 
@@ -514,7 +538,7 @@ void ApiHandler::HandleLogin() {
 
     if (persons_.contains(p)) {
         PersonInfo p_info{email, password, persons_[p], role};
-        if (tokens_.contains(p_info) && !tokens_[p_info].tracker.Has20MinutesPassed()) {
+        if (tokens_.contains(p_info)) {
             json::value jv {
                 {"success"s, true},
                 {"accessToken"s, "Bearer "s + tokens_[p_info].access_token},
@@ -526,9 +550,6 @@ void ApiHandler::HandleLogin() {
                     }}
             };
             return SendOkResponse(json::serialize(jv));
-        }
-        else {
-            return SendBadRequestResponse("Token is expired"s, "tokenIsExpired"s);
         }
     }
     SendNoAuthResponse("Invalid login format"s, "invalidLogin"s);
@@ -629,20 +650,26 @@ void ApiHandler::HandleUser() {
 
     try {
         std::string email = auth_to_person_.at(token_str.substr(7)).email;
+        std::string password = auth_to_person_.at(token_str.substr(7)).password;
         std::string name = auth_to_person_.at(token_str.substr(7)).name;
         std::string role = auth_to_person_.at(token_str.substr(7)).role;
-
-        json::value jv = {
-            {"success"s, true},
-            {"user"s, {
-                    {"email"s, email},
-                    {"name"s, name},
-                    {"role"s, role}
-                }}
-        };
-
-        return SendOkResponse(json::serialize(jv));
-     }
+        Person p{email, password, role};
+        PersonInfo p_info{email, password, persons_[p], role};
+        if (!tokens_[p_info].tracker.Has20MinutesPassed()) {
+            json::value jv = {
+                {"success"s, true},
+                {"user"s, {
+                        {"email"s, email},
+                        {"name"s, name},
+                        {"role"s, role}
+                    }}
+            };
+            return SendOkResponse(json::serialize(jv));
+        }
+        else {
+            return SendBadRequestResponse("Token is expired"s, "tokenIsExpired"s);
+        }
+    }
     catch (...) {
         return SendBadRequestResponse("Invalid token"s, "invalidToken"s);
     }

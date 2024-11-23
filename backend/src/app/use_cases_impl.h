@@ -60,6 +60,9 @@ class UseCasesImpl : public UseCases {
     std::string GetDepartment(int id) const override;
     int GetDepartmentId(const std::string& dep) const override;
 
+    std::unordered_set<std::string> GetNumbers() const override;
+    int GetPersonnelNumberForPhoneNumber(const std::string& number) const override;
+
   private:
     domain::DepartmentRepository& deps_;
     domain::EmployeeRepository& employees_;

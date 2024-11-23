@@ -138,4 +138,9 @@ int UseCasesImpl::GetCountVacations() const { return vacations_.GetCount(); }
 std::string UseCasesImpl::GetDepartment(int id) const { return deps_.GetDep(id); }
 int UseCasesImpl::GetDepartmentId(const std::string& dep) const { return deps_.GetDepId(dep); }
 
+std::unordered_set<std::string> UseCasesImpl::GetNumbers() const { return employees_.GetNumbers(); }
+int UseCasesImpl::GetPersonnelNumberForPhoneNumber(const std::string& number) const {
+    return employees_.GetPersonnelNumberForPhoneNumber(number);
+}
+
 } // namespace app

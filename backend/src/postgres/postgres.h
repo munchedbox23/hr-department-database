@@ -77,6 +77,9 @@ class EmployeeRepositoryImpl : public domain::EmployeeRepository {
 
     int GetCount() const override;
 
+    std::unordered_set<std::string> GetNumbers() const override;
+    int GetPersonnelNumberForPhoneNumber(const std::string& number) const override;
+
   private:
     connection_pool::ConnectionPool& pool_;
 };
