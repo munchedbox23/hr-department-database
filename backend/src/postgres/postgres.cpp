@@ -126,6 +126,32 @@ std::vector<ui::detail::EmployeeInfo> EmployeeRepositoryImpl::Get() const {
     return result;
 }
 
+std::vector<ui::detail::EmployeeInfo> EmployeeRepositoryImpl::GetForPerson(int personnel_number) const {
+    auto conn = pool_.GetConnection();
+    pqxx::read_transaction tr(*conn);
+
+    DepartmentRepositoryImpl deps(pool_);
+
+    std::string query = "SELECT * FROM Сотрудник;"s;
+
+    auto resp = tr.query<int, int, std::string, std::string, std::optional<int>,
+                         std::string, double, std::string>(query);
+
+    std::vector<ui::detail::EmployeeInfo> result;
+
+    for (const auto& [personnel_num, department_id, full_name, job_title,
+                experience, number, salary, education] : resp) {
+        if (personnel_number != personnel_num) {
+            continue;
+        }
+        ui::detail::EmployeeInfo employee{personnel_number, deps.GetDep(department_id), full_name, job_title,
+                                          experience, number, static_cast<int>(salary), education};
+        result.push_back(employee);
+    }
+
+    return result;
+}
+
 int EmployeeRepositoryImpl::GetCount() const {
     auto conn = pool_.GetConnection();
     pqxx::read_transaction tr(*conn);
@@ -157,6 +183,29 @@ std::vector<ui::detail::PayrollSheetInfo> PayrollSheetRepositoryImpl::Get() cons
     return result;
 }
 
+std::vector<ui::detail::PayrollSheetInfo> PayrollSheetRepositoryImpl::GetForPerson(int personnel_number) const {
+    auto conn = pool_.GetConnection();
+    pqxx::read_transaction tr(*conn);
+
+    std::string query = "SELECT * FROM ТабельУчетаЗарплаты;"s;
+
+    auto resp = tr.query<int, int, std::string, double, std::string>(query);
+
+    std::vector<ui::detail::PayrollSheetInfo> result;
+
+    for (const auto& [payroll_sheet_id, personnel_num, payment_date,
+                sum, payment_type] : resp) {
+        if (personnel_number != personnel_num) {
+            continue;
+        }
+        ui::detail::PayrollSheetInfo payroll_sheet{payroll_sheet_id, personnel_number,
+                                                   payment_date, static_cast<int>(sum), payment_type};
+        result.push_back(payroll_sheet);
+    }
+
+    return result;
+}
+
 int PayrollSheetRepositoryImpl::GetCount() const {
     auto conn = pool_.GetConnection();
     pqxx::read_transaction tr(*conn);
@@ -180,6 +229,29 @@ std::vector<ui::detail::PersonnelEventInfo> PersonnelEventRepositoryImpl::Get() 
 
     for (auto& [personnel_event_id, personnel_number, event_date,
                 event_type, comment] : resp) {
+        ui::detail::PersonnelEventInfo personnel_event{personnel_event_id, personnel_number,
+                                                       event_date, event_type, comment};
+        result.push_back(personnel_event);
+    }
+
+    return result;
+}
+
+std::vector<ui::detail::PersonnelEventInfo> PersonnelEventRepositoryImpl::GetForPerson(int personnel_number) const {
+    auto conn = pool_.GetConnection();
+    pqxx::read_transaction tr(*conn);
+
+    std::string query = "SELECT * FROM КадровоеСобытие;"s;
+
+    auto resp = tr.query<int, int, std::string, std::string, std::optional<std::string>>(query);
+
+    std::vector<ui::detail::PersonnelEventInfo> result;
+
+    for (const auto& [personnel_event_id, personnel_num, event_date,
+                event_type, comment] : resp) {
+        if (personnel_number != personnel_num) {
+            continue;
+        }
         ui::detail::PersonnelEventInfo personnel_event{personnel_event_id, personnel_number,
                                                        event_date, event_type, comment};
         result.push_back(personnel_event);
@@ -248,6 +320,27 @@ std::vector<ui::detail::TimeSheetInfo> TimeSheetRepositoryImpl::Get() const {
     return result;
 }
 
+std::vector<ui::detail::TimeSheetInfo> TimeSheetRepositoryImpl::GetForPerson(int personnel_number) const {
+    auto conn = pool_.GetConnection();
+    pqxx::read_transaction tr(*conn);
+
+    std::string query = "SELECT * FROM ТабельУчетаРабочегоВремени;"s;
+
+    auto resp = tr.query<int, int, std::string, std::optional<int>>(query);
+
+    std::vector<ui::detail::TimeSheetInfo> result;
+
+    for (const auto& [time_sheet_id, personnel_num, date, time_worked] : resp) {
+        if (personnel_number != personnel_num) {
+            continue;
+        }
+        ui::detail::TimeSheetInfo time_sheet{time_sheet_id, personnel_number, date, time_worked};
+        result.push_back(time_sheet);
+    }
+
+    return result;
+}
+
 int TimeSheetRepositoryImpl::GetCount() const {
     auto conn = pool_.GetConnection();
     pqxx::read_transaction tr(*conn);
@@ -273,6 +366,28 @@ std::vector<ui::detail::VacationInfo> VacationRepositoryImpl::Get() const {
         ui::detail::VacationInfo vacation{vacation_id, personnel_number, from_date,
                                           to_date, type};
         result.push_back(vacation);
+    }
+
+    return result;
+}
+
+std::vector<ui::detail::VacationInfo> VacationRepositoryImpl::GetForPerson(int personnel_number) const {
+    auto conn = pool_.GetConnection();
+    pqxx::read_transaction tr(*conn);
+
+    std::string query = "SELECT * FROM Отпуск;"s;
+
+    auto resp = tr.query<int, int, std::string, std::string, std::string>(query);
+
+    std::vector<ui::detail::VacationInfo> result;
+
+    for (const auto& [vacation_id, personnel_num, from_date, to_date, type] : resp) {
+        if (personnel_number != personnel_num) {
+            continue;
+        }
+        ui::detail::VacationInfo time_sheet{vacation_id, personnel_number, from_date,
+                                            to_date, type};
+        result.push_back(time_sheet);
     }
 
     return result;

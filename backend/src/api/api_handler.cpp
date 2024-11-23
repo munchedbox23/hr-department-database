@@ -63,11 +63,9 @@ void ApiHandler::HandleApiResponse() {
     else if (path_part == "/get"s) {
         HandleGet();
     }
-    /*
     else if (path_part == "/get-personal-info"s) {
         HandleGetPersonalInfo();
     }
-    */
     /*
     else if (path_part == "/update"s) {
         HandleUpdate();
@@ -315,7 +313,7 @@ void ApiHandler::HandleAddVacation() {
     }
 
     json::value jv = json::parse(req_info_.body);
-    jv.as_object()["НомерЗаписи"] = json::value(application_.GetUseCases().GetCountTimeSheet() + 1);
+    jv.as_object()["НомерЗаписи"] = json::value(application_.GetUseCases().GetCountVacations() + 1);
 
     std::string from_date;
     std::string to_date;
@@ -439,6 +437,98 @@ void ApiHandler::HandleGetVacations() {
     }
     if (CheckEndPath()) {
         json::value jv = json::value_from(application_.GetUseCases().GetVacations());
+        return SendOkResponse(json::serialize(jv));
+    }
+    SendBadRequestResponseDefault();
+}
+
+void ApiHandler::HandleGetPersonalInfo() {
+    std::string path_part = FindAndCutTarget(req_info_);
+
+    if (path_part == "/department"s) {
+        HandleGetDepartmentsForPerson();
+    }
+    else if (path_part == "/employee"s) {
+        HandleGetEmployeeForPerson();
+    }
+    else if (path_part == "/payroll-sheet"s) {
+        HandleGetPayrollSheetForPerson();
+    }
+    else if (path_part == "/personnel-event"s) {
+        HandleGetPersonnelEventsForPerson();
+    }
+    else if (path_part == "/staffing-table"s) {
+        HandleGetStaffingTableForPerson();
+    }
+    else if (path_part == "/time-sheet"s) {
+        HandleGetTimeSheetForPerson();
+    }
+    else if (path_part == "/vacation"s) {
+        HandleGetVacationForPerson();
+    }
+    else {
+        SendNotFoundResponse();
+    }
+}
+
+void ApiHandler::HandleGetDepartmentsForPerson() {
+    HandleGetDepartments();
+}
+
+void ApiHandler::HandleGetEmployeeForPerson() {
+    if (req_info_.method != http::verb::get && req_info_.method != http::verb::head) {
+        return SendWrongMethodResponseAllowedGetHead("Wrong method"s, true);
+    }
+    if (CheckEndPath()) {
+        json::value jv = json::value_from(application_.GetUseCases().GetEmployeeForPerson(personnel_number_));
+        return SendOkResponse(json::serialize(jv));
+    }
+    SendBadRequestResponseDefault();
+}
+
+void ApiHandler::HandleGetPayrollSheetForPerson() {
+    if (req_info_.method != http::verb::get && req_info_.method != http::verb::head) {
+        return SendWrongMethodResponseAllowedGetHead("Wrong method"s, true);
+    }
+    if (CheckEndPath()) {
+        json::value jv = json::value_from(application_.GetUseCases().GetPayrollSheetForPerson(personnel_number_));
+        return SendOkResponse(json::serialize(jv));
+    }
+    SendBadRequestResponseDefault();
+}
+
+void ApiHandler::HandleGetPersonnelEventsForPerson() {
+    if (req_info_.method != http::verb::get && req_info_.method != http::verb::head) {
+        return SendWrongMethodResponseAllowedGetHead("Wrong method"s, true);
+    }
+    if (CheckEndPath()) {
+        json::value jv = json::value_from(application_.GetUseCases().GetPersonnelEventsForPerson(personnel_number_));
+        return SendOkResponse(json::serialize(jv));
+    }
+    SendBadRequestResponseDefault();
+}
+
+void ApiHandler::HandleGetStaffingTableForPerson() {
+    HandleGetStaffingTable();
+}
+
+void ApiHandler::HandleGetTimeSheetForPerson() {
+    if (req_info_.method != http::verb::get && req_info_.method != http::verb::head) {
+        return SendWrongMethodResponseAllowedGetHead("Wrong method"s, true);
+    }
+    if (CheckEndPath()) {
+        json::value jv = json::value_from(application_.GetUseCases().GetTimeSheetForPerson(personnel_number_));
+        return SendOkResponse(json::serialize(jv));
+    }
+    SendBadRequestResponseDefault();
+}
+
+void ApiHandler::HandleGetVacationForPerson() {
+    if (req_info_.method != http::verb::get && req_info_.method != http::verb::head) {
+        return SendWrongMethodResponseAllowedGetHead("Wrong method"s, true);
+    }
+    if (CheckEndPath()) {
+        json::value jv = json::value_from(application_.GetUseCases().GetVacationForPerson(personnel_number_));
         return SendOkResponse(json::serialize(jv));
     }
     SendBadRequestResponseDefault();

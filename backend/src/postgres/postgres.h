@@ -69,6 +69,7 @@ class EmployeeRepositoryImpl : public domain::EmployeeRepository {
     explicit EmployeeRepositoryImpl(connection_pool::ConnectionPool& pool) : pool_{pool} {}
 
     std::vector<ui::detail::EmployeeInfo> Get() const override;
+    std::vector<ui::detail::EmployeeInfo> GetForPerson(int personnel_number) const override;
 
     std::shared_ptr<domain::Worker> GetWorker() const override {
         auto conn = pool_.GetConnection();
@@ -89,6 +90,7 @@ class PayrollSheetRepositoryImpl : public domain::PayrollSheetRepository {
     explicit PayrollSheetRepositoryImpl(connection_pool::ConnectionPool& pool) : pool_{pool} {}
 
     std::vector<ui::detail::PayrollSheetInfo> Get() const override;
+    std::vector<ui::detail::PayrollSheetInfo> GetForPerson(int personnel_number) const override;
 
     std::shared_ptr<domain::Worker> GetWorker() const override {
         auto conn = pool_.GetConnection();
@@ -106,6 +108,7 @@ class PersonnelEventRepositoryImpl : public domain::PersonnelEventRepository {
     explicit PersonnelEventRepositoryImpl(connection_pool::ConnectionPool& pool) : pool_{pool} {}
 
     std::vector<ui::detail::PersonnelEventInfo> Get() const override;
+    std::vector<ui::detail::PersonnelEventInfo> GetForPerson(int personnel_number) const override;
 
     std::shared_ptr<domain::Worker> GetWorker() const override {
         auto conn = pool_.GetConnection();
@@ -140,6 +143,7 @@ class TimeSheetRepositoryImpl : public domain::TimeSheetRepository {
     explicit TimeSheetRepositoryImpl(connection_pool::ConnectionPool& pool) : pool_{pool} {}
 
     std::vector<ui::detail::TimeSheetInfo> Get() const override;
+    std::vector<ui::detail::TimeSheetInfo> GetForPerson(int personnel_number) const override;
 
     std::shared_ptr<domain::Worker> GetWorker() const override {
         auto conn = pool_.GetConnection();
@@ -157,6 +161,7 @@ class VacationRepositoryImpl : public domain::VacationRepository {
     explicit VacationRepositoryImpl(connection_pool::ConnectionPool& pool) : pool_{pool} {}
 
     std::vector<ui::detail::VacationInfo> Get() const override;
+    std::vector<ui::detail::VacationInfo> GetForPerson(int personnel_number) const override;
 
     std::shared_ptr<domain::Worker> GetWorker() const override {
         auto conn = pool_.GetConnection();

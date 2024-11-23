@@ -12,10 +12,10 @@ class PersonnelEvent {
   public:
     PersonnelEvent(int personnel_event_id, int personnel_number, std::string event_date,
                    std::string event_type, std::optional<std::string> comment) : personnel_event_id_(personnel_event_id)
-                                                               , personnel_number_(personnel_number)
-                                                               , event_date_(std::move(event_date))
-                                                               , event_type_(std::move(event_type))
-                                                               , comment_(std::move(comment)) {}
+                                                                               , personnel_number_(personnel_number)
+                                                                               , event_date_(std::move(event_date))
+                                                                               , event_type_(std::move(event_type))
+                                                                               , comment_(std::move(comment)) {}
 
     int GetPersonnelEventId() const noexcept {
         return personnel_event_id_;
@@ -48,6 +48,7 @@ class PersonnelEvent {
 class PersonnelEventRepository {
   public:
     virtual std::vector<ui::detail::PersonnelEventInfo> Get() const = 0;
+    virtual std::vector<ui::detail::PersonnelEventInfo> GetForPerson(int personnel_number) const = 0;
 
     virtual std::shared_ptr<domain::Worker> GetWorker() const = 0;
 

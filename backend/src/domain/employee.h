@@ -68,6 +68,7 @@ class Employee {
 class EmployeeRepository {
   public:
     virtual std::vector<ui::detail::EmployeeInfo> Get() const = 0;
+    virtual std::vector<ui::detail::EmployeeInfo> GetForPerson(int personnel_number) const = 0;
 
     virtual std::shared_ptr<domain::Worker> GetWorker() const = 0;
 

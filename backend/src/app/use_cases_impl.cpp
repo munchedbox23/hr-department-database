@@ -49,6 +49,10 @@ std::vector<ui::detail::EmployeeInfo> UseCasesImpl::GetEmployees() const {
     return employees_.Get();
 }
 
+std::vector<ui::detail::EmployeeInfo> UseCasesImpl::GetEmployeeForPerson(int personnel_number) const {
+    return employees_.GetForPerson(personnel_number);
+}
+
 void UseCasesImpl::AddPayrollSheet(const ui::detail::PayrollSheetInfo& payroll_sheet) {
     auto worker = payroll_sheet_.GetWorker();
     worker->AddPayrollSheet({payroll_sheet.payroll_sheet_id, payroll_sheet.personnel_number,
@@ -65,6 +69,10 @@ std::vector<ui::detail::PayrollSheetInfo> UseCasesImpl::GetPayrollSheet() const 
     return payroll_sheet_.Get();
 }
 
+std::vector<ui::detail::PayrollSheetInfo> UseCasesImpl::GetPayrollSheetForPerson(int personnel_number) const {
+    return payroll_sheet_.GetForPerson(personnel_number);
+}
+
 void UseCasesImpl::AddPersonnelEvent(const ui::detail::PersonnelEventInfo& personnel_event) {
     auto worker = personnel_events_.GetWorker();
     worker->AddPersonnelEvent({personnel_event.personnel_event_id, personnel_event.personnel_number,
@@ -79,6 +87,10 @@ void UseCasesImpl::UpdatePersonnelEvent(const ui::detail::PersonnelEventInfo& pe
 
 std::vector<ui::detail::PersonnelEventInfo> UseCasesImpl::GetPersonnelEvents() const {
     return personnel_events_.Get();
+}
+
+std::vector<ui::detail::PersonnelEventInfo> UseCasesImpl::GetPersonnelEventsForPerson(int personnel_number) const {
+    return personnel_events_.GetForPerson(personnel_number);
 }
 
 void UseCasesImpl::AddStaffingTable(const ui::detail::StaffingTableInfo& staffing_table) {
@@ -111,6 +123,10 @@ std::vector<ui::detail::TimeSheetInfo> UseCasesImpl::GetTimeSheet() const {
     return time_sheet_.Get();
 }
 
+std::vector<ui::detail::TimeSheetInfo> UseCasesImpl::GetTimeSheetForPerson(int personnel_number) const {
+    return time_sheet_.GetForPerson(personnel_number);
+}
+
 void UseCasesImpl::AddVacation(const ui::detail::VacationInfo& vacation) {
     auto worker = vacations_.GetWorker();
     worker->AddVacation({vacation.vacation_id, vacation.personnel_number, vacation.from_date,
@@ -125,6 +141,10 @@ void UseCasesImpl::UpdateVacation(const ui::detail::VacationInfo& vacation) {
 
 std::vector<ui::detail::VacationInfo> UseCasesImpl::GetVacations() const {
     return vacations_.Get();
+}
+
+std::vector<ui::detail::VacationInfo> UseCasesImpl::GetVacationForPerson(int personnel_number) const {
+    return vacations_.GetForPerson(personnel_number);
 }
 
 int UseCasesImpl::GetCountDepartments() const { return deps_.GetCount(); }
