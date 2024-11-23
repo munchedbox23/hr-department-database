@@ -425,12 +425,12 @@ void WorkerImpl::AddDepartment(const domain::Department& dep) {
         dep.GetDepartmentId(), dep.GetDepName(), dep.GetNumber());
 }
 
-void WorkerImpl::UpdateDepartment(const domain::Department& dep) {
+void WorkerImpl::UpdateDepartment(const domain::Department& dep, int id) {
     nontr_.exec_params(
         R"(
     UPDATE Отдел SET НазваниеОтдела=$2, КонтактныйТелефон=$3 WHERE КодОтдела=$1;
     )"_zv,
-        dep.GetDepartmentId(), dep.GetDepName(), dep.GetNumber());
+        id, dep.GetDepName(), dep.GetNumber());
 }
 
 void WorkerImpl::AddEmployee(const domain::Employee& employee) {
@@ -458,13 +458,13 @@ void WorkerImpl::AddEmployee(const domain::Employee& employee) {
     }
 }
 
-void WorkerImpl::UpdateEmployee(const domain::Employee& employee) {
+void WorkerImpl::UpdateEmployee(const domain::Employee& employee, int id) {
     nontr_.exec_params(
         R"(
     UPDATE Сотрудник SET КодОтдела=$2, ФИО=$3, Должность=$4, Стаж=$5,
                                КонтактныйТелефон=$6, ЗаработнаяПлата=$7, УровеньОбразования=$8 WHERE IdСотрудника=$1;
     )"_zv,
-        employee.GetPersonnelNumber(), employee.GetDepartmentId(), employee.GetFullName(),
+        id, employee.GetDepartmentId(), employee.GetFullName(),
             employee.GetJobTitle(), *employee.GetExperience(), employee.GetNumber(),
             static_cast<double>(employee.GetSalary()), employee.GetEducation());
 }
@@ -479,13 +479,13 @@ void WorkerImpl::AddPayrollSheet(const domain::PayrollSheet& payroll_sheet) {
         payroll_sheet.GetPaymentDate(), static_cast<double>(payroll_sheet.GetSum()), payroll_sheet.GetPaymentType());
 }
 
-void WorkerImpl::UpdatePayrollSheet(const domain::PayrollSheet& payroll_sheet) {
+void WorkerImpl::UpdatePayrollSheet(const domain::PayrollSheet& payroll_sheet, int id) {
     nontr_.exec_params(
         R"(
     UPDATE ТабельУчетаЗарплаты SET IdСотрудника=$2, ДатаВыплаты=$3,
            Сумма=$4, ТипВыплаты=$5 WHERE НомерЗаписи=$1;
     )"_zv,
-        payroll_sheet.GetPayrollSheetId(), payroll_sheet.GetPersonnelNumber(),
+        id, payroll_sheet.GetPersonnelNumber(),
         payroll_sheet.GetPaymentDate(), static_cast<double>(payroll_sheet.GetSum()), payroll_sheet.GetPaymentType());
 }
 
@@ -510,13 +510,13 @@ void WorkerImpl::AddPersonnelEvent(const domain::PersonnelEvent& personnel_event
     }
 }
 
-void WorkerImpl::UpdatePersonnelEvent(const domain::PersonnelEvent& personnel_event) {
+void WorkerImpl::UpdatePersonnelEvent(const domain::PersonnelEvent& personnel_event, int id) {
     nontr_.exec_params(
         R"(
     UPDATE КадровоеСобытие SET IdСотрудника=$2, ДатаСобытия=$3,
                ТипСобытия=$4, Комментарий=$5 WHERE НомерСобытия=$1;
     )"_zv,
-        personnel_event.GetPersonnelEventId(), personnel_event.GetPersonnelNumber(),
+        id, personnel_event.GetPersonnelNumber(),
             personnel_event.GetEventDate(), personnel_event.GetEventType(), personnel_event.GetComment());
 }
 
@@ -530,12 +530,12 @@ void WorkerImpl::AddStaffingTable(const domain::StaffingTable& staffing_table) {
         staffing_table.GetTimeJob(), static_cast<double>(staffing_table.GetSalary()));
 }
 
-void WorkerImpl::UpdateStaffingTable(const domain::StaffingTable& staffing_table) {
+void WorkerImpl::UpdateStaffingTable(const domain::StaffingTable& staffing_table, int id) {
     nontr_.exec_params(
         R"(
     UPDATE ШтатноеРасписание SET КодОтдела=$2, Должность=$3, КоличествоЕдиниц=$4, Оклад=$5 WHERE IdРасписания=$1;
     )"_zv,
-        staffing_table.GetStaffingTableId(), staffing_table.GetDepartmentId(), staffing_table.GetJobTitle(),
+        id, staffing_table.GetDepartmentId(), staffing_table.GetJobTitle(),
         staffing_table.GetTimeJob(), static_cast<double>(staffing_table.GetSalary()));
 }
 
@@ -547,12 +547,12 @@ void WorkerImpl::AddTimeSheet(const domain::TimeSheet& time_sheet) {
         time_sheet.GetTimeSheetId(), time_sheet.GetPersonnelNumber(), time_sheet.GetTimeWorked(), time_sheet.GetDate());
 }
 
-void WorkerImpl::UpdateTimeSheet(const domain::TimeSheet& time_sheet) {
+void WorkerImpl::UpdateTimeSheet(const domain::TimeSheet& time_sheet, int id) {
     nontr_.exec_params(
         R"(
     UPDATE ТабельУчетаРабочегоВремени SET IdСотрудника=$2, КоличествоОтработанныхЧасов=$3, Дата=$4 WHERE НомерЗаписи=$1;
     )"_zv,
-        time_sheet.GetTimeSheetId(), time_sheet.GetPersonnelNumber(), time_sheet.GetTimeWorked(), time_sheet.GetDate());
+        id, time_sheet.GetPersonnelNumber(), time_sheet.GetTimeWorked(), time_sheet.GetDate());
 }
 
 void WorkerImpl::AddVacation(const domain::Vacation& vacation) {
@@ -566,13 +566,13 @@ void WorkerImpl::AddVacation(const domain::Vacation& vacation) {
         vacation.GetFromDate(), vacation.GetToDate(), vacation.GetType());
 }
 
-void WorkerImpl::UpdateVacation(const domain::Vacation& vacation) {
+void WorkerImpl::UpdateVacation(const domain::Vacation& vacation, int id) {
     nontr_.exec_params(
         R"(
     UPDATE Отпуск SET IdСотрудника=$2, ДатаНачала=$3,
                       ДатаОкончания=$4, Тип=$5 WHERE НомерЗаписи=$1;
     )"_zv,
-        vacation.GetVacationId(), vacation.GetPersonnelNumber(),
+        id, vacation.GetPersonnelNumber(),
         vacation.GetFromDate(), vacation.GetToDate(), vacation.GetType());
 }
 

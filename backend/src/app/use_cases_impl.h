@@ -22,35 +22,35 @@ class UseCasesImpl : public UseCases {
                           domain::VacationRepository& vacation);
 
     void AddDepartment(const ui::detail::DepartmentInfo& dep) override;
-    void UpdateDepartment(const ui::detail::DepartmentInfo& dep) override;
+    void UpdateDepartment(const ui::detail::DepartmentInfo& dep, int id) override;
     std::vector<ui::detail::DepartmentInfo> GetDepartments() const override;
 
     void AddEmployee(const ui::detail::EmployeeInfo& employee) override;
-    void UpdateEmployee(const ui::detail::EmployeeInfo& employee) override;
+    void UpdateEmployee(const ui::detail::EmployeeInfo& employee, int id) override;
     std::vector<ui::detail::EmployeeInfo> GetEmployees() const override;
     virtual std::vector<ui::detail::EmployeeInfo> GetEmployeeForPerson(int personnel_number) const override;
 
     void AddPayrollSheet(const ui::detail::PayrollSheetInfo& payroll_sheet) override;
-    void UpdatePayrollSheet(const ui::detail::PayrollSheetInfo& payroll_sheet) override;
+    void UpdatePayrollSheet(const ui::detail::PayrollSheetInfo& payroll_sheet, int id) override;
     std::vector<ui::detail::PayrollSheetInfo> GetPayrollSheet() const override;
     virtual std::vector<ui::detail::PayrollSheetInfo> GetPayrollSheetForPerson(int personnel_number) const override;
 
     void AddPersonnelEvent(const ui::detail::PersonnelEventInfo& personnel_event) override;
-    void UpdatePersonnelEvent(const ui::detail::PersonnelEventInfo& personnel_event) override;
+    void UpdatePersonnelEvent(const ui::detail::PersonnelEventInfo& personnel_event, int id) override;
     std::vector<ui::detail::PersonnelEventInfo> GetPersonnelEvents() const override;
     virtual std::vector<ui::detail::PersonnelEventInfo> GetPersonnelEventsForPerson(int personnel_number) const override;
 
     void AddStaffingTable(const ui::detail::StaffingTableInfo& staffing_table) override;
-    void UpdateStaffingTable(const ui::detail::StaffingTableInfo& staffing_table) override;
+    void UpdateStaffingTable(const ui::detail::StaffingTableInfo& staffing_table, int id) override;
     std::vector<ui::detail::StaffingTableInfo> GetStaffingTable() const override;
 
     void AddTimeSheet(const ui::detail::TimeSheetInfo& time_sheet) override;
-    void UpdateTimeSheet(const ui::detail::TimeSheetInfo& time_sheet) override;
+    void UpdateTimeSheet(const ui::detail::TimeSheetInfo& time_sheet, int id) override;
     std::vector<ui::detail::TimeSheetInfo> GetTimeSheet() const override;
     virtual std::vector<ui::detail::TimeSheetInfo> GetTimeSheetForPerson(int personnel_number) const override;
 
     void AddVacation(const ui::detail::VacationInfo& vacation) override;
-    void UpdateVacation(const ui::detail::VacationInfo& vacation) override;
+    void UpdateVacation(const ui::detail::VacationInfo& vacation, int id) override;
     std::vector<ui::detail::VacationInfo> GetVacations() const override;
     virtual std::vector<ui::detail::VacationInfo> GetVacationForPerson(int personnel_number) const override;
 

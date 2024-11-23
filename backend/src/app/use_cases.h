@@ -25,35 +25,35 @@ namespace app {
 class UseCases {
   public:
     virtual void AddDepartment(const ui::detail::DepartmentInfo& dep) = 0;
-    virtual void UpdateDepartment(const ui::detail::DepartmentInfo& dep) = 0;
+    virtual void UpdateDepartment(const ui::detail::DepartmentInfo& dep, int id) = 0;
     virtual std::vector<ui::detail::DepartmentInfo> GetDepartments() const = 0;
 
     virtual void AddEmployee(const ui::detail::EmployeeInfo& employee) = 0;
-    virtual void UpdateEmployee(const ui::detail::EmployeeInfo& employee) = 0;
+    virtual void UpdateEmployee(const ui::detail::EmployeeInfo& employee, int id) = 0;
     virtual std::vector<ui::detail::EmployeeInfo> GetEmployees() const = 0;
     virtual std::vector<ui::detail::EmployeeInfo> GetEmployeeForPerson(int personnel_number) const = 0;
 
     virtual void AddPayrollSheet(const ui::detail::PayrollSheetInfo& payroll_sheet) = 0;
-    virtual void UpdatePayrollSheet(const ui::detail::PayrollSheetInfo& payroll_sheet) = 0;
+    virtual void UpdatePayrollSheet(const ui::detail::PayrollSheetInfo& payroll_sheet, int id) = 0;
     virtual std::vector<ui::detail::PayrollSheetInfo> GetPayrollSheet() const = 0;
     virtual std::vector<ui::detail::PayrollSheetInfo> GetPayrollSheetForPerson(int personnel_number) const = 0;
 
     virtual void AddPersonnelEvent(const ui::detail::PersonnelEventInfo& personnel_event) = 0;
-    virtual void UpdatePersonnelEvent(const ui::detail::PersonnelEventInfo& personnel_event) = 0;
+    virtual void UpdatePersonnelEvent(const ui::detail::PersonnelEventInfo& personnel_event, int id) = 0;
     virtual std::vector<ui::detail::PersonnelEventInfo> GetPersonnelEvents() const = 0;
     virtual std::vector<ui::detail::PersonnelEventInfo> GetPersonnelEventsForPerson(int personnel_number) const = 0;
 
     virtual void AddStaffingTable(const ui::detail::StaffingTableInfo& staffing_table) = 0;
-    virtual void UpdateStaffingTable(const ui::detail::StaffingTableInfo& staffing_table) = 0;
+    virtual void UpdateStaffingTable(const ui::detail::StaffingTableInfo& staffing_table, int id) = 0;
     virtual std::vector<ui::detail::StaffingTableInfo> GetStaffingTable() const = 0;
 
     virtual void AddTimeSheet(const ui::detail::TimeSheetInfo& time_sheet) = 0;
-    virtual void UpdateTimeSheet(const ui::detail::TimeSheetInfo& time_sheet) = 0;
+    virtual void UpdateTimeSheet(const ui::detail::TimeSheetInfo& time_sheet, int id) = 0;
     virtual std::vector<ui::detail::TimeSheetInfo> GetTimeSheet() const = 0;
     virtual std::vector<ui::detail::TimeSheetInfo> GetTimeSheetForPerson(int personnel_number) const = 0;
 
     virtual void AddVacation(const ui::detail::VacationInfo& vacation) = 0;
-    virtual void UpdateVacation(const ui::detail::VacationInfo& vacation) = 0;
+    virtual void UpdateVacation(const ui::detail::VacationInfo& vacation, int id) = 0;
     virtual std::vector<ui::detail::VacationInfo> GetVacations() const = 0;
     virtual std::vector<ui::detail::VacationInfo> GetVacationForPerson(int personnel_number) const = 0;
 

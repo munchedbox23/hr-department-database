@@ -17,25 +17,25 @@ class WorkerImpl : public domain::Worker {
     explicit WorkerImpl(pqxx::connection& conn);
 
     void AddDepartment(const domain::Department& dep) override;
-    void UpdateDepartment(const domain::Department& dep) override;
+    void UpdateDepartment(const domain::Department& dep, int id) override;
 
     void AddEmployee(const domain::Employee& employee) override;
-    void UpdateEmployee(const domain::Employee& employee) override;
+    void UpdateEmployee(const domain::Employee& employee, int id) override;
 
     void AddPayrollSheet(const domain::PayrollSheet& payroll_sheet) override;
-    void UpdatePayrollSheet(const domain::PayrollSheet& payroll_sheet) override;
+    void UpdatePayrollSheet(const domain::PayrollSheet& payroll_sheet, int id) override;
 
     void AddPersonnelEvent(const domain::PersonnelEvent& personnel_event) override;
-    void UpdatePersonnelEvent(const domain::PersonnelEvent& personnel_event) override;
+    void UpdatePersonnelEvent(const domain::PersonnelEvent& personnel_event, int id) override;
 
     void AddStaffingTable(const domain::StaffingTable& staffing_table) override;
-    void UpdateStaffingTable(const domain::StaffingTable& staffing_table) override;
+    void UpdateStaffingTable(const domain::StaffingTable& staffing_table, int id) override;
 
     void AddTimeSheet(const domain::TimeSheet& time_sheet) override;
-    void UpdateTimeSheet(const domain::TimeSheet& time_sheet) override;
+    void UpdateTimeSheet(const domain::TimeSheet& time_sheet, int id) override;
 
     void AddVacation(const domain::Vacation& vacation) override;
-    void UpdateVacation(const domain::Vacation& vacation) override;
+    void UpdateVacation(const domain::Vacation& vacation, int id) override;
 
     ~WorkerImpl() override;
 

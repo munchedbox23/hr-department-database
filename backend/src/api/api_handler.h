@@ -183,13 +183,13 @@ class ApiHandler : public std::enable_shared_from_this<ApiHandler> {
     void HandleGetVacationForPerson();
 
     void HandleUpdate();
-    void HandleUpdateDepartment();
-    void HandleUpdateEmployee();
-    void HandleUpdatePayrollSheet();
-    void HandleUpdatePersonnelEvent();
-    void HandleUpdateStaffingTable();
-    void HandleUpdateTimeSheet();
-    void HandleUpdateVacation();
+    void HandleUpdateDepartment(int id);
+    void HandleUpdateEmployee(int id);
+    void HandleUpdatePayrollSheet(int id);
+    void HandleUpdatePersonnelEvent(int id);
+    void HandleUpdateStaffingTable(int id);
+    void HandleUpdateTimeSheet(int id);
+    void HandleUpdateVacation(int id);
 
     void HandleRegister();
     void HandleLogin();
