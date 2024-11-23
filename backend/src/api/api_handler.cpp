@@ -2,8 +2,6 @@
 
 #include <algorithm>
 
-#include <iostream>
-
 namespace {
 
 std::string CleanErrorMessage(const std::string& message) {
@@ -66,11 +64,9 @@ void ApiHandler::HandleApiResponse() {
     else if (path_part == "/get-personal-info"s) {
         HandleGetPersonalInfo();
     }
-    /*
     else if (path_part == "/update"s) {
         HandleUpdate();
     }
-    */
     else if (path_part == "/register"s) {
         HandleRegister();
     }
@@ -531,6 +527,279 @@ void ApiHandler::HandleGetVacationForPerson() {
         json::value jv = json::value_from(application_.GetUseCases().GetVacationForPerson(personnel_number_));
         return SendOkResponse(json::serialize(jv));
     }
+    SendBadRequestResponseDefault();
+}
+
+void ApiHandler::HandleUpdate() {
+    std::string path_part = FindAndCutTarget(req_info_);
+
+    if (path_part == "/department"s) {
+        HandleUpdateDepartment();
+    }
+    else if (path_part == "/employee"s) {
+        HandleUpdateEmployee();
+    }
+    else if (path_part == "/payroll-sheet"s) {
+        HandleUpdatePayrollSheet();
+    }
+    else if (path_part == "/order"s) {
+        HandleUpdatePersonnelEvent();
+    }
+    else if (path_part == "/staffing-table"s) {
+        HandleUpdateStaffingTable();
+    }
+    else if (path_part == "/time-sheet"s) {
+        HandleUpdateTimeSheet();
+    }
+    else if (path_part == "/vacation"s) {
+        HandleUpdateVacation();
+    }
+    else {
+        SendNotFoundResponse();
+    }
+}
+
+void ApiHandler::HandleUpdateDepartment() {
+    if (req_info_.method != http::verb::put) {
+        return SendWrongMethodResponseAllowedPut("Wrong method"s, true);
+    }
+
+    json::value jv = json::parse(req_info_.body);
+
+    ui::detail::DepartmentInfo dep = json::value_to<ui::detail::DepartmentInfo>(jv);
+    if (application_.GetUseCases().GetCountDepartments() < dep.department_id) {
+        return SendBadRequestResponse("Ошибка КодОтдела не найден"s);
+    }
+
+    try {
+        if (CheckEndPath()) {
+            application_.GetUseCases().UpdateDepartment(dep);
+            return SendOkResponse({});
+        }
+    }
+    catch (const std::exception& e) {
+        return SendBadRequestResponse(CleanErrorMessage(e.what()));
+    }
+
+    SendBadRequestResponseDefault();
+}
+
+void ApiHandler::HandleUpdateEmployee() {
+    if (req_info_.method != http::verb::put) {
+        return SendWrongMethodResponseAllowedPut("Wrong method"s, true);
+    }
+
+    json::value jv = json::parse(req_info_.body);
+
+    std::string dep;
+    dep = jv.at("КодОтдела").as_string();
+    jv.as_object()["КодОтдела"] = application_.GetUseCases().GetDepartmentId(dep);
+    if (jv.at("КодОтдела").as_int64() == -1) {
+        return SendBadRequestResponse("Ошибка Отдел не существует"s);
+    }
+
+    if (jv.as_object().if_contains("Стаж")) {
+        int experience = std::stoi((jv.at("Стаж").as_string()).c_str());
+        if (experience < 0) {
+            return SendBadRequestResponse("Ошибка Стаж < 0"s);
+        }
+    }
+
+    int salary = jv.at("ЗаработнаяПлата").as_int64();
+    if (salary <= 0) {
+        return SendBadRequestResponse("Ошибка ЗаработнаяПлата <= 0"s);
+    }
+
+    std::string education;
+    education = jv.at("УровеньОбразования").as_string();
+    if (!(education == "среднее"s || education == "высшее"s)) {
+        return SendBadRequestResponse("Ошибка УровеньОбразования != среднее или высшее"s);
+    }
+
+    ui::detail::EmployeeInfo employee = json::value_to<ui::detail::EmployeeInfo>(jv);
+    if (application_.GetUseCases().GetCountEmployees() < employee.personnel_number) {
+        return SendBadRequestResponse("Ошибка IdСотрудника не найден"s);
+    }
+
+    try {
+        if (CheckEndPath()) {
+            application_.GetUseCases().UpdateEmployee(employee);
+            return SendOkResponse({});
+        }
+    }
+    catch (const std::exception& e) {
+        return SendBadRequestResponse(CleanErrorMessage(e.what()));
+    }
+
+    SendBadRequestResponseDefault();
+}
+
+void ApiHandler::HandleUpdatePayrollSheet() {
+    if (req_info_.method != http::verb::put) {
+        return SendWrongMethodResponseAllowedPut("Wrong method"s, true);
+    }
+
+    json::value jv = json::parse(req_info_.body);
+
+    std::string date;
+    date = jv.at("ДатаВыплаты").as_string();
+    if (date > GetCurrentDate()) {
+        return SendBadRequestResponse("Ошибка ДатаВыплаты > текущей даты"s);
+    }
+
+    int sum = jv.at("Сумма").as_int64();
+    if (sum <= 0) {
+        return SendBadRequestResponse("Ошибка Сумма <= 0"s);
+    }
+
+    ui::detail::PayrollSheetInfo payroll_sheet = json::value_to<ui::detail::PayrollSheetInfo>(jv);
+    if (application_.GetUseCases().GetCountPayrollSheet() < payroll_sheet.payroll_sheet_id) {
+        return SendBadRequestResponse("Ошибка НомерЗаписи не найден"s);
+    }
+
+    try {
+        if (CheckEndPath()) {
+            application_.GetUseCases().UpdatePayrollSheet(payroll_sheet);
+            return SendOkResponse({});
+        }
+    }
+    catch (const std::exception& e) {
+        return SendBadRequestResponse(CleanErrorMessage(e.what()));
+    }
+
+    SendBadRequestResponseDefault();
+}
+
+void ApiHandler::HandleUpdatePersonnelEvent() {
+    if (req_info_.method != http::verb::put) {
+        return SendWrongMethodResponseAllowedPut("Wrong method"s, true);
+    }
+
+    json::value jv = json::parse(req_info_.body);
+
+    ui::detail::PersonnelEventInfo personnel_event = json::value_to<ui::detail::PersonnelEventInfo>(jv);
+    if (application_.GetUseCases().GetCountPersonnelEvents() < personnel_event.personnel_event_id) {
+        return SendBadRequestResponse("Ошибка НомерСобытия не найден"s);
+    }
+
+    try {
+        if (CheckEndPath()) {
+            application_.GetUseCases().UpdatePersonnelEvent(personnel_event);
+            return SendOkResponse({});
+        }
+    }
+    catch (const std::exception& e) {
+        return SendBadRequestResponse(CleanErrorMessage(e.what()));
+    }
+
+    SendBadRequestResponseDefault();
+}
+
+void ApiHandler::HandleUpdateStaffingTable() {
+    if (req_info_.method != http::verb::put) {
+        return SendWrongMethodResponseAllowedPut("Wrong method"s, true);
+    }
+
+    json::value jv = json::parse(req_info_.body);
+
+    std::string department;
+    department = jv.at("КодОтдела").as_string();
+    jv.as_object()["КодОтдела"] = application_.GetUseCases().GetDepartmentId(department);
+    if (jv.at("КодОтдела").as_int64() == -1) {
+        return SendBadRequestResponse("Ошибка Отдел не существует"s);
+    }
+
+    int salary = jv.at("Оклад").as_int64();
+    if (salary <= 0) {
+        return SendBadRequestResponse("Ошибка Оклад <= 0"s);
+    }
+
+    ui::detail::StaffingTableInfo staffing_table = json::value_to<ui::detail::StaffingTableInfo>(jv);
+    if (application_.GetUseCases().GetCountStaffingTable() < staffing_table.staffing_table_id) {
+        return SendBadRequestResponse("Ошибка IdРасписания не найден"s);
+    }
+
+    try {
+        if (CheckEndPath()) {
+            application_.GetUseCases().UpdateStaffingTable(staffing_table);
+            return SendOkResponse({});
+        }
+    }
+    catch (const std::exception& e) {
+        return SendBadRequestResponse(CleanErrorMessage(e.what()));
+    }
+
+    SendBadRequestResponseDefault();
+}
+
+void ApiHandler::HandleUpdateTimeSheet() {
+    if (req_info_.method != http::verb::put) {
+        return SendWrongMethodResponseAllowedPut("Wrong method"s, true);
+    }
+
+    json::value jv = json::parse(req_info_.body);
+
+    if (jv.as_object().if_contains("КоличествоОтработанныхЧасов")) {
+        int time_worked = jv.at("КоличествоОтработанныхЧасов").as_int64();
+        if (time_worked < 0) {
+            return SendBadRequestResponse("Ошибка КоличествоОтработанныхЧасов < 0"s);
+        }
+    }
+
+    std::string date;
+    date = jv.at("Дата").as_string();
+    if (date > GetCurrentDate()) {
+        return SendBadRequestResponse("Ошибка Дата > текущей даты"s);
+    }
+
+    ui::detail::TimeSheetInfo time_sheet = json::value_to<ui::detail::TimeSheetInfo>(jv);
+    if (application_.GetUseCases().GetCountTimeSheet() < time_sheet.time_sheet_id) {
+        return SendBadRequestResponse("Ошибка НомерЗаписи не найден"s);
+    }
+
+    try {
+        if (CheckEndPath()) {
+            application_.GetUseCases().UpdateTimeSheet(time_sheet);
+            return SendOkResponse({});
+        }
+    }
+    catch (const std::exception& e) {
+        return SendBadRequestResponse(CleanErrorMessage(e.what()));
+    }
+
+    SendBadRequestResponseDefault();
+}
+
+void ApiHandler::HandleUpdateVacation() {
+    if (req_info_.method != http::verb::put) {
+        return SendWrongMethodResponseAllowedPut("Wrong method"s, true);
+    }
+
+    json::value jv = json::parse(req_info_.body);
+
+    std::string from_date;
+    std::string to_date;
+    from_date = jv.at("ДатаНачала").as_string();
+    to_date = jv.at("ДатаОкончания").as_string();
+    if (from_date > to_date) {
+        return SendBadRequestResponse("Ошибка ДатаНачала > ДатаОкончания"s);
+    }
+
+    ui::detail::VacationInfo vacation = json::value_to<ui::detail::VacationInfo>(jv);
+    if (application_.GetUseCases().GetCountVacations() < vacation.vacation_id) {
+        return SendBadRequestResponse("Ошибка НомерЗаписи не найден"s);
+    }
+
+    try {
+        if (CheckEndPath()) {
+            application_.GetUseCases().UpdateVacation(vacation);
+            return SendOkResponse({});
+        }
+    }
+    catch (const std::exception& e) {
+        return SendBadRequestResponse(CleanErrorMessage(e.what()));
+    }
+
     SendBadRequestResponseDefault();
 }
 

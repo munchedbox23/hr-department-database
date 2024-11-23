@@ -136,7 +136,7 @@ void UseCasesImpl::AddVacation(const ui::detail::VacationInfo& vacation) {
 void UseCasesImpl::UpdateVacation(const ui::detail::VacationInfo& vacation) {
     auto worker = vacations_.GetWorker();
     worker->UpdateVacation({vacation.vacation_id, vacation.personnel_number, vacation.from_date,
-                            vacation.type, vacation.to_date});
+                            vacation.to_date, vacation.type});
 }
 
 std::vector<ui::detail::VacationInfo> UseCasesImpl::GetVacations() const {
