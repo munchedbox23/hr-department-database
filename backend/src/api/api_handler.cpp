@@ -61,9 +61,6 @@ void ApiHandler::HandleApiResponse() {
     else if (path_part == "/get"s) {
         HandleGet();
     }
-    else if (path_part == "/get-personal-info"s) {
-        HandleGetPersonalInfo();
-    }
     else if (path_part == "/update"s) {
         HandleUpdate();
     }
@@ -377,11 +374,81 @@ void ApiHandler::HandleGetDepartments() {
 }
 
 void ApiHandler::HandleGetEmployees() {
+    if (last_role_ == "admin"s) {
+        if (req_info_.method != http::verb::get && req_info_.method != http::verb::head) {
+            return SendWrongMethodResponseAllowedGetHead("Wrong method"s, true);
+        }
+        if (CheckEndPath()) {
+            json::value jv = json::value_from(application_.GetUseCases().GetEmployees());
+            return SendOkResponse(json::serialize(jv));
+        }
+    }
+    else {
+        return HandleGetEmployeeForPerson();
+    }
+    SendBadRequestResponseDefault();
+}
+
+void ApiHandler::HandleGetEmployeeForPerson() {
     if (req_info_.method != http::verb::get && req_info_.method != http::verb::head) {
         return SendWrongMethodResponseAllowedGetHead("Wrong method"s, true);
     }
     if (CheckEndPath()) {
-        json::value jv = json::value_from(application_.GetUseCases().GetEmployees());
+        json::value jv = json::value_from(application_.GetUseCases().GetEmployeeForPerson(personnel_number_));
+        return SendOkResponse(json::serialize(jv));
+    }
+    SendBadRequestResponseDefault();
+}
+
+void ApiHandler::HandleGetPayrollSheet() {
+    if (last_role_ == "admin"s) {
+        if (req_info_.method != http::verb::get && req_info_.method != http::verb::head) {
+            return SendWrongMethodResponseAllowedGetHead("Wrong method"s, true);
+        }
+        if (CheckEndPath()) {
+            json::value jv = json::value_from(application_.GetUseCases().GetPayrollSheet());
+            return SendOkResponse(json::serialize(jv));
+        }
+    }
+    else {
+        return HandleGetPayrollSheetForPerson();
+    }
+    SendBadRequestResponseDefault();
+}
+
+void ApiHandler::HandleGetPayrollSheetForPerson() {
+    if (req_info_.method != http::verb::get && req_info_.method != http::verb::head) {
+        return SendWrongMethodResponseAllowedGetHead("Wrong method"s, true);
+    }
+    if (CheckEndPath()) {
+        json::value jv = json::value_from(application_.GetUseCases().GetPayrollSheetForPerson(personnel_number_));
+        return SendOkResponse(json::serialize(jv));
+    }
+    SendBadRequestResponseDefault();
+}
+
+void ApiHandler::HandleGetPersonnelEvents() {
+    if (last_role_ == "admin"s) {
+        if (req_info_.method != http::verb::get && req_info_.method != http::verb::head) {
+            return SendWrongMethodResponseAllowedGetHead("Wrong method"s, true);
+        }
+        if (CheckEndPath()) {
+            json::value jv = json::value_from(application_.GetUseCases().GetPersonnelEvents());
+            return SendOkResponse(json::serialize(jv));
+        }
+    }
+    else {
+        return HandleGetPersonnelEventsForPerson();
+    }
+    SendBadRequestResponseDefault();
+}
+
+void ApiHandler::HandleGetPersonnelEventsForPerson() {
+    if (req_info_.method != http::verb::get && req_info_.method != http::verb::head) {
+        return SendWrongMethodResponseAllowedGetHead("Wrong method"s, true);
+    }
+    if (CheckEndPath()) {
+        json::value jv = json::value_from(application_.GetUseCases().GetPersonnelEventsForPerson(personnel_number_));
         return SendOkResponse(json::serialize(jv));
     }
     SendBadRequestResponseDefault();
@@ -398,118 +465,20 @@ void ApiHandler::HandleGetStaffingTable() {
     SendBadRequestResponseDefault();
 }
 
-void ApiHandler::HandleGetPayrollSheet() {
-    if (req_info_.method != http::verb::get && req_info_.method != http::verb::head) {
-        return SendWrongMethodResponseAllowedGetHead("Wrong method"s, true);
-    }
-    if (CheckEndPath()) {
-        json::value jv = json::value_from(application_.GetUseCases().GetPayrollSheet());
-        return SendOkResponse(json::serialize(jv));
-    }
-    SendBadRequestResponseDefault();
-}
-
-void ApiHandler::HandleGetPersonnelEvents() {
-    if (req_info_.method != http::verb::get && req_info_.method != http::verb::head) {
-        return SendWrongMethodResponseAllowedGetHead("Wrong method"s, true);
-    }
-    if (CheckEndPath()) {
-        json::value jv = json::value_from(application_.GetUseCases().GetPersonnelEvents());
-        return SendOkResponse(json::serialize(jv));
-    }
-    SendBadRequestResponseDefault();
-}
-
 void ApiHandler::HandleGetTimeSheet() {
-    if (req_info_.method != http::verb::get && req_info_.method != http::verb::head) {
-        return SendWrongMethodResponseAllowedGetHead("Wrong method"s, true);
-    }
-    if (CheckEndPath()) {
-        json::value jv = json::value_from(application_.GetUseCases().GetTimeSheet());
-        return SendOkResponse(json::serialize(jv));
-    }
-    SendBadRequestResponseDefault();
-}
-
-void ApiHandler::HandleGetVacations() {
-    if (req_info_.method != http::verb::get && req_info_.method != http::verb::head) {
-        return SendWrongMethodResponseAllowedGetHead("Wrong method"s, true);
-    }
-    if (CheckEndPath()) {
-        json::value jv = json::value_from(application_.GetUseCases().GetVacations());
-        return SendOkResponse(json::serialize(jv));
-    }
-    SendBadRequestResponseDefault();
-}
-
-void ApiHandler::HandleGetPersonalInfo() {
-    std::string path_part = FindAndCutTarget(req_info_);
-
-    if (path_part == "/department"s) {
-        HandleGetDepartmentsForPerson();
-    }
-    else if (path_part == "/employee"s) {
-        HandleGetEmployeeForPerson();
-    }
-    else if (path_part == "/payroll-sheet"s) {
-        HandleGetPayrollSheetForPerson();
-    }
-    else if (path_part == "/personnel-event"s) {
-        HandleGetPersonnelEventsForPerson();
-    }
-    else if (path_part == "/staffing-table"s) {
-        HandleGetStaffingTableForPerson();
-    }
-    else if (path_part == "/time-sheet"s) {
-        HandleGetTimeSheetForPerson();
-    }
-    else if (path_part == "/vacation"s) {
-        HandleGetVacationForPerson();
+    if (last_role_ == "admin"s) {
+        if (req_info_.method != http::verb::get && req_info_.method != http::verb::head) {
+            return SendWrongMethodResponseAllowedGetHead("Wrong method"s, true);
+        }
+        if (CheckEndPath()) {
+            json::value jv = json::value_from(application_.GetUseCases().GetTimeSheet());
+            return SendOkResponse(json::serialize(jv));
+        }
     }
     else {
-        SendNotFoundResponse();
-    }
-}
-
-void ApiHandler::HandleGetDepartmentsForPerson() {
-    HandleGetDepartments();
-}
-
-void ApiHandler::HandleGetEmployeeForPerson() {
-    if (req_info_.method != http::verb::get && req_info_.method != http::verb::head) {
-        return SendWrongMethodResponseAllowedGetHead("Wrong method"s, true);
-    }
-    if (CheckEndPath()) {
-        json::value jv = json::value_from(application_.GetUseCases().GetEmployeeForPerson(personnel_number_));
-        return SendOkResponse(json::serialize(jv));
+        return HandleGetTimeSheetForPerson();
     }
     SendBadRequestResponseDefault();
-}
-
-void ApiHandler::HandleGetPayrollSheetForPerson() {
-    if (req_info_.method != http::verb::get && req_info_.method != http::verb::head) {
-        return SendWrongMethodResponseAllowedGetHead("Wrong method"s, true);
-    }
-    if (CheckEndPath()) {
-        json::value jv = json::value_from(application_.GetUseCases().GetPayrollSheetForPerson(personnel_number_));
-        return SendOkResponse(json::serialize(jv));
-    }
-    SendBadRequestResponseDefault();
-}
-
-void ApiHandler::HandleGetPersonnelEventsForPerson() {
-    if (req_info_.method != http::verb::get && req_info_.method != http::verb::head) {
-        return SendWrongMethodResponseAllowedGetHead("Wrong method"s, true);
-    }
-    if (CheckEndPath()) {
-        json::value jv = json::value_from(application_.GetUseCases().GetPersonnelEventsForPerson(personnel_number_));
-        return SendOkResponse(json::serialize(jv));
-    }
-    SendBadRequestResponseDefault();
-}
-
-void ApiHandler::HandleGetStaffingTableForPerson() {
-    HandleGetStaffingTable();
 }
 
 void ApiHandler::HandleGetTimeSheetForPerson() {
@@ -519,6 +488,22 @@ void ApiHandler::HandleGetTimeSheetForPerson() {
     if (CheckEndPath()) {
         json::value jv = json::value_from(application_.GetUseCases().GetTimeSheetForPerson(personnel_number_));
         return SendOkResponse(json::serialize(jv));
+    }
+    SendBadRequestResponseDefault();
+}
+
+void ApiHandler::HandleGetVacations() {
+    if (last_role_ == "admin"s) {
+        if (req_info_.method != http::verb::get && req_info_.method != http::verb::head) {
+            return SendWrongMethodResponseAllowedGetHead("Wrong method"s, true);
+        }
+        if (CheckEndPath()) {
+            json::value jv = json::value_from(application_.GetUseCases().GetVacations());
+            return SendOkResponse(json::serialize(jv));
+        }
+    }
+    else {
+        return HandleGetVacationForPerson();
     }
     SendBadRequestResponseDefault();
 }
