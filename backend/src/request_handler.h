@@ -61,7 +61,28 @@ void RequestHandler::HandleStaticDataResponse(http::request<Body, http::basic_fi
         return send(MakeBadRequestResponse(req, "Access denied"s));
     }
     if (file.filename().string() == "authorization"s) {
-        file = file = file.parent_path();
+        file = file.parent_path();
+    }
+    if (file.filename().string() == "employees"s) {
+        file = file.parent_path();
+    }
+    if (file.filename().string() == "staffing"s) {
+        file = file.parent_path();
+    }
+    if (file.filename().string() == "vacations"s) {
+        file = file.parent_path();
+    }
+    if (file.filename().string() == "events"s) {
+        file = file.parent_path();
+    }
+    if (file.filename().string() == "department"s) {
+        file = file.parent_path();
+    }
+    if (file.filename().string() == "attendance"s) {
+        file = file.parent_path();
+    }
+    if (file.filename().string() == "payroll"s) {
+        file = file.parent_path();
     }
 
     if (fs::exists(file)) {

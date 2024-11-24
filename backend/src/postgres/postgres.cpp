@@ -116,8 +116,8 @@ std::vector<ui::detail::EmployeeInfo> EmployeeRepositoryImpl::Get() const {
 
     std::vector<ui::detail::EmployeeInfo> result;
 
-    for (auto& [personnel_number, department_id, full_name, job_title,
-                experience, number, salary, education] : resp) {
+    for (const auto& [personnel_number, department_id, full_name, job_title,
+                      experience, number, salary, education] : resp) {
         ui::detail::EmployeeInfo employee{personnel_number, deps.GetDep(department_id), full_name, job_title,
                                           experience, number, static_cast<int>(salary), education};
         result.push_back(employee);
@@ -140,7 +140,7 @@ std::vector<ui::detail::EmployeeInfo> EmployeeRepositoryImpl::GetForPerson(int p
     std::vector<ui::detail::EmployeeInfo> result;
 
     for (const auto& [personnel_num, department_id, full_name, job_title,
-                experience, number, salary, education] : resp) {
+                      experience, number, salary, education] : resp) {
         if (personnel_number != personnel_num) {
             continue;
         }
@@ -173,8 +173,8 @@ std::vector<ui::detail::PayrollSheetInfo> PayrollSheetRepositoryImpl::Get() cons
 
     std::vector<ui::detail::PayrollSheetInfo> result;
 
-    for (auto& [payroll_sheet_id, personnel_number, payment_date,
-                sum, payment_type] : resp) {
+    for (const auto& [payroll_sheet_id, personnel_number, payment_date,
+                      sum, payment_type] : resp) {
         ui::detail::PayrollSheetInfo payroll_sheet{payroll_sheet_id, personnel_number,
                                                    payment_date, static_cast<int>(sum), payment_type};
         result.push_back(payroll_sheet);
@@ -194,7 +194,7 @@ std::vector<ui::detail::PayrollSheetInfo> PayrollSheetRepositoryImpl::GetForPers
     std::vector<ui::detail::PayrollSheetInfo> result;
 
     for (const auto& [payroll_sheet_id, personnel_num, payment_date,
-                sum, payment_type] : resp) {
+                      sum, payment_type] : resp) {
         if (personnel_number != personnel_num) {
             continue;
         }
@@ -227,8 +227,8 @@ std::vector<ui::detail::PersonnelEventInfo> PersonnelEventRepositoryImpl::Get() 
 
     std::vector<ui::detail::PersonnelEventInfo> result;
 
-    for (auto& [personnel_event_id, personnel_number, event_date,
-                event_type, comment] : resp) {
+    for (const auto& [personnel_event_id, personnel_number, event_date,
+                      event_type, comment] : resp) {
         ui::detail::PersonnelEventInfo personnel_event{personnel_event_id, personnel_number,
                                                        event_date, event_type, comment};
         result.push_back(personnel_event);
@@ -248,7 +248,7 @@ std::vector<ui::detail::PersonnelEventInfo> PersonnelEventRepositoryImpl::GetFor
     std::vector<ui::detail::PersonnelEventInfo> result;
 
     for (const auto& [personnel_event_id, personnel_num, event_date,
-                event_type, comment] : resp) {
+                      event_type, comment] : resp) {
         if (personnel_number != personnel_num) {
             continue;
         }
@@ -283,7 +283,7 @@ std::vector<ui::detail::StaffingTableInfo> StaffingTableRepositoryImpl::Get() co
 
     std::vector<ui::detail::StaffingTableInfo> result;
 
-    for (auto& [staffing_table_id, department_id, job_title, time_job, salary] : resp) {
+    for (const auto& [staffing_table_id, department_id, job_title, time_job, salary] : resp) {
         ui::detail::StaffingTableInfo staffing_table{staffing_table_id, deps.GetDep(department_id), job_title, time_job, static_cast<int>(salary)};
         result.push_back(staffing_table);
     }
@@ -312,7 +312,7 @@ std::vector<ui::detail::TimeSheetInfo> TimeSheetRepositoryImpl::Get() const {
 
     std::vector<ui::detail::TimeSheetInfo> result;
 
-    for (auto& [time_sheet_id, personnel_number, date, time_worked] : resp) {
+    for (const auto& [time_sheet_id, personnel_number, date, time_worked] : resp) {
         ui::detail::TimeSheetInfo time_sheet{time_sheet_id, personnel_number, date, time_worked};
         result.push_back(time_sheet);
     }
@@ -362,7 +362,7 @@ std::vector<ui::detail::VacationInfo> VacationRepositoryImpl::Get() const {
 
     std::vector<ui::detail::VacationInfo> result;
 
-    for (auto& [vacation_id, personnel_number, from_date, to_date, type] : resp) {
+    for (const auto& [vacation_id, personnel_number, from_date, to_date, type] : resp) {
         ui::detail::VacationInfo vacation{vacation_id, personnel_number, from_date,
                                           to_date, type};
         result.push_back(vacation);

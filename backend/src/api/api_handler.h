@@ -48,6 +48,25 @@ class TimeTracker {
     std::chrono::time_point<std::chrono::high_resolution_clock> start_time_;
 };
 
+struct Login {
+    std::string email;
+    std::string password;
+
+    bool operator==(const Login& other) const {
+        return email == other.email &&
+               password == other.password;
+    }
+};
+
+struct LoginHasher {
+    std::size_t operator()(const Login& login) const {
+        std::size_t h1 = std::hash<std::string>()(login.email);
+        std::size_t h2 = std::hash<std::string>()(login.password);
+
+        return h1 + h2 * 23;
+    }
+};
+
 struct Person {
     std::string email;
     std::string password;
@@ -118,6 +137,8 @@ inline std::unordered_map<std::string, PersonInfo> refresh_token_to_person_;
 inline std::deque<std::string> refresh_tokens_;
 inline int personnel_number_{};
 inline std::string last_role_;
+inline std::unordered_map<Login, std::string, LoginHasher> login_to_role_;
+inline std::unordered_set<std::string> numbers_;
 
 class ApiHandler : public std::enable_shared_from_this<ApiHandler> {
   public:
@@ -155,6 +176,8 @@ class ApiHandler : public std::enable_shared_from_this<ApiHandler> {
         return stream.str();
     }
 
+    void HandleOptions();
+
     void HandleAdd();
     void HandleAddDepartment();
     void HandleAddEmployee();
@@ -191,7 +214,6 @@ class ApiHandler : public std::enable_shared_from_this<ApiHandler> {
     void HandleLogin();
     void HandleLogout();
     void HandleToken();
-    void HandleOptions();
     void HandleUser();
 
     template <typename Body, typename Allocator>
@@ -210,7 +232,6 @@ class ApiHandler : public std::enable_shared_from_this<ApiHandler> {
     void SendNoAuthResponse(const std::string& message = "invalidToken"s,
                             const std::string& key = "Something wrong with token"s, bool no_cache = true);
 
-    void SendWrongMethodResponseAllowedDelete(const std::string& message = "Only DELETE method is expected"s, bool no_cache = true);
     void SendWrongMethodResponseAllowedGetHead (const std::string& message = "Only GET/HEAD method is expected"s,
                                                 bool no_cache = true);
     void SendWrongMethodResponseAllowedPost(const std::string& message = "Only POST method is expected"s, bool no_cache = true);

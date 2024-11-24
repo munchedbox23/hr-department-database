@@ -3,8 +3,8 @@
 #include <condition_variable>
 #include <pqxx/pqxx>
 #include <thread>
-
 #include <mutex>
+
 namespace connection_pool {
 
 class ConnectionPool {

@@ -62,7 +62,7 @@ void UseCasesImpl::AddPayrollSheet(const ui::detail::PayrollSheetInfo& payroll_s
 void UseCasesImpl::UpdatePayrollSheet(const ui::detail::PayrollSheetInfo& payroll_sheet, int id) {
     auto worker = payroll_sheet_.GetWorker();
     worker->UpdatePayrollSheet({payroll_sheet.payroll_sheet_id, payroll_sheet.personnel_number,
-          payroll_sheet.payment_date, payroll_sheet.sum, payroll_sheet.payment_type}, id);
+                                payroll_sheet.payment_date, payroll_sheet.sum, payroll_sheet.payment_type}, id);
 }
 
 std::vector<ui::detail::PayrollSheetInfo> UseCasesImpl::GetPayrollSheet() const {
@@ -82,7 +82,7 @@ void UseCasesImpl::AddPersonnelEvent(const ui::detail::PersonnelEventInfo& perso
 void UseCasesImpl::UpdatePersonnelEvent(const ui::detail::PersonnelEventInfo& personnel_event, int id) {
     auto worker = personnel_events_.GetWorker();
     worker->UpdatePersonnelEvent({personnel_event.personnel_event_id, personnel_event.personnel_number,
-          personnel_event.event_date, personnel_event.event_type, personnel_event.comment}, id);
+                                  personnel_event.event_date, personnel_event.event_type, personnel_event.comment}, id);
 }
 
 std::vector<ui::detail::PersonnelEventInfo> UseCasesImpl::GetPersonnelEvents() const {
@@ -102,7 +102,7 @@ void UseCasesImpl::AddStaffingTable(const ui::detail::StaffingTableInfo& staffin
 void UseCasesImpl::UpdateStaffingTable(const ui::detail::StaffingTableInfo& staffing_table, int id) {
     auto worker = staffing_table_.GetWorker();
     worker->UpdateStaffingTable({staffing_table.staffing_table_id, std::get<int>(staffing_table.department),
-          staffing_table.job_title, staffing_table.time_job, staffing_table.salary}, id);
+                                 staffing_table.job_title, staffing_table.time_job, staffing_table.salary}, id);
 }
 
 std::vector<ui::detail::StaffingTableInfo> UseCasesImpl::GetStaffingTable() const {
@@ -136,7 +136,7 @@ void UseCasesImpl::AddVacation(const ui::detail::VacationInfo& vacation) {
 void UseCasesImpl::UpdateVacation(const ui::detail::VacationInfo& vacation, int id) {
     auto worker = vacations_.GetWorker();
     worker->UpdateVacation({vacation.vacation_id, vacation.personnel_number, vacation.from_date,
-          vacation.to_date, vacation.type}, id);
+                            vacation.to_date, vacation.type}, id);
 }
 
 std::vector<ui::detail::VacationInfo> UseCasesImpl::GetVacations() const {

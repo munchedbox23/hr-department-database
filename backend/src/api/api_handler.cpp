@@ -84,6 +84,11 @@ void ApiHandler::HandleApiResponse() {
     }
 }
 
+void ApiHandler::HandleOptions() {
+    ResponseInfo result = MakeResponse(http::status::ok, true);
+    SendOkResponse({});
+}
+
 void ApiHandler::HandleAdd() {
     std::string path_part = FindAndCutTarget(req_info_);
 
@@ -374,26 +379,14 @@ void ApiHandler::HandleGetDepartments() {
 }
 
 void ApiHandler::HandleGetEmployees() {
-    if (last_role_ == "admin"s) {
-        if (req_info_.method != http::verb::get && req_info_.method != http::verb::head) {
-            return SendWrongMethodResponseAllowedGetHead("Wrong method"s, true);
-        }
-        if (CheckEndPath()) {
-            json::value jv = json::value_from(application_.GetUseCases().GetEmployees());
-            return SendOkResponse(json::serialize(jv));
-        }
-    }
-    else {
-        return HandleGetEmployeeForPerson();
-    }
-    SendBadRequestResponseDefault();
-}
-
-void ApiHandler::HandleGetEmployeeForPerson() {
     if (req_info_.method != http::verb::get && req_info_.method != http::verb::head) {
         return SendWrongMethodResponseAllowedGetHead("Wrong method"s, true);
     }
     if (CheckEndPath()) {
+        if (last_role_ == "admin"s) {
+            json::value jv = json::value_from(application_.GetUseCases().GetEmployees());
+            return SendOkResponse(json::serialize(jv));
+        }
         json::value jv = json::value_from(application_.GetUseCases().GetEmployeeForPerson(personnel_number_));
         return SendOkResponse(json::serialize(jv));
     }
@@ -401,26 +394,14 @@ void ApiHandler::HandleGetEmployeeForPerson() {
 }
 
 void ApiHandler::HandleGetPayrollSheet() {
-    if (last_role_ == "admin"s) {
-        if (req_info_.method != http::verb::get && req_info_.method != http::verb::head) {
-            return SendWrongMethodResponseAllowedGetHead("Wrong method"s, true);
-        }
-        if (CheckEndPath()) {
-            json::value jv = json::value_from(application_.GetUseCases().GetPayrollSheet());
-            return SendOkResponse(json::serialize(jv));
-        }
-    }
-    else {
-        return HandleGetPayrollSheetForPerson();
-    }
-    SendBadRequestResponseDefault();
-}
-
-void ApiHandler::HandleGetPayrollSheetForPerson() {
     if (req_info_.method != http::verb::get && req_info_.method != http::verb::head) {
         return SendWrongMethodResponseAllowedGetHead("Wrong method"s, true);
     }
     if (CheckEndPath()) {
+        if (last_role_ == "admin"s) {
+            json::value jv = json::value_from(application_.GetUseCases().GetPayrollSheet());
+            return SendOkResponse(json::serialize(jv));
+        }
         json::value jv = json::value_from(application_.GetUseCases().GetPayrollSheetForPerson(personnel_number_));
         return SendOkResponse(json::serialize(jv));
     }
@@ -428,26 +409,14 @@ void ApiHandler::HandleGetPayrollSheetForPerson() {
 }
 
 void ApiHandler::HandleGetPersonnelEvents() {
-    if (last_role_ == "admin"s) {
-        if (req_info_.method != http::verb::get && req_info_.method != http::verb::head) {
-            return SendWrongMethodResponseAllowedGetHead("Wrong method"s, true);
-        }
-        if (CheckEndPath()) {
-            json::value jv = json::value_from(application_.GetUseCases().GetPersonnelEvents());
-            return SendOkResponse(json::serialize(jv));
-        }
-    }
-    else {
-        return HandleGetPersonnelEventsForPerson();
-    }
-    SendBadRequestResponseDefault();
-}
-
-void ApiHandler::HandleGetPersonnelEventsForPerson() {
     if (req_info_.method != http::verb::get && req_info_.method != http::verb::head) {
         return SendWrongMethodResponseAllowedGetHead("Wrong method"s, true);
     }
     if (CheckEndPath()) {
+        if (last_role_ == "admin"s) {
+            json::value jv = json::value_from(application_.GetUseCases().GetPersonnelEvents());
+            return SendOkResponse(json::serialize(jv));
+        }
         json::value jv = json::value_from(application_.GetUseCases().GetPersonnelEventsForPerson(personnel_number_));
         return SendOkResponse(json::serialize(jv));
     }
@@ -466,26 +435,14 @@ void ApiHandler::HandleGetStaffingTable() {
 }
 
 void ApiHandler::HandleGetTimeSheet() {
-    if (last_role_ == "admin"s) {
-        if (req_info_.method != http::verb::get && req_info_.method != http::verb::head) {
-            return SendWrongMethodResponseAllowedGetHead("Wrong method"s, true);
-        }
-        if (CheckEndPath()) {
-            json::value jv = json::value_from(application_.GetUseCases().GetTimeSheet());
-            return SendOkResponse(json::serialize(jv));
-        }
-    }
-    else {
-        return HandleGetTimeSheetForPerson();
-    }
-    SendBadRequestResponseDefault();
-}
-
-void ApiHandler::HandleGetTimeSheetForPerson() {
     if (req_info_.method != http::verb::get && req_info_.method != http::verb::head) {
         return SendWrongMethodResponseAllowedGetHead("Wrong method"s, true);
     }
     if (CheckEndPath()) {
+        if (last_role_ == "admin"s) {
+            json::value jv = json::value_from(application_.GetUseCases().GetTimeSheet());
+            return SendOkResponse(json::serialize(jv));
+        }
         json::value jv = json::value_from(application_.GetUseCases().GetTimeSheetForPerson(personnel_number_));
         return SendOkResponse(json::serialize(jv));
     }
@@ -493,26 +450,14 @@ void ApiHandler::HandleGetTimeSheetForPerson() {
 }
 
 void ApiHandler::HandleGetVacations() {
-    if (last_role_ == "admin"s) {
-        if (req_info_.method != http::verb::get && req_info_.method != http::verb::head) {
-            return SendWrongMethodResponseAllowedGetHead("Wrong method"s, true);
-        }
-        if (CheckEndPath()) {
-            json::value jv = json::value_from(application_.GetUseCases().GetVacations());
-            return SendOkResponse(json::serialize(jv));
-        }
-    }
-    else {
-        return HandleGetVacationForPerson();
-    }
-    SendBadRequestResponseDefault();
-}
-
-void ApiHandler::HandleGetVacationForPerson() {
     if (req_info_.method != http::verb::get && req_info_.method != http::verb::head) {
         return SendWrongMethodResponseAllowedGetHead("Wrong method"s, true);
     }
     if (CheckEndPath()) {
+        if (last_role_ == "admin"s) {
+            json::value jv = json::value_from(application_.GetUseCases().GetVacations());
+            return SendOkResponse(json::serialize(jv));
+        }
         json::value jv = json::value_from(application_.GetUseCases().GetVacationForPerson(personnel_number_));
         return SendOkResponse(json::serialize(jv));
     }
@@ -835,31 +780,44 @@ void ApiHandler::HandleRegister() {
 
     json::value person = json::parse(req_info_.body);
 
-    if (person.as_object().contains("email"s) && person.as_object().contains("password"s) && person.as_object().contains("name"s) && person.as_object().contains("role")) {
-        if (person.at("role").as_string() == "admin"s && person.as_object().contains("number")) {
-            return SendBadRequestResponse("Invalid register format"s, "invalidRegister"s);
-        }
-        else if (person.at("role").as_string() == "employee"s && !person.as_object().contains("number")) {
-            return SendBadRequestResponse("Invalid register format"s, "invalidRegister"s);
-        }
+    if (!person.as_object().contains("email") || !person.as_object().contains("password") || !person.as_object().contains("name") || !person.as_object().contains("role")) {
+        return SendBadRequestResponse("Invalid register format", "invalidRegister");
     }
-    else {
-        return SendBadRequestResponse("Invalid register format"s, "invalidRegister"s);
+
+    std::string role;
+    role = person.at("role").as_string();
+    bool hasNumber = person.as_object().contains("number");
+
+    if ((role == "admin" && hasNumber) || (role == "employee" && !hasNumber)) {
+        return SendBadRequestResponse("Invalid register format", "invalidRegister");
     }
 
     std::string email;
     std::string password;
     std::string name;
-    std::string role;
     std::string number;
 
     email = person.at("email").as_string();
     password = person.at("password").as_string();
     name = person.at("name").as_string();
-    role = person.at("role").as_string();
     last_role_ = role;
+    Person p{email, password, role};
+    PersonInfo p_info{email, password, name, role};
+    Login login{email, password};
+
+    if (persons_.contains(p) || tokens_.contains(p_info) || login_to_role_.contains(login)) {
+        return SendBadRequestResponse("Пользователь уже зарегистрирован"s);
+    }
+
     if (role == "employee") {
         number = person.at("number").as_string();
+
+        if (numbers_.contains(number)) {
+            return SendBadRequestResponse("Пользователь уже зарегистрирован"s);
+        }
+        else {
+            numbers_.insert(number);
+        }
 
         std::unordered_set<std::string> numbers = application_.GetUseCases().GetNumbers();
         try {
@@ -877,9 +835,7 @@ void ApiHandler::HandleRegister() {
     std::string access_token = GetUniqueToken();
     std::string refresh_token = GetUniqueToken();
 
-    Person p{email, password, role};
-    PersonInfo p_info{email, password, name, role};
-
+    login_to_role_[{email, password}] = role;
     persons_.insert({p, name});
     tokens_[p_info] = {access_token, refresh_token, TimeTracker{}};
     auth_to_person_[access_token] = p_info;
@@ -914,15 +870,25 @@ void ApiHandler::HandleLogin() {
 
     std::string email;
     std::string password;
-    std::string role = last_role_;
+    std::string role;
 
     email = person.at("email").as_string();
     password = person.at("password").as_string();
+
+    try {
+        role = login_to_role_.at({email, password});
+    }
+    catch (...) {
+        return SendNoAuthResponse("Invalid login format"s, "invalidLogin"s);
+    }
+
     Person p{email, password, role};
+    last_role_ = role;
 
     if (persons_.contains(p)) {
         PersonInfo p_info{email, password, persons_[p], role};
         if (tokens_.contains(p_info)) {
+            refresh_tokens_.push_back(tokens_[p_info].refresh_token);
             json::value jv {
                 {"success"s, true},
                 {"accessToken"s, "Bearer "s + tokens_[p_info].access_token},
@@ -1012,11 +978,6 @@ void ApiHandler::HandleToken() {
     }
 
     SendBadRequestResponseDefault();
-}
-
-void ApiHandler::HandleOptions() {
-    ResponseInfo result = MakeResponse(http::status::ok, true);
-    SendOkResponse({});
 }
 
 void ApiHandler::HandleUser() {
@@ -1123,21 +1084,6 @@ void ApiHandler::SendNoAuthResponse(const std::string& message, const std::strin
     };
 
     result.body = json::serialize(body);
-
-    send_(result);
-}
-
-void ApiHandler::SendWrongMethodResponseAllowedDelete(const std::string& message, bool no_cache) {
-    ResponseInfo result = MakeResponse(http::status::method_not_allowed, no_cache);
-
-    json::value body = {
-        {"code"s, "invalidMethod"s},
-        {"message"s, message}
-    };
-
-    result.body = json::serialize(body);
-
-    result.additional_fields.emplace_back(http::field::allow, "DELETE"s);
 
     send_(result);
 }
