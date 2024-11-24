@@ -156,6 +156,8 @@ class ApiHandler : public std::enable_shared_from_this<ApiHandler> {
 
     bool CheckEndPath();
     std::string FindAndCutTarget(RequestInfo& req);
+    std::string GetIdFromTarget(const std::string& target);
+
     void HandleApiResponse();
 
     std::random_device random_device_;

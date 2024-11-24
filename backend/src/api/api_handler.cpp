@@ -52,6 +52,14 @@ std::string ApiHandler::FindAndCutTarget(RequestInfo& req) {
     return res;
 }
 
+std::string ApiHandler::GetIdFromTarget(const std::string& target) {
+    size_t last_slash_pos = target.find_last_of('/');
+    if (last_slash_pos == std::string::npos) {
+        return ""s;
+    }
+    return target.substr(last_slash_pos + 1);
+}
+
 void ApiHandler::HandleApiResponse() {
     std::string path_part = FindAndCutTarget(req_info_);
 
@@ -464,23 +472,15 @@ void ApiHandler::HandleGetVacations() {
     SendBadRequestResponseDefault();
 }
 
-std::string GetId(const std::string& str) {
-    size_t last_slash_pos = str.find_last_of('/');
-    if (last_slash_pos == std::string::npos) {
-        return ""s;
-  }
-  return str.substr(last_slash_pos + 1);
-}
-
 void ApiHandler::HandleUpdate() {
     std::string path_part = FindAndCutTarget(req_info_);
 
     std::string target = req_info_.target;
-    if (GetId(target).empty()) {
+    if (GetIdFromTarget(target).empty()) {
         return SendBadRequestResponseDefault();
     }
 
-    int id = std::stoi(GetId(target).c_str());
+    int id = std::stoi(GetIdFromTarget(target).c_str());
 
     if (path_part == "/department"s) {
         HandleUpdateDepartment(id);
