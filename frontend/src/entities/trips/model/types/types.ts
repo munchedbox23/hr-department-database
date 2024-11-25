@@ -11,5 +11,5 @@ export interface ITrip {
 
 export interface ITripComposition {
   ТабельныйНомер: number;
-  НомерЗаписи: number;
+  НомерЗаписи: string;
 }

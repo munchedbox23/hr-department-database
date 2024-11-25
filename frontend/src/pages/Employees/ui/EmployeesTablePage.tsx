@@ -6,7 +6,7 @@ import {
 import { Table } from "@/widgets/Table";
 import { Loader } from "@/shared/ui/Loader";
 import { Container, Typography } from "@mui/material";
-import { useMaterialReactTable, MRT_ColumnDef } from "material-react-table";
+import { MRT_ColumnDef } from "material-react-table";
 import { useMemo } from "react";
 import { CreateAnEntity } from "@/features/common/create-an-entity";
 import { CreateAnEmployeeForm } from "@/features/employee/createAnEmployee";
@@ -79,6 +79,15 @@ export const EmployeeTablePage = () => {
         accessorKey: "СемейноеПоложение",
         header: "Семейное Положение",
         size: 200,
+      },
+      {
+        accessorKey: "ДатаУвольнения",
+        header: "Дата Увольнения",
+        size: 150,
+        Cell: ({ cell }) => {
+          const dateValue = cell.getValue() as string | number;
+          return dateValue ?? new Date(dateValue).toLocaleDateString();
+        },
       },
     ],
     []

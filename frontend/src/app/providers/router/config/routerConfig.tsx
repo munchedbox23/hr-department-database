@@ -12,10 +12,12 @@ import { WorkHoursPage } from "@/pages/WorkHoursPage";
 import { OrdersPage } from "@/pages/OrderPage";
 import { TripsPage } from "@/pages/TripsPage";
 import { VacationPage } from "@/pages/VacationPage";
+import { DepartmentPage } from "@/pages/DepartmentPage";
+
 export const router = createBrowserRouter([
   {
     path: appRoutes.home(),
-    element: <MainLayout />,
+    element: <OnlyAuth component={<MainLayout />} />,
     children: [
       { index: true, element: <OnlyAuth component={<WelcomePage />} /> },
       {
@@ -41,6 +43,10 @@ export const router = createBrowserRouter([
       {
         path: appRoutes.vacations(),
         element: <OnlyAuth component={<VacationPage />} />,
+      },
+      {
+        path: appRoutes.department(),
+        element: <OnlyAuth component={<DepartmentPage />} />,
       },
     ],
   },

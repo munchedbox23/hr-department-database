@@ -1,23 +1,28 @@
 import { useState } from "react";
 
-type ValidationFunction = (value: any) => string;
+type ValidationErrors<T> = {
+  [K in keyof T]?: string;
+};
 
-export const useValidation = (formState: any, validationRules: Record<string, ValidationFunction>) => {
-  const [errors, setErrors] = useState<Record<string, string>>({});
+type Validator<T> = (value: T[keyof T]) => string | null;
 
-  const validateForm = () => {
-    const newErrors: Record<string, string> = {};
+export const useValidation = <T extends Record<string, any>>(validators: {
+  [K in keyof T]: Validator<T>;
+}) => {
+  const [errors, setErrors] = useState<ValidationErrors<T>>({});
 
-    for (const field in validationRules) {
-      const error = validationRules[field](formState[field]);
+  const validateForm = (formState: T): boolean => {
+    const newErrors: ValidationErrors<T> = {};
+
+    for (const key in validators) {
+      const error = validators[key](formState[key]);
       if (error) {
-        newErrors[field] = error;
+        newErrors[key] = error;
       }
     }
 
     setErrors(newErrors);
-
-    return Object.values(newErrors).every((error) => error === "");
+    return Object.keys(newErrors).length === 0;
   };
 
   return { errors, validateForm };

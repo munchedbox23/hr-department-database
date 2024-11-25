@@ -27,7 +27,7 @@ export const StaffingSchedulePage: React.FC = () => {
     },
     {
       accessorKey: "КодОтдела",
-      header: "Код Отдела",
+      header: "Название Отдела",
       size: 100,
     },
     {

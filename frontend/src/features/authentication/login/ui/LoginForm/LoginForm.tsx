@@ -4,10 +4,10 @@ import { PasswordInput } from "@/shared/ui/PasswordInput";
 import { checkUserAuth, useLoginMutation } from "@/entities/user";
 import { useNavigate } from "react-router-dom";
 import { validateEmail, validatePassword } from "@/shared/lib/validate";
-import { useState } from "react";
 import { appRoutes } from "@/shared/const/routes";
 import { IUserLogin } from "@/entities/user";
 import { useAppDispatch } from "@/app/providers/StoreProvider";
+import { useValidation } from "@/shared/lib/hooks/useValidate";
 
 export const LoginForm = () => {
   const { formState, handleChange } = useForm<IUserLogin>({
@@ -17,27 +17,16 @@ export const LoginForm = () => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
 
-  const [errors, setErrors] = useState<IUserLogin>({
-    email: "",
-    password: "",
-  });
   const [login, { isLoading: isUserLogin }] = useLoginMutation();
 
-  const validateForm = () => {
-    const passwordError = validatePassword(formState.password ?? "");
-    const emailError = validateEmail(formState.email ?? "");
-
-    setErrors({
-      password: passwordError || "",
-      email: emailError || "",
-    });
-
-    return !passwordError && !emailError;
-  };
+  const { errors, validateForm } = useValidation<IUserLogin>({
+    email: (value) => validateEmail(value as string),
+    password: (value) => validatePassword(value as string),
+  });
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (!validateForm()) return;
+    if (!validateForm(formState)) return;
     try {
       await login(formState)
         .unwrap()

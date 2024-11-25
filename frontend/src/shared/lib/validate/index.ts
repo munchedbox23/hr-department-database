@@ -1,4 +1,5 @@
 import { validateEmail } from "./validateEmail";
-import { validateUsername } from "./validateUsername";
+import { validateName } from "./validateName";
 import { validatePassword } from "./validatePassword";
-export { validateEmail, validatePassword, validateUsername };
+import { validatePhoneNumber } from "./validatePhoneNumber";
+export { validateEmail, validatePassword, validateName, validatePhoneNumber };

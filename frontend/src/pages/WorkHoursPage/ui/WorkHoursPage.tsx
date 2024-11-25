@@ -12,17 +12,17 @@ import { NotificationSnackbar } from "@/shared/ui/NotificationSnackbar";
 const columns: MRT_ColumnDef<TimeSheetRecord>[] = [
   {
     accessorKey: "НомерЗаписи",
-    header: "Номер Записи",
+    header: "Номер записи",
     size: 100,
   },
   {
     accessorKey: "ТабельныйНомер",
-    header: "ТабельныйНомер",
+    header: "Табельный номер",
     size: 100,
   },
   {
     accessorKey: "ОтработанноеВремя",
-    header: "ОтработанноеВремя",
+    header: "Отработанное время",
     size: 100,
   },
   {
