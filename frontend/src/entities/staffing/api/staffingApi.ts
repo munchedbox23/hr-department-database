@@ -35,6 +35,17 @@ export const staffingApi = createApi({
       }),
       invalidatesTags: [{ type: "Staffing", id: "LIST" }],
     }),
+    updateStaffing: builder.mutation<
+      StaffingRecord,
+      { staffing: Omit<StaffingRecord, "НомерЗаписи">; id: number }
+    >({
+      query: ({ staffing, id }) => ({
+        url: `/update/staffing-table/${id}`,
+        method: "PUT",
+        body: JSON.stringify(staffing),
+      }),
+      invalidatesTags: [{ type: "Staffing", id: "LIST" }],
+    }),
   }),
 });
 
@@ -42,4 +53,5 @@ export const {
   useGetStaffingQuery,
   useGetDepartmentQuery,
   useAddStaffingMutation,
+  useUpdateStaffingMutation,
 } = staffingApi;

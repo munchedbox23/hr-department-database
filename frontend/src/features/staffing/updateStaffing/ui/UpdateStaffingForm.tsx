@@ -3,33 +3,27 @@ import { CustomSelect } from "@/shared/ui/CustomSelect";
 import { useForm } from "@/shared/lib/hooks/useForm";
 import {
   StaffingRecord,
-  useAddStaffingMutation,
+  useUpdateStaffingMutation,
   useGetDepartmentQuery,
 } from "@/entities/staffing";
 import { EmployeePosition } from "@/entities/employee";
 import { TextField } from "@mui/material";
-import { useModalContext } from "@/app/providers/ModalProvider";
 
-export const CreateStaffingForm = ({
+export const UpdateStaffingForm = ({
+  staffing,
   positions,
   onStaffingAdded,
 }: {
+  staffing: StaffingRecord;
   positions: EmployeePosition[];
   onStaffingAdded: () => void;
 }) => {
-  const { closeModal } = useModalContext();
-  const { formState, handleChange } = useForm<
-    Omit<Partial<StaffingRecord>, "НомерЗаписи">
-  >({
-    КодДолжности: undefined,
-    КодОтдела: undefined,
-    КоличествоСтавок: 1,
-    Оклад: undefined,
-  });
+  const { formState, handleChange } =
+    useForm<Omit<Partial<StaffingRecord>, "НомерЗаписи">>(staffing);
 
   const { data: departments = [] } = useGetDepartmentQuery();
-  const [addStaffing, { isLoading: isAddingStaffing }] =
-    useAddStaffingMutation();
+  const [updateStaffing, { isLoading: isUpdatingStaffing }] =
+    useUpdateStaffingMutation();
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -39,8 +33,10 @@ export const CreateStaffingForm = ({
         Оклад: Number(formState.Оклад),
         КоличествоСтавок: Number(formState.КоличествоСтавок),
       };
-      await addStaffing(staffingData as Omit<StaffingRecord, "НомерЗаписи">);
-      closeModal();
+      await updateStaffing({
+        staffing: staffingData as Omit<StaffingRecord, "НомерЗаписи">,
+        id: staffing.НомерЗаписи,
+      });
       onStaffingAdded();
     } catch (error) {
       console.error("Error adding staffing:", error);
@@ -49,14 +45,14 @@ export const CreateStaffingForm = ({
 
   return (
     <BaseForm
-      isLoading={isAddingStaffing}
+      isLoading={isUpdatingStaffing}
       onSubmit={handleSubmit}
       buttonText="Добавить"
     >
       <CustomSelect
         label="Должность"
         name="КодДолжности"
-        value={formState?.КодДолжности?.toString() ?? ""}
+        value={formState?.КодДолжности?.toString() || ""}
         options={positions?.map((position) => ({
           value: position.Название.toString(),
           label: position.Название,
@@ -66,7 +62,7 @@ export const CreateStaffingForm = ({
       <CustomSelect
         label="Отдел"
         name="КодОтдела"
-        value={formState?.КодОтдела?.toString() ?? ""}
+        value={formState?.КодОтдела?.toString() || ""}
         options={departments?.map((department) => ({
           value: department.Название.toString(),
           label: department.Название,

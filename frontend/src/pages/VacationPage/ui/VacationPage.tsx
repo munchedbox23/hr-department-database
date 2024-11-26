@@ -6,6 +6,8 @@ import { CreateVacationsForm } from "@/features/vacations/createVacations";
 import { CreateAnEntity } from "@/features/common/create-an-entity";
 import { useSnackbar } from "@/shared/lib/hooks/useSnackbar";
 import { NotificationSnackbar } from "@/shared/ui/NotificationSnackbar";
+import { UpdateVacationsForm } from "@/features/vacations/updateVacations";
+import { EditAnEntity } from "@/features/common/edit-an-entity";
 
 export const VacationPage = () => {
   const { data: vacations, isLoading } = useGetVacationsQuery();
@@ -33,14 +35,23 @@ export const VacationPage = () => {
       ) : (
         <ListOfItem
           items={vacations || []}
-          renderItem={(vacation) => <VacationItem vacation={vacation} />}
+          renderItem={(vacation) => (
+            <VacationItem vacation={vacation}>
+              <EditAnEntity title="Изменить запись">
+                <UpdateVacationsForm
+                  vacation={vacation}
+                  onVacationAdded={handleOpenSnackbar}
+                />
+              </EditAnEntity>
+            </VacationItem>
+          )}
           getKey={(vacation) => vacation.НомерЗаписи}
         />
       )}
       <NotificationSnackbar
         open={openSnackbar}
         onClose={handleCloseSnackbar}
-        message="Запись успешно добавлена!"
+        message="Операция выполнена успешно!"
         severity="success"
       />
     </Container>

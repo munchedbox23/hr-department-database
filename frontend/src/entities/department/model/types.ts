@@ -1,6 +1,6 @@
 export interface DepartmentRecord {
   КодОтдела: number;
-  ТабельныйНомерРуководителя: number;
+  ТабельныйНомерРуководителя?: number;
   Название: string;
-  НомерКабинета: number;
+  НомерКабинета?: number;
 }

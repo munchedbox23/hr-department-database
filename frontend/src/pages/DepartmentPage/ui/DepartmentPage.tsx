@@ -6,10 +6,15 @@ import { Container } from "@mui/material";
 import { CreateAnEntity } from "@/features/common/create-an-entity";
 import { Table } from "@/widgets/Table";
 import { NotificationSnackbar } from "@/shared/ui/NotificationSnackbar";
-import { CreateAnEmployeeForm } from "@/features/employee/createAnEmployee";
+import { CreateDepartmentForm } from "@/features/department/createDepartment";
+import { useSnackbar } from "@/shared/lib/hooks/useSnackbar";
+import { EditAnEntity } from "@/features/common/edit-an-entity";
+import { UpdateDepartmentForm } from "@/features/department/updateDepartment";
 
 export const DepartmentPage = () => {
   const { data: departments = [], isLoading } = useGetDepartmentQuery();
+  const { openSnackbar, handleCloseSnackbar, handleOpenSnackbar } =
+    useSnackbar();
 
   const columns = useMemo<MRT_ColumnDef<DepartmentRecord>[]>(
     () => [
@@ -33,6 +38,19 @@ export const DepartmentPage = () => {
         header: "Номер кабинета",
         size: 250,
       },
+      {
+        accessorKey: "Действия",
+        header: "Действия",
+        size: 150,
+        Cell: ({ row }) => (
+          <EditAnEntity title="Изменить отдел">
+            <UpdateDepartmentForm
+              department={row.original}
+              onDepartmentAdded={handleOpenSnackbar}
+            />
+          </EditAnEntity>
+        ),
+      },
     ],
     [departments]
   );
@@ -41,19 +59,16 @@ export const DepartmentPage = () => {
     <Loader />
   ) : (
     <Container maxWidth="xl" sx={{ py: 5 }}>
-      {/* <CreateAnEntity title="Добавить сотрудника">
-        <CreateAnEmployeeForm
-          positions={departments}
-          onEmployeeAdded={handleOpenSnackbar}
-        />
-      </CreateAnEntity> */}
+      <CreateAnEntity title="Добавить отдел">
+        <CreateDepartmentForm onDepartmentAdded={handleOpenSnackbar} />
+      </CreateAnEntity>
       <Table data={departments} columns={columns} />
-      {/* <NotificationSnackbar
+      <NotificationSnackbar
         open={openSnackbar}
         onClose={handleCloseSnackbar}
-        message="Сотрудник успешно добавлен!"
+        message="Операция выполнена успешно!"
         severity="success"
-      /> */}
+      />
     </Container>
   );
 };

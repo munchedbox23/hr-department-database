@@ -23,6 +23,12 @@ function validateStartDate(startDate: string): string | null {
   if (!startDate) {
     return "Дата начала не может быть пустой.";
   }
+  const start = new Date(startDate);
+  const today = new Date();
+  today.setHours(0, 0, 0, 0); // Set the time to midnight to only compare dates
+  if (start < today) {
+    return "Дата начала должна быть больше или равна текущей дате.";
+  }
   return null;
 }
 

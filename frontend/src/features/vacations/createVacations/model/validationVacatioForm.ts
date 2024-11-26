@@ -2,6 +2,11 @@ function validateVacationStartDate(startDate: string): string | null {
   if (!startDate) {
     return "Дата отпуска не может быть пустой.";
   }
+  const start = new Date(startDate);
+  const today = new Date();
+  if (start <= today) {
+    return "Дата отпуска должна быть больше текущей даты.";
+  }
   return null;
 }
 

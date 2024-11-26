@@ -6,21 +6,32 @@ interface OrderListItemProps {
   order: Order;
 }
 
-export const OrderListItem: React.FC<OrderListItemProps> = ({ order }) => {
+export const OrderListItem: React.FC<
+  React.PropsWithChildren<OrderListItemProps>
+> = ({ order, children }) => {
   return (
-    <Card variant="outlined" sx={{ marginBottom: 2, padding: 2, borderRadius: 2 }}>
+    <Card
+      variant="outlined"
+      sx={{ marginBottom: 2, padding: 2, borderRadius: 2 }}
+    >
       <CardContent>
         <Typography variant="h6" component="div" gutterBottom>
-          <span style={{ color: '#1E90FF' }}>№{order.НомерПриказа}</span> - {order.Содержание}
+          <span style={{ color: "#1E90FF" }}>№{order.НомерПриказа}</span> -{" "}
+          {order.Содержание}
         </Typography>
         <Divider />
-        <Typography variant="body2" color="text.secondary" sx={{ marginTop: 1 }}>
+        <Typography
+          variant="body2"
+          color="text.secondary"
+          sx={{ marginTop: 1 }}
+        >
           Дата оформления: {order.ДатаОформления}
         </Typography>
         <Typography variant="body2" color="text.secondary">
           Табельный номер: {order.ТабельныйНомер}
         </Typography>
       </CardContent>
+      {children}
     </Card>
   );
 };

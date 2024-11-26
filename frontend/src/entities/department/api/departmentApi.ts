@@ -20,7 +20,33 @@ export const departmentApi = createApi({
             ]
           : [{ type: "Department", id: "LIST" }],
     }),
+    addDepartment: builder.mutation<
+      DepartmentRecord,
+      Omit<DepartmentRecord, "КодОтдела">
+    >({
+      query: (department) => ({
+        url: "/add/department",
+        method: "POST",
+        body: JSON.stringify(department),
+      }),
+      invalidatesTags: [{ type: "Department", id: "LIST" }],
+    }),
+    updateDepartment: builder.mutation<
+      DepartmentRecord,
+      { department: Omit<DepartmentRecord, "КодОтдела">; id: number }
+    >({
+      query: ({ department, id }) => ({
+        url: `/update/department/${id}`,
+        method: "PUT",
+        body: JSON.stringify(department),
+      }),
+      invalidatesTags: [{ type: "Department", id: "LIST" }],
+    }),
   }),
 });
 
-export const { useGetDepartmentQuery } = departmentApi;
+export const {
+  useGetDepartmentQuery,
+  useAddDepartmentMutation,
+  useUpdateDepartmentMutation,
+} = departmentApi;

@@ -1,6 +1,7 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { apiUrl } from "@/shared/const/apiUrl";
 import { TimeSheetRecord } from "../model/types/types";
+import { StaffingRecord } from "@/entities/staffing/model/types/types";
 
 export const timeSheetApi = createApi({
   reducerPath: "timeSheetApi",
@@ -31,7 +32,22 @@ export const timeSheetApi = createApi({
       }),
       invalidatesTags: ["TimeSheet"],
     }),
+    updateTimeSheet: builder.mutation<
+      TimeSheetRecord,
+      { timeSheet: Omit<TimeSheetRecord, "НомерЗаписи">; id: number }
+    >({
+      query: ({ timeSheet, id }) => ({
+        url: `/update/time-sheet/${id}`,
+        method: "PUT",
+        body: JSON.stringify(timeSheet),
+      }),
+      invalidatesTags: [{ type: "TimeSheet", id: "LIST" }],
+    }),
   }),
 });
 
-export const { useGetTimeSheetQuery, useAddTimeSheetMutation } = timeSheetApi;
+export const {
+  useGetTimeSheetQuery,
+  useAddTimeSheetMutation,
+  useUpdateTimeSheetMutation,
+} = timeSheetApi;

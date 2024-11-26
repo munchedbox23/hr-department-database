@@ -4,4 +4,5 @@ export {
   useGetEmployeesQuery,
   useAddEmployeeMutation,
   useGetEmployeePositionQuery,
+  useUpdateEmployeeMutation,
 } from "./api/employeesApi";

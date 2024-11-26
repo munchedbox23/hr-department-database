@@ -11,11 +11,25 @@ function validateAddress(address: string): string | null {
 function validateExperience(
   experience: string | number | undefined
 ): string | null {
+  if (experience === undefined || experience === "") {
+    return null;
+  }
   const exp =
     typeof experience === "string" ? parseInt(experience, 10) : experience;
-  return exp === undefined || (Number.isInteger(exp) && exp >= 0)
+  return Number.isInteger(exp) && exp >= 0
     ? null
     : "Введите корректный опыт работы";
 }
 
-export { validateAddress, validateExperience };
+function validateTerminationDate(value: string): string | null {
+  if (!value) {
+    return null;
+  }
+  const currentDate = new Date();
+  const inputDate = new Date(value);
+  return inputDate >= currentDate
+    ? null
+    : "Дата увольнения должна быть >= текущей даты";
+}
+
+export { validateAddress, validateExperience, validateTerminationDate };

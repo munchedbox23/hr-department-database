@@ -13,10 +13,14 @@ import { CreateAnEmployeeForm } from "@/features/employee/createAnEmployee";
 import { NotificationSnackbar } from "@/shared/ui/NotificationSnackbar";
 import { useSnackbar } from "@/shared/lib/hooks/useSnackbar";
 import { EditAnEntity } from "@/features/common/edit-an-entity";
+import { UpdateAnEmployeeForm } from "@/features/employee/updateAnEmployee";
 
 export const EmployeeTablePage = () => {
   const { data = [], isLoading } = useGetEmployeesQuery();
   const { data: positions = [] } = useGetEmployeePositionQuery();
+
+  const { openSnackbar, handleCloseSnackbar, handleOpenSnackbar } =
+    useSnackbar();
 
   const columns = useMemo<MRT_ColumnDef<Employee>[]>(
     () => [
@@ -97,16 +101,17 @@ export const EmployeeTablePage = () => {
         size: 150,
         Cell: ({ row }) => (
           <EditAnEntity title="Изменить сотрудника">
-            <div></div>
+            <UpdateAnEmployeeForm
+              employee={row.original}
+              positions={positions}
+              onEmployeeAdded={handleOpenSnackbar}
+            />
           </EditAnEntity>
         ),
       },
     ],
-    []
+    [positions]
   );
-
-  const { openSnackbar, handleCloseSnackbar, handleOpenSnackbar } =
-    useSnackbar();
 
   return isLoading ? (
     <Loader />
@@ -122,7 +127,7 @@ export const EmployeeTablePage = () => {
       <NotificationSnackbar
         open={openSnackbar}
         onClose={handleCloseSnackbar}
-        message="Сотрудник успешно добавлен!"
+        message="Операция выполнена успешно!"
         severity="success"
       />
     </Container>

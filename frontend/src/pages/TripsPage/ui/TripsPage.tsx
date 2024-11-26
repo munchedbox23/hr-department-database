@@ -9,17 +9,18 @@ import { CreateTripForm } from "@/features/trips/createTrip";
 import { CreateAnEntity } from "@/features/common/create-an-entity";
 import { useSnackbar } from "@/shared/lib/hooks/useSnackbar";
 import { NotificationSnackbar } from "@/shared/ui/NotificationSnackbar";
+import { UpdateTripForm } from "@/features/trips/updateTrip";
+import { EditAnEntity } from "@/features/common/edit-an-entity";
 
 export const TripsPage: React.FC = () => {
   const { data: trips = [], isLoading } = useGetTripsQuery();
   const { openSnackbar, handleCloseSnackbar, handleOpenSnackbar } =
     useSnackbar();
 
-
   return (
     <Container maxWidth="lg" sx={{ py: 5 }}>
       <Stack
-        flexDirection="row" 
+        flexDirection="row"
         justifyContent="space-between"
         alignItems="center"
       >
@@ -39,7 +40,15 @@ export const TripsPage: React.FC = () => {
           items={trips}
           renderItem={(trip) => (
             <TripsItem trip={trip}>
-              <ShowTrip trip={trip} />
+              <Stack flexDirection="column" gap={2}>
+                <ShowTrip trip={trip} />
+                <EditAnEntity title="Изменить запись">
+                  <UpdateTripForm
+                    trip={trip}
+                    onTripUpdated={handleOpenSnackbar}
+                  />
+                </EditAnEntity>
+              </Stack>
             </TripsItem>
           )}
           getKey={(trip) => trip.НомерЗаписи}
@@ -48,7 +57,7 @@ export const TripsPage: React.FC = () => {
       <NotificationSnackbar
         open={openSnackbar}
         onClose={handleCloseSnackbar}
-        message="Запись успешно добавлена!"
+        message="Операция выполнена успешно!"
         severity="success"
       />
     </Container>
