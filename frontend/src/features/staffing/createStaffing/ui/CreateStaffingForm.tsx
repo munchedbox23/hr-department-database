@@ -37,6 +37,7 @@ export const CreateStaffingForm = ({
       const staffingData = {
         ...formState,
         Оклад: Number(formState.Оклад),
+        КоличествоСтавок: Number(formState.КоличествоСтавок),
       };
       await addStaffing(staffingData as Omit<StaffingRecord, "НомерЗаписи">);
       closeModal();

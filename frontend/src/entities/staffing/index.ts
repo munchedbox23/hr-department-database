@@ -4,4 +4,5 @@ export {
   useGetDepartmentQuery,
   useAddStaffingMutation,
   staffingApi,
+  useUpdateStaffingMutation,
 } from "./api/staffingApi";

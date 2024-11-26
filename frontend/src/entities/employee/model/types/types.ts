@@ -24,6 +24,7 @@ export type Employee = {
     | "вдовец"
     | "вдова"
     | "";
+  ДатаУвольнения?: string;
 };
 
 export type EmployeePosition = {

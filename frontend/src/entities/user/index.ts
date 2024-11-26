@@ -12,6 +12,7 @@ export type {
   IUserRegister,
   IUserResponse,
   IRefreshTokenResponse,
+  IUserWithRole,
 } from "./model/types/types";
 
 import userSlice from "./model/slice/authSlice";

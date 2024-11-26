@@ -17,7 +17,7 @@ export interface IUserAuth {
   user: {
     email: string;
     name: string;
-    role: string;
+    role: "admin" | "employee";
   };
 }
 

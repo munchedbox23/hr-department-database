@@ -14,7 +14,7 @@ export const ShowTrip = ({ trip }: { trip: ITrip }) => {
     compositionBusinessTrip?.some(
       (composition) =>
         composition.ТабельныйНомер === employee.ТабельныйНомер &&
-        composition.НомерЗаписи === trip.НомерЗаписи
+        composition.НомерЗаписи === trip.Организация
     )
   );
 

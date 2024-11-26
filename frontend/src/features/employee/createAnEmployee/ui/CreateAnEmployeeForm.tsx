@@ -1,16 +1,22 @@
-import {  TextField } from "@mui/material";
+import { TextField } from "@mui/material";
 import { useForm } from "@/shared/lib/hooks/useForm";
 import { Employee, EmployeePosition } from "@/entities/employee";
-import { useAddEmployeeMutation } from "@/entities/employee";
+import {
+  useAddEmployeeMutation,
+  useGetEmployeesQuery,
+} from "@/entities/employee";
 import { CustomSelect } from "@/shared/ui/CustomSelect";
 import MaskedInput from "react-text-mask";
 import { phoneMask } from "../model/const/constants";
-import { useState } from "react";
-import { validateUsername } from "@/shared/lib/validate/validateUsername";
-import { validateEmail } from "@/shared/lib/validate/validateEmail";
-import { validateAddress } from "../model/lib/validateForm";
 import { BaseForm } from "@/shared/ui/BaseForm";
 import { useModalContext } from "@/app/providers/ModalProvider/config/lib/useModalContext";
+import { useValidation } from "@/shared/lib/hooks/useValidate";
+import {
+  validateName,
+  validatePhoneNumber,
+  validateEmail,
+} from "@/shared/lib/validate";
+import { validateExperience, validateAddress } from "../model/lib/validateForm";
 
 export const CreateAnEmployeeForm = ({
   positions,
@@ -36,35 +42,32 @@ export const CreateAnEmployeeForm = ({
   const { closeModal } = useModalContext();
 
   const [addEmployee, { isLoading }] = useAddEmployeeMutation();
-  const [errors, setErrors] = useState({
-    ФИО: "",
-    Почта: "",
-    Прописка: "",
+  const { data: employees } = useGetEmployeesQuery();
+
+  const existingPhones = employees?.map((employee) => employee.Телефон);
+  const existingEmails = employees?.map((employee) => employee.Почта);
+
+  const { errors, validateForm } = useValidation<
+    Pick<Employee, "ФИО" | "Стаж" | "Телефон" | "Почта" | "Прописка">
+  >({
+    ФИО: (value) => validateName(value as string),
+    Стаж: (value) => validateExperience(value as string | number | undefined),
+    Телефон: (value) =>
+      validatePhoneNumber(value as string, existingPhones ?? []),
+    Почта: (value) => validateEmail(value as string, existingEmails ?? []),
+    Прописка: (value) => validateAddress(value as string),
   });
-
-  const validateForm = () => {
-    const nameError = validateUsername(formState.ФИО);
-    const emailError = validateEmail(formState.Почта);
-    const addressError = validateAddress(formState.Прописка);
-
-    const newErrors = {
-      ФИО: nameError || "",
-      Почта: emailError || "",
-      Прописка: addressError || "",
-    };
-
-    setErrors(newErrors);
-
-    return Object.values(newErrors).every((error) => error === "");
-  };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (!validateForm()) return;
-
-    await addEmployee(formState);
-    onEmployeeAdded();
-    closeModal();
+    if (!validateForm(formState)) return;
+    try {
+      await addEmployee(formState);
+      onEmployeeAdded();
+      closeModal();
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (
@@ -81,9 +84,9 @@ export const CreateAnEmployeeForm = ({
         value={formState.ФИО}
         variant="outlined"
         onChange={handleChange}
+        fullWidth
         error={!!errors.ФИО}
         helperText={errors.ФИО}
-        fullWidth
       />
       <CustomSelect
         label="Пол"
@@ -118,6 +121,8 @@ export const CreateAnEmployeeForm = ({
         onChange={handleChange}
         inputProps={{ min: 0, max: 100 }}
         fullWidth
+        error={!!errors.Стаж}
+        helperText={errors.Стаж}
       />
       <MaskedInput
         mask={phoneMask}
@@ -132,6 +137,8 @@ export const CreateAnEmployeeForm = ({
             label="Телефон"
             variant="outlined"
             fullWidth
+            error={!!errors.Телефон}
+            helperText={errors.Телефон}
           />
         )}
       />
@@ -142,9 +149,9 @@ export const CreateAnEmployeeForm = ({
         value={formState.Прописка}
         variant="outlined"
         onChange={handleChange}
+        fullWidth
         error={!!errors.Прописка}
         helperText={errors.Прописка}
-        fullWidth
       />
       <CustomSelect
         label="Образование"
@@ -178,9 +185,9 @@ export const CreateAnEmployeeForm = ({
         value={formState.Почта}
         variant="outlined"
         onChange={handleChange}
+        fullWidth
         error={!!errors.Почта}
         helperText={errors.Почта}
-        fullWidth
       />
       <CustomSelect
         label="Семейное Положение"

@@ -2,9 +2,10 @@ import React from "react";
 import { Card, CardContent, Typography, Divider } from "@mui/material";
 import { Vacation } from "../model/types/types";
 
-export const VacationItem: React.FC<{ vacation: Vacation }> = ({
-  vacation,
-}) => {
+export const VacationItem: React.FC<{
+  vacation: Vacation;
+  children?: React.ReactNode;
+}> = ({ vacation, children }) => {
   return (
     <Card
       variant="outlined"
@@ -38,6 +39,7 @@ export const VacationItem: React.FC<{ vacation: Vacation }> = ({
           Табельный номер: {vacation.ТабельныйНомер}
         </Typography>
       </CardContent>
+      {children}
     </Card>
   );
 };

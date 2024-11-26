@@ -6,6 +6,7 @@ export enum AppRoutes {
   LABOR_CONTRACTS = "labor-contracts",
   STAFFING = "staffing",
   ATTENDANCE = "attendance",
+  DEPARTMENT = "department",
   NOT_FOUND = "*",
 }
 
@@ -18,6 +19,7 @@ export const getRouteBusinessTrips = () => `${AppRoutes.BUSINESS_TRIPS}`;
 export const getRouteLaborContracts = () => `${AppRoutes.LABOR_CONTRACTS}`;
 export const getRouteStaffing = () => `${AppRoutes.STAFFING}`;
 export const getRouteAttendance = () => `${AppRoutes.ATTENDANCE}`;
+export const getRouteDepartment = () => `${AppRoutes.DEPARTMENT}`;
 
 export const appRoutes = {
   home: getRouteHome,
@@ -29,4 +31,5 @@ export const appRoutes = {
   staffing: getRouteStaffing,
   attendance: getRouteAttendance,
   notFound: getRouteNotFound,
+  department: getRouteDepartment,
 };

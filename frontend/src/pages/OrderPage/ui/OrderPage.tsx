@@ -7,6 +7,8 @@ import { CreateOrderForm } from "@/features/orders/createOrder";
 import { CreateAnEntity } from "@/features/common/create-an-entity";
 import { useSnackbar } from "@/shared/lib/hooks/useSnackbar";
 import { NotificationSnackbar } from "@/shared/ui/NotificationSnackbar";
+import { EditAnEntity } from "@/features/common/edit-an-entity";
+import { UpdateOrderForm } from "@/features/orders/updateOrder";
 
 export const OrdersPage: React.FC = () => {
   const { data: orders = [], isLoading } = useGetOrdersQuery();
@@ -34,14 +36,23 @@ export const OrdersPage: React.FC = () => {
       ) : (
         <ListOfItem
           items={orders}
-          renderItem={(order) => <OrderListItem order={order} />}
+          renderItem={(order) => (
+            <OrderListItem order={order}>
+              <EditAnEntity title="Изменить договор">
+                <UpdateOrderForm
+                  order={order}
+                  onOrderAdded={handleOpenSnackbar}
+                />
+              </EditAnEntity>
+            </OrderListItem>
+          )}
           getKey={(order) => order.ТабельныйНомер}
         />
       )}
       <NotificationSnackbar
         open={openSnackbar}
         onClose={handleCloseSnackbar}
-        message="Трудовой договор успешно добавлен!"
+          message="Операция выполнена успешно!"
         severity="success"
       />
     </Container>

@@ -6,6 +6,12 @@ import { useGetEmployeesQuery } from "@/entities/employee";
 import { TextField } from "@mui/material";
 import { useAddVacationMutation } from "@/entities/vacations";
 import { useModalContext } from "@/app/providers/ModalProvider";
+import { useValidation } from "@/shared/lib/hooks/useValidate";
+import {
+  validateVacationStartDate,
+  validateEndDate,
+  validatePurpose,
+} from "../model/validationVacatioForm";
 
 export const CreateVacationsForm = ({
   onVacationAdded,
@@ -24,8 +30,18 @@ export const CreateVacationsForm = ({
   const [addVacation, { isLoading }] = useAddVacationMutation();
   const { closeModal } = useModalContext();
 
+  const { errors, validateForm } = useValidation<
+    Pick<Vacation, "ДатаОтпуска" | "ДатаОкончания" | "Основание">
+  >({
+    ДатаОтпуска: (value) => validateVacationStartDate(value as string),
+    ДатаОкончания: (value) =>
+      validateEndDate(value as string, formState.ДатаОтпуска),
+    Основание: (value) => validatePurpose(value as string),
+  });
+
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    if (!validateForm(formState)) return;
     try {
       await addVacation({
         ...formState,
@@ -88,6 +104,8 @@ export const CreateVacationsForm = ({
           shrink: true,
         }}
         fullWidth
+        error={!!errors.ДатаОтпуска}
+        helperText={errors.ДатаОтпуска}
       />
       <TextField
         type="date"
@@ -100,6 +118,8 @@ export const CreateVacationsForm = ({
           shrink: true,
         }}
         fullWidth
+        error={!!errors.ДатаОкончания}
+        helperText={errors.ДатаОкончания}
       />
       <TextField
         type="number"
@@ -120,6 +140,8 @@ export const CreateVacationsForm = ({
         multiline
         rows={4}
         fullWidth
+        error={!!errors.Основание}
+        helperText={errors.Основание}
       />
     </BaseForm>
   );

@@ -3,15 +3,16 @@ import { Box, Button, CircularProgress, TextField } from "@mui/material";
 import { PasswordInput } from "@/shared/ui/PasswordInput";
 import { FormEvent, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import {
-  validateUsername,
-  validatePassword,
-  validateEmail,
-} from "@/shared/lib/validate";
 import { appRoutes } from "@/shared/const/routes";
 import { checkUserAuth, useRegisterMutation } from "@/entities/user";
 import { IUserRegister } from "@/entities/user";
 import { useAppDispatch } from "@/app/providers/StoreProvider";
+import {
+  validateEmail,
+  validateName,
+  validatePassword,
+} from "@/shared/lib/validate";
+import { useValidation } from "@/shared/lib/hooks/useValidate";
 
 export const RegisterForm = () => {
   const { formState, handleChange } = useForm<IUserRegister>({
@@ -20,32 +21,19 @@ export const RegisterForm = () => {
     password: "",
   });
   const dispatch = useAppDispatch();
-  const [errors, setErrors] = useState<IUserRegister>({
-    name: "",
-    email: "",
-    password: "",
-  });
-
-  const validateForm = (): boolean => {
-    const usernameError = validateUsername(formState.name ?? "");
-    const passwordError = validatePassword(formState.password ?? "");
-    const emailError = validateEmail(formState.email ?? "");
-
-    setErrors({
-      name: usernameError || "",
-      password: passwordError || "",
-      email: emailError || "",
-    });
-
-    return !passwordError && !emailError && !usernameError;
-  };
 
   const [register, { isLoading: isUserRegister }] = useRegisterMutation();
   const navigate = useNavigate();
 
+  const { errors, validateForm } = useValidation<IUserRegister>({
+    name: (value) => validateName(value as string),
+    email: (value) => validateEmail(value as string),
+    password: (value) => validatePassword(value as string),
+  });
+
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (!validateForm()) return;
+    if (!validateForm(formState)) return;
     try {
       await register(formState)
         .unwrap()

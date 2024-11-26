@@ -32,7 +32,23 @@ export const tripsApi = createApi({
       }),
       invalidatesTags: ["Trips", { type: "Trips", id: "LIST" }],
     }),
+    updateTrip: builder.mutation<
+      ITrip,
+      { trip: Omit<ITrip, "НомерЗаписи">; id: number }
+    >({
+      query: ({ trip, id }) => ({
+        url: `/update/business-trip/${id}`,
+        method: "PUT",
+        body: JSON.stringify(trip),
+      }),
+      invalidatesTags: [{ type: "Trips", id: "LIST" }],
+    }),
   }),
 });
 
-export const { useGetTripsQuery, useGetTripCompositionQuery, useAddTripMutation } = tripsApi;
+export const {
+  useGetTripsQuery,
+  useGetTripCompositionQuery,
+  useAddTripMutation,
+  useUpdateTripMutation,
+} = tripsApi;

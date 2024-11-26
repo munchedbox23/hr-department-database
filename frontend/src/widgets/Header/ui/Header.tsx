@@ -22,6 +22,7 @@ const pages = [
   { name: "Отпуска", route: appRoutes.vacations },
   { name: "Командировки", route: appRoutes.businessTrips },
   { name: "Сотрудники", route: appRoutes.employees },
+  { name: "Отделы", route: appRoutes.department },
   { name: "Трудовые договоры", route: appRoutes.laborContracts },
   { name: "Штатное расписание", route: appRoutes.staffing },
   { name: "Табель учета рабочего времени", route: appRoutes.attendance },
@@ -35,7 +36,7 @@ const AppHeader: React.FC = () => {
     null
   );
 
-  const user = useAppSelector((store) => store.user.user); 
+  const user = useAppSelector((store) => store.user.user);
 
   const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) =>
     setAnchorElNav(event.currentTarget);

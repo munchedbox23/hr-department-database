@@ -8,6 +8,7 @@ import { tripsApi } from "@/entities/trips";
 import { vacationApi } from "@/entities/vacations";
 import { staffingApi } from "@/entities/staffing";
 import { timeSheetApi } from "@/entities/time-sheet";
+import { departmentApi } from "@/entities/department";
 
 export const store = configureStore({
   reducer: rootReducer,
@@ -19,7 +20,8 @@ export const store = configureStore({
       tripsApi.middleware,
       vacationApi.middleware,
       staffingApi.middleware,
-      timeSheetApi.middleware
+      timeSheetApi.middleware,
+      departmentApi.middleware
     ),
 });
 

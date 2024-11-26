@@ -6,15 +6,21 @@ import {
 import { Table } from "@/widgets/Table";
 import { Loader } from "@/shared/ui/Loader";
 import { Container, Typography } from "@mui/material";
-import { useMaterialReactTable, MRT_ColumnDef } from "material-react-table";
+import { MRT_ColumnDef } from "material-react-table";
 import { useMemo } from "react";
 import { CreateAnEntity } from "@/features/common/create-an-entity";
 import { CreateAnEmployeeForm } from "@/features/employee/createAnEmployee";
 import { NotificationSnackbar } from "@/shared/ui/NotificationSnackbar";
 import { useSnackbar } from "@/shared/lib/hooks/useSnackbar";
+import { EditAnEntity } from "@/features/common/edit-an-entity";
+import { UpdateAnEmployeeForm } from "@/features/employee/updateAnEmployee";
+
 export const EmployeeTablePage = () => {
   const { data = [], isLoading } = useGetEmployeesQuery();
   const { data: positions = [] } = useGetEmployeePositionQuery();
+
+  const { openSnackbar, handleCloseSnackbar, handleOpenSnackbar } =
+    useSnackbar();
 
   const columns = useMemo<MRT_ColumnDef<Employee>[]>(
     () => [
@@ -80,12 +86,32 @@ export const EmployeeTablePage = () => {
         header: "Семейное Положение",
         size: 200,
       },
+      {
+        accessorKey: "ДатаУвольнения",
+        header: "Дата Увольнения",
+        size: 150,
+        Cell: ({ cell }) => {
+          const dateValue = cell.getValue() as string | number;
+          return dateValue ?? new Date(dateValue).toLocaleDateString();
+        },
+      },
+      {
+        accessorKey: "Действия",
+        header: "Действия",
+        size: 150,
+        Cell: ({ row }) => (
+          <EditAnEntity title="Изменить сотрудника">
+            <UpdateAnEmployeeForm
+              employee={row.original}
+              positions={positions}
+              onEmployeeAdded={handleOpenSnackbar}
+            />
+          </EditAnEntity>
+        ),
+      },
     ],
-    []
+    [positions]
   );
-
-  const { openSnackbar, handleCloseSnackbar, handleOpenSnackbar } =
-    useSnackbar();
 
   return isLoading ? (
     <Loader />
@@ -101,7 +127,7 @@ export const EmployeeTablePage = () => {
       <NotificationSnackbar
         open={openSnackbar}
         onClose={handleCloseSnackbar}
-        message="Сотрудник успешно добавлен!"
+        message="Операция выполнена успешно!"
         severity="success"
       />
     </Container>

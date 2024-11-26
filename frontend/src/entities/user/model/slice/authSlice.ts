@@ -1,7 +1,7 @@
 import { getCookie } from "@/shared/lib/cookie/cookieRequest";
 import { fetchWithRefresh } from "@/shared/lib/requests/request";
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { IUser, IUserAuth } from "../types/types";
+import { IUserWithRole, IUserAuth } from "../types/types";
 import { apiUrl } from "@/shared/const/apiUrl";
 
 export const checkUserAuth = createAsyncThunk<IUserAuth, void>(
@@ -33,7 +33,7 @@ export const checkUserAuth = createAsyncThunk<IUserAuth, void>(
 const userSlice = createSlice({
   name: "user",
   initialState: {
-    user: null as IUser | null,
+    user: null as IUserWithRole | null,
     isAuthChecked: false,
     isRequestLoading: false,
     isRequestFailed: false,

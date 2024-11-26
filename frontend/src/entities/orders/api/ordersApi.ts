@@ -30,7 +30,22 @@ export const ordersApi = createApi({
       }),
       invalidatesTags: [{ type: "Orders", id: "LIST" }],
     }),
+    updateOrder: builder.mutation<
+      Order,
+      { order: Omit<Order, "НомерПриказа">; id: number }
+    >({
+      query: ({ order, id }) => ({
+        url: `/update/order/${id}`,
+        method: "PUT",
+        body: JSON.stringify(order),
+      }),
+      invalidatesTags: [{ type: "Orders", id: "LIST" }],
+    }),
   }),
 });
 
-export const { useGetOrdersQuery, useAddOrderMutation } = ordersApi;
+export const {
+  useGetOrdersQuery,
+  useAddOrderMutation,
+  useUpdateOrderMutation,
+} = ordersApi;

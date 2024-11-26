@@ -17,7 +17,7 @@ export const request = async <T>(
 };
 
 export const refreshToken = (): Promise<IRefreshTokenResponse> => {
-  return request(`${apiUrl.authBaseUrl}${apiUrl.auth.refreshToken}`, {
+  return request(`${apiUrl.baseUrl}${apiUrl.auth.refreshToken}`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",

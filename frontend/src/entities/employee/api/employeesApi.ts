@@ -33,6 +33,17 @@ export const employeesApi = createApi({
       }),
       invalidatesTags: [{ type: "Employee", id: "LIST" }],
     }),
+    updateEmployee: builder.mutation<
+      Employee,
+      { employee: Omit<Employee, "ТабельныйНомер">; id: number }
+    >({
+      query: ({ employee, id }) => ({
+        url: `/update/employee/${id}`,
+        method: "PUT",
+        body: JSON.stringify(employee),
+      }),
+      invalidatesTags: [{ type: "Employee", id: "LIST" }],
+    }),
   }),
 });
 
@@ -40,4 +51,5 @@ export const {
   useGetEmployeesQuery,
   useAddEmployeeMutation,
   useGetEmployeePositionQuery,
+  useUpdateEmployeeMutation,
 } = employeesApi;

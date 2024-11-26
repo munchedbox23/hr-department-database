@@ -1,8 +1,17 @@
 import { useModalContext } from "@/app/providers/ModalProvider";
 import { ITrip, useAddTripMutation } from "@/entities/trips";
 import { useForm } from "@/shared/lib/hooks/useForm";
+import { useValidation } from "@/shared/lib/hooks/useValidate";
 import { BaseForm } from "@/shared/ui/BaseForm";
 import { TextField } from "@mui/material";
+import {
+  validateCountry,
+  validateCity,
+  validateOrganization,
+  validateStartDate,
+  validatePurpose,
+  validateEndDate,
+} from "../model/validationTripForm";
 
 export const CreateTripForm = ({
   onTripAdded,
@@ -22,8 +31,20 @@ export const CreateTripForm = ({
   const [addTrip, { isLoading }] = useAddTripMutation();
   const { closeModal } = useModalContext();
 
+  const { errors, validateForm } = useValidation<
+    Omit<ITrip, "КоличествоДней" | "НомерЗаписи">
+  >({
+    Страна: (value) => validateCountry(value as string),
+    Город: (value) => validateCity(value as string),
+    Организация: (value) => validateOrganization(value as string),
+    СДата: (value) => validateStartDate(value as string),
+    ПоДату: (value) => validateEndDate(value as string, formState.СДата),
+    Цель: (value) => validatePurpose(value as string),
+  });
+
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    if (!validateForm(formState)) return;
     try {
       await addTrip({
         ...formState,
@@ -49,6 +70,8 @@ export const CreateTripForm = ({
         value={formState.Страна}
         onChange={handleChange}
         fullWidth
+        error={!!errors.Страна}
+        helperText={errors.Страна}
       />
       <TextField
         type="text"
@@ -57,6 +80,8 @@ export const CreateTripForm = ({
         value={formState.Город}
         onChange={handleChange}
         fullWidth
+        error={!!errors.Город}
+        helperText={errors.Город}
       />
       <TextField
         type="text"
@@ -65,6 +90,8 @@ export const CreateTripForm = ({
         value={formState.Организация}
         onChange={handleChange}
         fullWidth
+        error={!!errors.Организация}
+        helperText={errors.Организация}
       />
       <TextField
         type="date"
@@ -72,6 +99,8 @@ export const CreateTripForm = ({
         value={formState.СДата}
         onChange={handleChange}
         fullWidth
+        error={!!errors.СДата}
+        helperText={errors.СДата}
       />
       <TextField
         type="date"
@@ -79,6 +108,8 @@ export const CreateTripForm = ({
         value={formState.ПоДату}
         onChange={handleChange}
         fullWidth
+        error={!!errors.ПоДату}
+        helperText={errors.ПоДату}
       />
       <TextField
         type="number"
@@ -98,6 +129,8 @@ export const CreateTripForm = ({
         multiline
         rows={3}
         fullWidth
+        error={!!errors.Цель}
+        helperText={errors.Цель}
       />
     </BaseForm>
   );
