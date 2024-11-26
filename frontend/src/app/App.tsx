@@ -5,6 +5,7 @@ import { useEffect } from "react";
 import { useAppDispatch } from "./providers/StoreProvider";
 import { checkUserAuth } from "@/entities/user";
 import { AppLocalizationProvider } from "./providers/LocalizationProvider.tsx";
+import { UserProvider } from "./providers/UserProvider";
 
 const App = () => {
   const dispatch = useAppDispatch();
@@ -16,7 +17,9 @@ const App = () => {
   return (
     <AppLocalizationProvider>
       <AnimatePresence mode="wait">
-        <RouterProvider router={router} />
+        <UserProvider>
+          <RouterProvider router={router} />
+        </UserProvider>
       </AnimatePresence>
     </AppLocalizationProvider>
   );

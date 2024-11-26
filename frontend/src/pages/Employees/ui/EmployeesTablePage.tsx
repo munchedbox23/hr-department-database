@@ -12,6 +12,8 @@ import { CreateAnEntity } from "@/features/common/create-an-entity";
 import { CreateAnEmployeeForm } from "@/features/employee/createAnEmployee";
 import { NotificationSnackbar } from "@/shared/ui/NotificationSnackbar";
 import { useSnackbar } from "@/shared/lib/hooks/useSnackbar";
+import { EditAnEntity } from "@/features/common/edit-an-entity";
+
 export const EmployeeTablePage = () => {
   const { data = [], isLoading } = useGetEmployeesQuery();
   const { data: positions = [] } = useGetEmployeePositionQuery();
@@ -88,6 +90,16 @@ export const EmployeeTablePage = () => {
           const dateValue = cell.getValue() as string | number;
           return dateValue ?? new Date(dateValue).toLocaleDateString();
         },
+      },
+      {
+        accessorKey: "Действия",
+        header: "Действия",
+        size: 150,
+        Cell: ({ row }) => (
+          <EditAnEntity title="Изменить сотрудника">
+            <div></div>
+          </EditAnEntity>
+        ),
       },
     ],
     []
