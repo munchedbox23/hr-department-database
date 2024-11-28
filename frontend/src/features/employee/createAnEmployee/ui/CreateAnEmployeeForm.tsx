@@ -11,12 +11,12 @@ import { phoneMask } from "../model/const/constants";
 import { BaseForm } from "@/shared/ui/BaseForm";
 import { useModalContext } from "@/app/providers/ModalProvider/config/lib/useModalContext";
 import { useValidation } from "@/shared/lib/hooks/useValidate";
+import { validatePhoneNumber, validateEmail } from "@/shared/lib/validate";
 import {
-  validateName,
-  validatePhoneNumber,
-  validateEmail,
-} from "@/shared/lib/validate";
-import { validateExperience, validateAddress } from "../model/lib/validateForm";
+  validateExperience,
+  validateAddress,
+  validateFullName,
+} from "../model/lib/validateForm";
 
 export const CreateAnEmployeeForm = ({
   positions,
@@ -50,7 +50,7 @@ export const CreateAnEmployeeForm = ({
   const { errors, validateForm } = useValidation<
     Pick<Employee, "ФИО" | "Стаж" | "Телефон" | "Почта" | "Прописка">
   >({
-    ФИО: (value) => validateName(value as string),
+    ФИО: (value) => validateFullName(value as string),
     Стаж: (value) => validateExperience(value as string | number | undefined),
     Телефон: (value) =>
       validatePhoneNumber(value as string, existingPhones ?? []),

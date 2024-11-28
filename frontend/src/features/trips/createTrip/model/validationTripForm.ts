@@ -25,7 +25,7 @@ function validateStartDate(startDate: string): string | null {
   }
   const start = new Date(startDate);
   const today = new Date();
-  today.setHours(0, 0, 0, 0); // Set the time to midnight to only compare dates
+  today.setHours(0, 0, 0, 0);
   if (start < today) {
     return "Дата начала должна быть больше или равна текущей дате.";
   }
@@ -51,6 +51,25 @@ function validatePurpose(purpose: string): string | null {
   return null;
 }
 
+function validateNumberOfDays(
+  startDate: string,
+  endDate: string,
+  numberOfDays: number
+): string | null {
+  if (!startDate || !endDate) {
+    return "Дата отпуска и дата окончания должны быть заполнены.";
+  }
+  const start = new Date(startDate);
+  const end = new Date(endDate);
+  const calculatedDays = Math.ceil(
+    (end.getTime() - start.getTime()) / (1000 * 60 * 60 * 24)
+  );
+  if (calculatedDays !== numberOfDays) {
+    return `Количество дней должно быть равно ${calculatedDays}.`;
+  }
+  return null;
+}
+
 export {
   validateEndDate,
   validatePurpose,
@@ -58,4 +77,5 @@ export {
   validateCity,
   validateOrganization,
   validateStartDate,
+  validateNumberOfDays,
 };

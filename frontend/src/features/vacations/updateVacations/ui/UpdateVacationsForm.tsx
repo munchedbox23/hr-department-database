@@ -10,6 +10,7 @@ import {
   validateVacationStartDate,
   validateEndDate,
   validatePurpose,
+  validateNumberOfDays,
 } from "../../createVacations/model/validationVacatioForm";
 
 export const UpdateVacationsForm = ({
@@ -31,12 +32,21 @@ export const UpdateVacationsForm = ({
   const [updateVacation, { isLoading }] = useUpdateVacationMutation();
 
   const { errors, validateForm } = useValidation<
-    Pick<Vacation, "ДатаОтпуска" | "ДатаОкончания" | "Основание">
+    Pick<
+      Vacation,
+      "ДатаОтпуска" | "ДатаОкончания" | "Основание" | "КоличествоДней"
+    >
   >({
     ДатаОтпуска: (value) => validateVacationStartDate(value as string),
     ДатаОкончания: (value) =>
       validateEndDate(value as string, formState.ДатаОтпуска),
     Основание: (value) => validatePurpose(value as string),
+    КоличествоДней: (value) =>
+      validateNumberOfDays(
+        formState.ДатаОтпуска,
+        formState.ДатаОкончания,
+        Number(value)
+      ),
   });
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
@@ -60,7 +70,7 @@ export const UpdateVacationsForm = ({
     <BaseForm
       isLoading={isLoading}
       onSubmit={handleSubmit}
-      buttonText="Создать"
+      buttonText="Изменить"
     >
       <CustomSelect
         name="ТабельныйНомер"
@@ -132,6 +142,8 @@ export const UpdateVacationsForm = ({
         onChange={handleChange}
         inputProps={{ min: 0 }}
         fullWidth
+        error={!!errors.КоличествоДней}
+        helperText={errors.КоличествоДней}
       />
       <TextField
         name="Основание"

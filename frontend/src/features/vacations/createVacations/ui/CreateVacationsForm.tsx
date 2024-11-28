@@ -11,6 +11,7 @@ import {
   validateVacationStartDate,
   validateEndDate,
   validatePurpose,
+  validateNumberOfDays,
 } from "../model/validationVacatioForm";
 
 export const CreateVacationsForm = ({
@@ -31,12 +32,21 @@ export const CreateVacationsForm = ({
   const { closeModal } = useModalContext();
 
   const { errors, validateForm } = useValidation<
-    Pick<Vacation, "ДатаОтпуска" | "ДатаОкончания" | "Основание">
+    Pick<
+      Vacation,
+      "ДатаОтпуска" | "ДатаОкончания" | "Основание" | "КоличествоДней"
+    >
   >({
     ДатаОтпуска: (value) => validateVacationStartDate(value as string),
     ДатаОкончания: (value) =>
       validateEndDate(value as string, formState.ДатаОтпуска),
     Основание: (value) => validatePurpose(value as string),
+    КоличествоДней: (value) =>
+      validateNumberOfDays(
+        formState.ДатаОтпуска,
+        formState.ДатаОкончания,
+        Number(value)
+      ),
   });
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
@@ -130,6 +140,8 @@ export const CreateVacationsForm = ({
         onChange={handleChange}
         inputProps={{ min: 0 }}
         fullWidth
+        error={!!errors.КоличествоДней}
+        helperText={errors.КоличествоДней}
       />
       <TextField
         name="Основание"

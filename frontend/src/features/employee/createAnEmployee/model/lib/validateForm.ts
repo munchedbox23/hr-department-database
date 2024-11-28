@@ -29,7 +29,25 @@ function validateTerminationDate(value: string): string | null {
   const inputDate = new Date(value);
   return inputDate >= currentDate
     ? null
-    : "Дата увольнения должна быть >= текущей даты";
+    : "Дата увольнения должна быть больше или равна текущей даты";
 }
 
-export { validateAddress, validateExperience, validateTerminationDate };
+function validateFullName(fullName: string): string | null {
+  if (!fullName) {
+    return "ФИО не может быть пустым.";
+  }
+  if (fullName.length < 3) {
+    return "ФИО должно содержать не менее 3 символов.";
+  }
+  if (!/^[а-яА-ЯёЁ\s]+$/.test(fullName)) {
+    return "ФИО должно содержать только буквы и пробелы.";
+  }
+  return null;
+}
+
+export {
+  validateAddress,
+  validateExperience,
+  validateTerminationDate,
+  validateFullName,
+};

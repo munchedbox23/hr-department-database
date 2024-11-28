@@ -6,6 +6,8 @@ import { TimeSheetRecord } from "@/entities/time-sheet/model/types/types";
 import { useGetEmployeesQuery } from "@/entities/employee";
 import { useAddTimeSheetMutation } from "@/entities/time-sheet";
 import { useModalContext } from "@/app/providers/ModalProvider";
+import { useValidation } from "@/shared/lib/hooks/useValidate";
+import { validateWorkedHours } from "../model/validateTimeSheetForm";
 
 export const CreateTimeSheetForm = ({
   onTimeSheetAdded,
@@ -22,6 +24,12 @@ export const CreateTimeSheetForm = ({
 
   const { data: employeesData } = useGetEmployeesQuery();
   const [addTimeSheet, { isLoading }] = useAddTimeSheetMutation();
+
+  const { errors, validateForm } = useValidation<
+    Pick<TimeSheetRecord, "ОтработанноеВремя">
+  >({
+    ОтработанноеВремя: (value) => validateWorkedHours(value as string | number),
+  });
 
   const monthNames = [
     "январь",
@@ -40,11 +48,16 @@ export const CreateTimeSheetForm = ({
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    const formStateWithDefaults = {
+      ...formState,
+      ОтработанноеВремя: formState.ОтработанноеВремя ?? 0,
+    };
+    if (!validateForm(formStateWithDefaults)) return;
     try {
       await addTimeSheet({
-        ...formState,
-        ТабельныйНомер: Number(formState.ТабельныйНомер),
-        ОтработанноеВремя: Number(formState.ОтработанноеВремя),
+        ...formStateWithDefaults,
+        ТабельныйНомер: Number(formStateWithDefaults.ТабельныйНомер),
+        ОтработанноеВремя: Number(formStateWithDefaults.ОтработанноеВремя),
       } as Omit<TimeSheetRecord, "НомерЗаписи">);
       closeModal();
       onTimeSheetAdded();
@@ -77,6 +90,9 @@ export const CreateTimeSheetForm = ({
         onChange={handleChange}
         inputProps={{ min: 0, max: 160 }}
         fullWidth
+        error={!!errors.ОтработанноеВремя}
+        helperText={errors.ОтработанноеВремя}
+        required
       />
       <CustomSelect
         name="Месяц"

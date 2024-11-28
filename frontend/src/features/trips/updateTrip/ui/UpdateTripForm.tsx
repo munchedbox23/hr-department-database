@@ -10,6 +10,7 @@ import {
   validateStartDate,
   validatePurpose,
   validateEndDate,
+  validateNumberOfDays,
 } from "../../createTrip/model/validationTripForm";
 
 export const UpdateTripForm = ({
@@ -31,15 +32,15 @@ export const UpdateTripForm = ({
 
   const [updateTrip, { isLoading }] = useUpdateTripMutation();
 
-  const { errors, validateForm } = useValidation<
-    Omit<ITrip, "КоличествоДней" | "НомерЗаписи">
-  >({
+  const { errors, validateForm } = useValidation<Omit<ITrip, "НомерЗаписи">>({
     Страна: (value) => validateCountry(value as string),
     Город: (value) => validateCity(value as string),
     Организация: (value) => validateOrganization(value as string),
     СДата: (value) => validateStartDate(value as string),
     ПоДату: (value) => validateEndDate(value as string, formState.СДата),
     Цель: (value) => validatePurpose(value as string),
+    КоличествоДней: (value) =>
+      validateNumberOfDays(formState.СДата, formState.ПоДату, Number(value)),
   });
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
@@ -121,6 +122,8 @@ export const UpdateTripForm = ({
         onChange={handleChange}
         InputProps={{ inputProps: { min: 0 } }}
         fullWidth
+        error={!!errors.КоличествоДней}
+        helperText={errors.КоличествоДней}
       />
       <TextField
         type="text"

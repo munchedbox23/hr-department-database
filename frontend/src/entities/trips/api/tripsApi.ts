@@ -22,7 +22,16 @@ export const tripsApi = createApi({
     }),
     getTripComposition: builder.query<ITripComposition[], void>({
       query: () => "/get/composition-business-trip",
-      providesTags: ["TripComposition"],
+      providesTags: (result) =>
+        result
+          ? [
+              ...result.map(
+                ({ НомерЗаписи }) =>
+                  ({ type: "TripComposition", id: НомерЗаписи } as const)
+              ),
+              { type: "TripComposition", id: "LIST" },
+            ]
+          : [{ type: "TripComposition", id: "LIST" }],
     }),
     addTrip: builder.mutation<ITrip, Omit<ITrip, "НомерЗаписи">>({
       query: (trip) => ({
@@ -43,6 +52,25 @@ export const tripsApi = createApi({
       }),
       invalidatesTags: [{ type: "Trips", id: "LIST" }],
     }),
+    deleteTrip: builder.mutation<void, { id: number; organization: string }>({
+      query: ({ id, organization }) => ({
+        url: `/delete/composition-business-trip/${id}`,
+        method: "DELETE",
+        body: JSON.stringify({ НомерЗаписи: organization }),
+      }),
+      invalidatesTags: [{ type: "TripComposition", id: "LIST" }],
+    }),
+      addTripComposition: builder.mutation<ITripComposition, { id: number; organization: string }>({
+        query: ({id, organization}) => ({
+          url: "/add/composition-business-trip",
+        method: "POST",
+        body: JSON.stringify({
+          НомерЗаписи: organization,
+          ТабельныйНомер: id,
+        }),
+      }),
+      invalidatesTags: [{ type: "TripComposition", id: "LIST" }],
+    }),
   }),
 });
 
@@ -51,4 +79,6 @@ export const {
   useGetTripCompositionQuery,
   useAddTripMutation,
   useUpdateTripMutation,
+  useDeleteTripMutation,
+  useAddTripCompositionMutation,
 } = tripsApi;
