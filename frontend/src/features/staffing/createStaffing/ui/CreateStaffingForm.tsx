@@ -9,6 +9,8 @@ import {
 import { EmployeePosition } from "@/entities/employee";
 import { TextField } from "@mui/material";
 import { useModalContext } from "@/app/providers/ModalProvider";
+import { validateSalary } from "../model/validateStaffingForm";
+import { useValidation } from "@/shared/lib/hooks/useValidate";
 
 export const CreateStaffingForm = ({
   positions,
@@ -27,12 +29,19 @@ export const CreateStaffingForm = ({
     Оклад: undefined,
   });
 
+  const { errors, validateForm } = useValidation<
+    Pick<Partial<StaffingRecord>, "Оклад">
+  >({
+    Оклад: (value) => validateSalary(value as string | number | undefined),
+  });
+
   const { data: departments = [] } = useGetDepartmentQuery();
   const [addStaffing, { isLoading: isAddingStaffing }] =
     useAddStaffingMutation();
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    if (!validateForm(formState)) return;
     try {
       const staffingData = {
         ...formState,
@@ -92,6 +101,8 @@ export const CreateStaffingForm = ({
         onChange={handleChange}
         inputProps={{ min: 1, max: 100000000 }}
         fullWidth
+        error={!!errors.Оклад}
+        helperText={errors.Оклад}
       />
     </BaseForm>
   );

@@ -12,15 +12,18 @@
   overflow-y: auto;
 }
 
-.form::-webkit-scrollbar {
+.form::-webkit-scrollbar,
+ul::-webkit-scrollbar {
   width: 8px;
 }
 
-.form::-webkit-scrollbar-track {
+.form::-webkit-scrollbar-track,
+ul::-webkit-scrollbar-track {
   background: #f1f1f1;
 }
 
-.form::-webkit-scrollbar-thumb {
+.form::-webkit-scrollbar-thumb,
+ul::-webkit-scrollbar-thumb {
   background-color: #1e90ff;
   border-radius: 8px;
   border: 2px solid #f1f1f1;

@@ -8,6 +8,11 @@ import {
   DepartmentRecord,
   useUpdateDepartmentMutation,
 } from "@/entities/department";
+import {
+  validateDepartmentName,
+  validateRoomNumber,
+} from "../../createDepartment/model/validateDepartmentForm";
+import { useValidation } from "@/shared/lib/hooks/useValidate";
 
 export const UpdateDepartmentForm = ({
   department,
@@ -27,11 +32,20 @@ export const UpdateDepartmentForm = ({
 
   const { closeModal } = useModalContext();
 
+  const { errors, validateForm } = useValidation<
+    Pick<DepartmentRecord, "Название" | "НомерКабинета">
+  >({
+    Название: (value) => validateDepartmentName(value as string),
+    НомерКабинета: (value) =>
+      validateRoomNumber(value as string | number | undefined),
+  });
+
   const [updateDepartment, { isLoading }] = useUpdateDepartmentMutation();
   const { data: employees = [] } = useGetEmployeesQuery();
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    if (!validateForm(formState)) return;
     try {
       await updateDepartment({
         department: {
@@ -65,6 +79,8 @@ export const UpdateDepartmentForm = ({
         variant="outlined"
         onChange={handleChange}
         fullWidth
+        error={!!errors.Название}
+        helperText={errors.Название}
       />
       <CustomSelect
         label="Руководитель"
@@ -87,6 +103,8 @@ export const UpdateDepartmentForm = ({
         variant="outlined"
         onChange={handleChange}
         fullWidth
+        error={!!errors.НомерКабинета}
+        helperText={errors.НомерКабинета}
       />
     </BaseForm>
   );

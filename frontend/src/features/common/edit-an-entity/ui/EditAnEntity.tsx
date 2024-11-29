@@ -22,7 +22,7 @@ export const EditAnEntity = ({
           sx={{
             my: 0.3,
             maxWidth: "250px",
-        
+            marginLeft: "12px",
           }}
           color="primary"
           variant="contained"

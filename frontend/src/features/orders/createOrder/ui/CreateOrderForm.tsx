@@ -5,6 +5,8 @@ import { TextField } from "@mui/material";
 import { useGetEmployeesQuery } from "@/entities/employee";
 import { useAddOrderMutation } from "@/entities/orders/api/ordersApi";
 import { useModalContext } from "@/app/providers/ModalProvider";
+import { validateContent } from "../model/validateOrderForm";
+import { useValidation } from "@/shared/lib/hooks/useValidate";
 
 type CreateOrderFormState = {
   ТабельныйНомер?: number;
@@ -27,8 +29,17 @@ export const CreateOrderForm = ({
   const [addOrder, { isLoading }] = useAddOrderMutation();
   const { closeModal } = useModalContext();
 
+  const { errors, validateForm } = useValidation<
+    Pick<CreateOrderFormState, "Содержание">
+  >({
+    Содержание: (value) => validateContent(value as string),
+  });
+
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+
+    if (!validateForm(formState)) return;
+
     try {
       await addOrder({
         ...formState,
@@ -78,6 +89,8 @@ export const CreateOrderForm = ({
         multiline
         rows={4}
         fullWidth
+        error={!!errors.Содержание}
+        helperText={errors.Содержание}
       />
     </BaseForm>
   );

@@ -10,16 +10,13 @@ import { CustomSelect } from "@/shared/ui/CustomSelect";
 import MaskedInput from "react-text-mask";
 import { BaseForm } from "@/shared/ui/BaseForm";
 import { useValidation } from "@/shared/lib/hooks/useValidate";
-import {
-  validateName,
-  validatePhoneNumber,
-  validateEmail,
-} from "@/shared/lib/validate";
+import { validatePhoneNumber, validateEmail } from "@/shared/lib/validate";
 import { phoneMask } from "../../createAnEmployee/model/const/constants";
 import {
   validateExperience,
   validateAddress,
   validateTerminationDate,
+  validateFullName,
 } from "../../createAnEmployee/model/lib/validateForm";
 
 export const UpdateAnEmployeeForm = ({
@@ -53,7 +50,7 @@ export const UpdateAnEmployeeForm = ({
       "ФИО" | "Стаж" | "Телефон" | "Почта" | "Прописка" | "ДатаУвольнения"
     >
   >({
-    ФИО: (value) => validateName(value as string),
+    ФИО: (value) => validateFullName(value as string),
     Стаж: (value) => validateExperience(value as string | number | undefined),
     Телефон: (value) =>
       validatePhoneNumber(value as string, existingPhones ?? []),
@@ -82,7 +79,7 @@ export const UpdateAnEmployeeForm = ({
 
   return (
     <BaseForm
-      buttonText="Добавить"
+      buttonText="Изменить"
       isLoading={isLoading}
       onSubmit={handleSubmit}
     >

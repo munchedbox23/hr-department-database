@@ -38,16 +38,6 @@ a {
   color: inherit;
 }
 
-:-webkit-scrollbar {
-  width: 8px; /* ширина scrollbar */
-  height: 8px;
-}
-
-::-webkit-scrollbar-thumb {
-  border-radius: var(--borderRadius-16); /* закругление */
-  background-color: var(--palette-blue75);
-}
-
 body {
   font-size: var(--component-badge-size-xs-height);
   font-weight: 400;

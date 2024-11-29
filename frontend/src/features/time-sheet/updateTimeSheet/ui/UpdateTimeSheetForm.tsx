@@ -81,6 +81,7 @@ export const UpdateTimeSheetForm = ({
         onChange={handleChange}
         inputProps={{ min: 0, max: 160 }}
         fullWidth
+        required
       />
       <CustomSelect
         name="Месяц"
