@@ -4,6 +4,7 @@ import {
   CardContent,
   Typography,
   IconButton,
+  Box,
   CircularProgress,
 } from "@mui/material";
 import { useState } from "react";
@@ -75,87 +76,81 @@ export const ShowTrip = ({ trip }: { trip: ITrip }) => {
 
   return (
     <>
-      {tripEmployees && tripEmployees.length > 0 && (
-        <Button
-          variant="contained"
-          color="primary"
-          onClick={() => setTripOpen(true)}
-          sx={{ marginTop: 2 }}
-        >
-          Показать состав
-        </Button>
-      )}
-      
-        <ModalWithOverlay
-          title="Состав командировки"
-          onClose={() => setTripOpen(false)}
+      <Button
+        variant="contained"
+        color="primary"
+        onClick={() => setTripOpen(true)}
+        sx={{ marginTop: 2 }}
+      >
+        Показать состав
+      </Button>
+      <ModalWithOverlay
+        title="Состав командировки"
+        onClose={() => setTripOpen(false)}
         open={tripOpen}
       >
         {isLoading || isLoadingAddTripComposition ? (
           <CircularProgress />
-          ) : (
-            <ul>
-              {tripEmployees?.map((employee: Employee) => (
-                <li key={employee.ТабельныйНомер}>
-                  <Card
-                    sx={{
-                      marginBottom: 2,
-                      boxShadow: "0px 5px 10px 2px rgba(62, 168, 249, 0.2)",
-                    }}
+        ) : (
+          <Box component="ul" sx={{ maxHeight: "300px", overflowY: "auto" }}>
+            {tripEmployees?.map((employee: Employee) => (
+              <li key={employee.ТабельныйНомер}>
+                <Card
+                  sx={{
+                    marginBottom: 2,
+                    boxShadow: "0px 5px 10px 2px rgba(62, 168, 249, 0.2)",
+                  }}
+                >
+                  <CardContent
+                    sx={{ display: "flex", justifyContent: "space-between" }}
                   >
-                    <CardContent
-                      sx={{ display: "flex", justifyContent: "space-between" }}
+                    <Typography variant="h6">
+                      {employee.ФИО} - Табельный номер:{" "}
+                      {employee.ТабельныйНомер}
+                    </Typography>
+                    <IconButton
+                      aria-label="delete"
+                      sx={{
+                        color: "red",
+                        "&:hover": {
+                          backgroundColor: "rgba(0, 0, 0, 0.1)",
+                        },
+                      }}
+                      onClick={() =>
+                        handleDelete(employee.ТабельныйНомер, trip.Организация)
+                      }
                     >
-                      <Typography variant="h6">
-                        {employee.ФИО} - Табельный номер:{" "}
-                        {employee.ТабельныйНомер}
-                      </Typography>
-                      <IconButton
-                        aria-label="delete"
-                        sx={{
-                          color: "red",
-                          "&:hover": {
-                            backgroundColor: "rgba(0, 0, 0, 0.1)",
-                          },
-                        }}
-                        onClick={() =>
-                          handleDelete(
-                            employee.ТабельныйНомер,
-                            trip.Организация
-                          )
-                        }
-                      >
-                        <DeleteIcon />
-                      </IconButton>
-                    </CardContent>
-                  </Card>
-                </li>
-              ))}
-            </ul>
-          )}
-          <CustomSelect
-            name="ТабельныйНомер"
-            label="Табельный номер"
-            options={filteredEmployees?.map((employee) => ({
-              value: employee.ТабельныйНомер.toString(),
-              label: employee.ФИО + " - " + employee.ТабельныйНомер,
-            }))}
-            value={selectedEmployee?.ТабельныйНомер?.toString() || ""}
-            onChange={handleChange}
-          />
-          <Button
-            variant="contained"
-            color="primary"
-            onClick={() =>
-              handleAddTripComposition(
-                Number(selectedEmployee?.ТабельныйНомер),
-                trip.Организация
-              )
-            }
-            sx={{ marginTop: 2 }}
-          >
-            Добавить сотрудника
-          </Button>
+                      <DeleteIcon />
+                    </IconButton>
+                  </CardContent>
+                </Card>
+              </li>
+            ))}
+          </Box>
+        )}
+        <CustomSelect
+          name="ТабельныйНомер"
+          label="Табельный номер"
+          options={filteredEmployees?.map((employee) => ({
+            value: employee.ТабельныйНомер.toString(),
+            label: employee.ФИО + " - " + employee.ТабельныйНомер,
+          }))}
+          value={selectedEmployee?.ТабельныйНомер?.toString() || ""}
+          onChange={handleChange}
+        />
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={() =>
+            handleAddTripComposition(
+              Number(selectedEmployee?.ТабельныйНомер),
+              trip.Организация
+            )
+          }
+          sx={{ marginTop: 2 }}
+        >
+          Добавить сотрудника
+        </Button>
       </ModalWithOverlay>
     </>
   );

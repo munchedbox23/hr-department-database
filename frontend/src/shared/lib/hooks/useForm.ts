@@ -12,5 +12,9 @@ export const useForm = <T>(initialState: T) => {
     setFormState({ ...formState, [e.target.name]: e.target.value });
   };
 
-  return { formState, setFormState, handleChange };
+  const handleReset = () => {
+    setFormState(initialState);
+  };
+
+  return { formState, setFormState, handleChange, handleReset };
 };

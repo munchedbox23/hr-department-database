@@ -1,5 +1,5 @@
-import React from "react";
-import { Container, Typography, Stack } from "@mui/material";
+import React, { useState, useEffect } from "react";
+import { Container, Typography, Stack, Box } from "@mui/material";
 import { ListOfItem } from "@/widgets/ListOfItem";
 import { OrderListItem, useGetOrdersQuery } from "@/entities/orders";
 import { ListItemSkeleton } from "@/shared/ui/ListItemSkeleton";
@@ -9,11 +9,48 @@ import { useSnackbar } from "@/shared/lib/hooks/useSnackbar";
 import { NotificationSnackbar } from "@/shared/ui/NotificationSnackbar";
 import { EditAnEntity } from "@/features/common/edit-an-entity";
 import { UpdateOrderForm } from "@/features/orders/updateOrder";
+import { FilterBlock } from "@/widgets/Filter";
+import { FilterOrdersForm } from "@/features/orders/filterOrder";
+import { SortOrder } from "@/features/orders/sortOrder";
+import { useForm } from "@/shared/lib/hooks/useForm";
+import { useSearchParams } from "react-router-dom";
 
 export const OrdersPage: React.FC = () => {
   const { data: orders = [], isLoading } = useGetOrdersQuery();
   const { openSnackbar, handleCloseSnackbar, handleOpenSnackbar } =
     useSnackbar();
+  const [filteredOrders, setFilteredOrders] = useState(orders);
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  const { formState, handleChange, setFormState } = useForm({
+    date: searchParams.get("date") || "",
+  });
+
+  const handleReset = () => {
+    setFormState({ date: "" });
+    setSearchParams({});
+  };
+
+  const handleSearch = () => {
+    setSearchParams({ date: formState.date });
+    const newFilteredOrders = orders.filter((order) => {
+      const orderDate = new Date(order.ДатаОформления);
+      const filterDate = formState.date ? new Date(formState.date) : null;
+      return filterDate ? orderDate >= filterDate : true;
+    });
+    setFilteredOrders(newFilteredOrders);
+  };
+
+  useEffect(() => {
+    const date = searchParams.get("date") || "";
+    setFilteredOrders(
+      orders.filter((order) => {
+        const orderDate = new Date(order.ДатаОформления);
+        const filterDate = date ? new Date(date) : null;
+        return filterDate ? orderDate >= filterDate : true;
+      })
+    );
+  }, [searchParams, orders]);
 
   return (
     <Container maxWidth="lg" sx={{ py: 5 }}>
@@ -29,30 +66,49 @@ export const OrdersPage: React.FC = () => {
           <CreateOrderForm onOrderAdded={handleOpenSnackbar} />
         </CreateAnEntity>
       </Stack>
+
       {isLoading ? (
         Array.from({ length: 5 }).map((_, index) => (
           <ListItemSkeleton key={index} />
         ))
       ) : (
-        <ListOfItem
-          items={orders}
-          renderItem={(order) => (
-            <OrderListItem order={order}>
-              <EditAnEntity title="Изменить договор">
-                <UpdateOrderForm
-                  order={order}
-                  onOrderAdded={handleOpenSnackbar}
+        <Stack flexDirection="row" gap={2}>
+          <Box>
+            <SortOrder
+              filteredOrders={filteredOrders || []}
+              setFilteredOrders={setFilteredOrders}
+            />
+            <FilterBlock
+              onReset={handleReset}
+              onApply={handleSearch}
+              renderFilters={() => (
+                <FilterOrdersForm
+                  formState={formState}
+                  handleChange={handleChange}
                 />
-              </EditAnEntity>
-            </OrderListItem>
-          )}
-          getKey={(order) => order.ТабельныйНомер}
-        />
+              )}
+            />
+          </Box>
+          <ListOfItem
+            items={filteredOrders}
+            renderItem={(order) => (
+              <OrderListItem order={order}>
+                <EditAnEntity title="Изменить договор">
+                  <UpdateOrderForm
+                    order={order}
+                    onOrderAdded={handleOpenSnackbar}
+                  />
+                </EditAnEntity>
+              </OrderListItem>
+            )}
+            getKey={(order) => order.ТабельныйНомер}
+          />
+        </Stack>
       )}
       <NotificationSnackbar
         open={openSnackbar}
         onClose={handleCloseSnackbar}
-          message="Операция выполнена успешно!"
+        message="Операция выполнена успешно!"
         severity="success"
       />
     </Container>

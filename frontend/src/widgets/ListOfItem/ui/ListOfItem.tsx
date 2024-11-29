@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { List, Pagination, Box } from "@mui/material";
+import { List, Pagination, Box, Stack, Typography } from "@mui/material";
 
 interface ListProps<T> {
   items: T[];
@@ -24,22 +24,32 @@ export const ListOfItem = <T,>({ items, renderItem, getKey }: ListProps<T>) => {
   const currentItems = items.slice(startIndex, startIndex + itemsPerPage);
 
   return (
-    <>
-      <List>
-        {currentItems.map((item) => (
-          <React.Fragment key={getKey(item)}>{renderItem(item)}</React.Fragment>
-        ))}
-      </List>
-      <Box display="flex" justifyContent="center">
-        <Pagination
-          count={totalPages}
-          page={currentPage}
-          onChange={handlePageChange}
-          color="primary"
-          showFirstButton
-          showLastButton
-        />
-      </Box>
-    </>
+    <Stack flex={1} flexDirection="column">
+      {items.length > 0 ? (
+        <>
+          <List>
+            {currentItems.map((item) => (
+              <React.Fragment key={getKey(item)}>
+                {renderItem(item)}
+              </React.Fragment>
+            ))}
+          </List>
+          <Box display="flex" justifyContent="center">
+            <Pagination
+              count={totalPages}
+              page={currentPage}
+              onChange={handlePageChange}
+              color="primary"
+              showFirstButton
+              showLastButton
+            />
+          </Box>
+        </>
+      ) : (
+        <Typography variant="h6" textAlign="center">
+          Нет данных для отображения
+        </Typography>
+      )}
+    </Stack>
   );
 };
