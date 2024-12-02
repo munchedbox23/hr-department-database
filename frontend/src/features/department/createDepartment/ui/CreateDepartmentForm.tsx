@@ -7,17 +7,20 @@ import { useModalContext } from "@/app/providers/ModalProvider/config/lib/useMod
 import {
   DepartmentRecord,
   useAddDepartmentMutation,
+  useGetDepartmentQuery,
 } from "@/entities/department";
 import { useValidation } from "@/shared/lib/hooks/useValidate";
 import {
   validateDepartmentName,
   validateRoomNumber,
-} from "../model/validateDepartmentForm";
+} from "@/shared/lib/validate";
 
 export const CreateDepartmentForm = ({
   onDepartmentAdded,
+  onDepartmentAddedError,
 }: {
   onDepartmentAdded: () => void;
+  onDepartmentAddedError: () => void;
 }) => {
   const { formState, handleChange } = useForm<
     Omit<DepartmentRecord, "КодОтдела">
@@ -29,16 +32,17 @@ export const CreateDepartmentForm = ({
 
   const { closeModal } = useModalContext();
 
-  const { errors, validateForm } = useValidation<
-    Pick<DepartmentRecord, "Название" | "НомерКабинета">
-  >({
-    Название: (value) => validateDepartmentName(value as string),
-    НомерКабинета: (value) =>
-      validateRoomNumber(value as string | number | undefined),
-  });
-
   const [addDepartment, { isLoading }] = useAddDepartmentMutation();
   const { data: employees = [] } = useGetEmployeesQuery();
+  const { data: departments = [] } = useGetDepartmentQuery();
+
+  const { errors, validateForm } = useValidation<
+    Omit<DepartmentRecord, "КодОтдела">
+  >({
+    Название: (value) => validateDepartmentName(value as string, departments),
+    НомерКабинета: (value) =>
+      validateRoomNumber(value as string | number | undefined, departments),
+  });
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -50,11 +54,12 @@ export const CreateDepartmentForm = ({
           formState.ТабельныйНомерРуководителя
         ),
         НомерКабинета: Number(formState.НомерКабинета),
-      });
+      }).unwrap();
       onDepartmentAdded();
-      closeModal();
     } catch (error) {
-      console.log(error);
+      onDepartmentAddedError();
+    } finally {
+      closeModal();
     }
   };
 

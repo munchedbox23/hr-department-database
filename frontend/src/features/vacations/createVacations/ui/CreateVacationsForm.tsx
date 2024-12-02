@@ -16,8 +16,10 @@ import {
 
 export const CreateVacationsForm = ({
   onVacationAdded,
+  onVacationAddedError,
 }: {
   onVacationAdded: () => void;
+  onVacationAddedError: () => void;
 }) => {
   const { data: employeesData } = useGetEmployeesQuery();
   const { formState, handleChange } = useForm<Omit<Vacation, "НомерЗаписи">>({
@@ -49,6 +51,10 @@ export const CreateVacationsForm = ({
       ),
   });
 
+  const filteredEmployees = employeesData?.filter(
+    (employee) => employee.ДатаУвольнения === "NULL"
+  );
+
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     if (!validateForm(formState)) return;
@@ -57,10 +63,12 @@ export const CreateVacationsForm = ({
         ...formState,
         ТабельныйНомер: Number(formState.ТабельныйНомер),
         КоличествоДней: Number(formState.КоличествоДней),
-      });
+      }).unwrap();
       onVacationAdded();
       closeModal();
     } catch (error) {
+      closeModal();
+      onVacationAddedError();
       console.log(error);
     }
   };
@@ -73,10 +81,12 @@ export const CreateVacationsForm = ({
       <CustomSelect
         name="ТабельныйНомер"
         label="Табельный номер"
-        options={Array.from({ length: employeesData?.length || 0 }, (_, i) => ({
-          value: (i + 1).toString(),
-          label: (i + 1).toString(),
-        }))}
+        options={
+          filteredEmployees?.map((employee) => ({
+            value: employee.ТабельныйНомер.toString(),
+            label: employee.ТабельныйНомер.toString(),
+          })) || []
+        }
         value={formState.ТабельныйНомер?.toString() || ""}
         onChange={handleChange}
       />
@@ -138,7 +148,7 @@ export const CreateVacationsForm = ({
         value={Number(formState.КоличествоДней) || ""}
         variant="outlined"
         onChange={handleChange}
-        inputProps={{ min: 0 }}
+        inputProps={{ min: 1, max: 14 }}
         fullWidth
         error={!!errors.КоличествоДней}
         helperText={errors.КоличествоДней}

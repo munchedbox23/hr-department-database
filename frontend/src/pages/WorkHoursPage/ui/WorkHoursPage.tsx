@@ -13,8 +13,14 @@ import { EditAnEntity } from "@/features/common/edit-an-entity";
 
 export const WorkHoursPage: React.FC = () => {
   const { data: timeSheetData, isLoading } = useGetTimeSheetQuery();
-  const { openSnackbar, handleCloseSnackbar, handleOpenSnackbar } =
-    useSnackbar();
+  const {
+    openSnackbar,
+    handleCloseSnackbar,
+    handleOpenSnackbar,
+    openSnackbarError,
+    handleCloseSnackbarError,
+    handleOpenSnackbarError,
+  } = useSnackbar();
 
   const columns = useMemo<MRT_ColumnDef<TimeSheetRecord>[]>(
     () => [
@@ -47,6 +53,7 @@ export const WorkHoursPage: React.FC = () => {
             <UpdateTimeSheetForm
               timeSheet={row.original}
               onTimeSheetUpdated={handleOpenSnackbar}
+              onTimeSheetUpdatedError={handleOpenSnackbarError}
             />
           </EditAnEntity>
         ),
@@ -58,7 +65,10 @@ export const WorkHoursPage: React.FC = () => {
   return (
     <Container maxWidth="lg" sx={{ py: 5 }}>
       <CreateAnEntity title="Добавить запись">
-        <CreateTimeSheetForm onTimeSheetAdded={handleOpenSnackbar} />
+        <CreateTimeSheetForm
+          onTimeSheetAdded={handleOpenSnackbar}
+          onTimeSheetAddedError={handleOpenSnackbarError}
+        />
       </CreateAnEntity>
       <Table columns={columns} data={timeSheetData || []} />
       <NotificationSnackbar
@@ -66,6 +76,12 @@ export const WorkHoursPage: React.FC = () => {
         onClose={handleCloseSnackbar}
         message="Операция выполнена успешно!"
         severity="success"
+      />
+      <NotificationSnackbar
+        open={openSnackbarError}
+        onClose={handleCloseSnackbarError}
+        message="Ошибка при выполнении операции!"
+        severity="error"
       />
     </Container>
   );

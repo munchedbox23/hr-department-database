@@ -13,8 +13,14 @@ import { UpdateDepartmentForm } from "@/features/department/updateDepartment";
 
 export const DepartmentPage = () => {
   const { data: departments = [], isLoading } = useGetDepartmentQuery();
-  const { openSnackbar, handleCloseSnackbar, handleOpenSnackbar } =
-    useSnackbar();
+  const {
+    openSnackbar,
+    handleCloseSnackbar,
+    handleOpenSnackbar,
+    openSnackbarError,
+    handleCloseSnackbarError,
+    handleOpenSnackbarError,
+  } = useSnackbar();
 
   const columns = useMemo<MRT_ColumnDef<DepartmentRecord>[]>(
     () => [
@@ -47,6 +53,7 @@ export const DepartmentPage = () => {
             <UpdateDepartmentForm
               department={row.original}
               onDepartmentAdded={handleOpenSnackbar}
+              onDepartmentUpdatedError={handleOpenSnackbarError}
             />
           </EditAnEntity>
         ),
@@ -60,7 +67,10 @@ export const DepartmentPage = () => {
   ) : (
     <Container maxWidth="xl" sx={{ py: 5 }}>
       <CreateAnEntity title="Добавить отдел">
-        <CreateDepartmentForm onDepartmentAdded={handleOpenSnackbar} />
+        <CreateDepartmentForm
+          onDepartmentAdded={handleOpenSnackbar}
+          onDepartmentAddedError={handleOpenSnackbarError}
+        />
       </CreateAnEntity>
       <Table data={departments} columns={columns} />
       <NotificationSnackbar
@@ -68,6 +78,12 @@ export const DepartmentPage = () => {
         onClose={handleCloseSnackbar}
         message="Операция выполнена успешно!"
         severity="success"
+      />
+      <NotificationSnackbar
+        open={openSnackbarError}
+        onClose={handleCloseSnackbarError}
+        message="Ошибка при выполнении операции!"
+        severity="error"
       />
     </Container>
   );

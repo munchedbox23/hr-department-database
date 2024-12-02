@@ -19,8 +19,14 @@ export const EmployeeTablePage = () => {
   const { data = [], isLoading } = useGetEmployeesQuery();
   const { data: positions = [] } = useGetEmployeePositionQuery();
 
-  const { openSnackbar, handleCloseSnackbar, handleOpenSnackbar } =
-    useSnackbar();
+  const {
+    openSnackbar,
+    handleCloseSnackbar,
+    handleOpenSnackbar,
+    openSnackbarError,
+    handleCloseSnackbarError,
+    handleOpenSnackbarError,
+  } = useSnackbar();
 
   const columns = useMemo<MRT_ColumnDef<Employee>[]>(
     () => [
@@ -105,6 +111,7 @@ export const EmployeeTablePage = () => {
               employee={row.original}
               positions={positions}
               onEmployeeAdded={handleOpenSnackbar}
+              onEmployeeAddedError={handleOpenSnackbarError}
             />
           </EditAnEntity>
         ),
@@ -121,6 +128,7 @@ export const EmployeeTablePage = () => {
         <CreateAnEmployeeForm
           positions={positions}
           onEmployeeAdded={handleOpenSnackbar}
+          onEmployeeAddedError={handleOpenSnackbarError}
         />
       </CreateAnEntity>
       <Table data={data} columns={columns} />
@@ -129,6 +137,12 @@ export const EmployeeTablePage = () => {
         onClose={handleCloseSnackbar}
         message="Операция выполнена успешно!"
         severity="success"
+      />
+      <NotificationSnackbar
+        open={openSnackbarError}
+        onClose={handleCloseSnackbarError}
+        message="Ошибка при выполнении операции!"
+        severity="error"
       />
     </Container>
   );

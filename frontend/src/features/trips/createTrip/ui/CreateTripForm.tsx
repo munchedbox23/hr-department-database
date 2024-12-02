@@ -16,8 +16,10 @@ import {
 
 export const CreateTripForm = ({
   onTripAdded,
+  onTripAddedError,
 }: {
   onTripAdded: () => void;
+  onTripAddedError: () => void;
 }) => {
   const { formState, handleChange } = useForm<Omit<ITrip, "НомерЗаписи">>({
     Страна: "Россия",
@@ -50,11 +52,12 @@ export const CreateTripForm = ({
       await addTrip({
         ...formState,
         КоличествоДней: Number(formState.КоличествоДней),
-      });
+      }).unwrap();
       closeModal();
       onTripAdded();
     } catch (error) {
-      console.error(error);
+      closeModal();
+      onTripAddedError();
     }
   };
 
@@ -118,7 +121,7 @@ export const CreateTripForm = ({
         name="КоличествоДней"
         value={formState.КоличествоДней || ""}
         onChange={handleChange}
-        InputProps={{ inputProps: { min: 0 } }}
+        InputProps={{ inputProps: { min: 1, max: 10 } }}
         fullWidth
         error={!!errors.КоличествоДней}
         helperText={errors.КоличествоДней}

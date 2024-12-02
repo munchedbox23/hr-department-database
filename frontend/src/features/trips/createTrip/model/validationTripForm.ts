@@ -19,6 +19,10 @@ function validateOrganization(organization: string): string | null {
   return null;
 }
 
+function validatePositionCode(positionCode: string): string | null {
+  return positionCode ? null : "Должность должна быть выбрана.";
+}
+
 function validateStartDate(startDate: string): string | null {
   if (!startDate) {
     return "Дата начала не может быть пустой.";
@@ -78,4 +82,5 @@ export {
   validateOrganization,
   validateStartDate,
   validateNumberOfDays,
+  validatePositionCode,
 };

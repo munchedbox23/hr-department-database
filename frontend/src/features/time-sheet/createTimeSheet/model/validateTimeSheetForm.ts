@@ -1,4 +1,6 @@
-function validateWorkedHours(hours: string | number | undefined): string | null {
+function validateWorkedHours(
+  hours: string | number | undefined
+): string | null {
   if (hours === undefined || hours === "") {
     return "Отработанное время не может быть пустым.";
   }
@@ -6,7 +8,7 @@ function validateWorkedHours(hours: string | number | undefined): string | null 
   if (!Number.isFinite(hoursValue) || hoursValue < 0) {
     return "Введите корректное отработанное время.";
   }
-  if (hoursValue > 160) {
+  if (hoursValue > 170) {
     return "Отработанное время не может превышать 160 часов.";
   }
   return null;

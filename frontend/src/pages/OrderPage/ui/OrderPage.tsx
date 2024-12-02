@@ -17,8 +17,14 @@ import { useSearchParams } from "react-router-dom";
 
 export const OrdersPage: React.FC = () => {
   const { data: orders = [], isLoading } = useGetOrdersQuery();
-  const { openSnackbar, handleCloseSnackbar, handleOpenSnackbar } =
-    useSnackbar();
+  const {
+    openSnackbar,
+    handleCloseSnackbar,
+    handleOpenSnackbar,
+    openSnackbarError,
+    handleCloseSnackbarError,
+    handleOpenSnackbarError,
+  } = useSnackbar();
   const [filteredOrders, setFilteredOrders] = useState(orders);
   const [searchParams, setSearchParams] = useSearchParams();
 
@@ -36,7 +42,7 @@ export const OrdersPage: React.FC = () => {
     const newFilteredOrders = orders.filter((order) => {
       const orderDate = new Date(order.ДатаОформления);
       const filterDate = formState.date ? new Date(formState.date) : null;
-      return filterDate ? orderDate >= filterDate : true;
+      return filterDate ? orderDate.toDateString() === filterDate.toDateString() : true;
     });
     setFilteredOrders(newFilteredOrders);
   };
@@ -47,7 +53,7 @@ export const OrdersPage: React.FC = () => {
       orders.filter((order) => {
         const orderDate = new Date(order.ДатаОформления);
         const filterDate = date ? new Date(date) : null;
-        return filterDate ? orderDate >= filterDate : true;
+        return filterDate ? orderDate.toDateString() === filterDate.toDateString() : true;
       })
     );
   }, [searchParams, orders]);
@@ -63,7 +69,10 @@ export const OrdersPage: React.FC = () => {
           Трудовые договоры
         </Typography>
         <CreateAnEntity title="Добавить трудовой договор">
-          <CreateOrderForm onOrderAdded={handleOpenSnackbar} />
+          <CreateOrderForm
+            onOrderAdded={handleOpenSnackbar}
+            onOrderAddedError={handleOpenSnackbarError}
+          />
         </CreateAnEntity>
       </Stack>
 
@@ -96,7 +105,8 @@ export const OrdersPage: React.FC = () => {
                 <EditAnEntity title="Изменить договор">
                   <UpdateOrderForm
                     order={order}
-                    onOrderAdded={handleOpenSnackbar}
+                    onOrderUpdated={handleOpenSnackbar}
+                    onOrderUpdatedError={handleOpenSnackbarError}
                   />
                 </EditAnEntity>
               </OrderListItem>
@@ -110,6 +120,12 @@ export const OrdersPage: React.FC = () => {
         onClose={handleCloseSnackbar}
         message="Операция выполнена успешно!"
         severity="success"
+      />
+      <NotificationSnackbar
+        open={openSnackbarError}
+        onClose={handleCloseSnackbarError}
+        message="Ошибка при выполнении операции!"
+        severity="error"
       />
     </Container>
   );

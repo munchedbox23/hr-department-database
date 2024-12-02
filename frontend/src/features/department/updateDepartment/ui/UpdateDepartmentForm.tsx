@@ -7,19 +7,22 @@ import { useModalContext } from "@/app/providers/ModalProvider/config/lib/useMod
 import {
   DepartmentRecord,
   useUpdateDepartmentMutation,
+  useGetDepartmentQuery,
 } from "@/entities/department";
+import { useValidation } from "@/shared/lib/hooks/useValidate";
 import {
   validateDepartmentName,
   validateRoomNumber,
-} from "../../createDepartment/model/validateDepartmentForm";
-import { useValidation } from "@/shared/lib/hooks/useValidate";
+} from "@/shared/lib/validate/validateDepartment";
 
 export const UpdateDepartmentForm = ({
   department,
   onDepartmentAdded,
+  onDepartmentUpdatedError,
 }: {
   department: DepartmentRecord;
   onDepartmentAdded: () => void;
+  onDepartmentUpdatedError: () => void;
 }) => {
   const { formState, handleChange } = useForm<
     Omit<DepartmentRecord, "КодОтдела">
@@ -31,13 +34,13 @@ export const UpdateDepartmentForm = ({
   });
 
   const { closeModal } = useModalContext();
-
+  const { data: departments = [] } = useGetDepartmentQuery();
   const { errors, validateForm } = useValidation<
     Pick<DepartmentRecord, "Название" | "НомерКабинета">
   >({
-    Название: (value) => validateDepartmentName(value as string),
+    Название: (value) => validateDepartmentName(value as string, departments),
     НомерКабинета: (value) =>
-      validateRoomNumber(value as string | number | undefined),
+      validateRoomNumber(value as string | number | undefined, departments),
   });
 
   const [updateDepartment, { isLoading }] = useUpdateDepartmentMutation();
@@ -56,11 +59,11 @@ export const UpdateDepartmentForm = ({
           НомерКабинета: Number(formState.НомерКабинета),
         },
         id: department.КодОтдела,
-      });
+      }).unwrap();
       onDepartmentAdded();
       closeModal();
     } catch (error) {
-      console.log(error);
+      onDepartmentUpdatedError();
     }
   };
 

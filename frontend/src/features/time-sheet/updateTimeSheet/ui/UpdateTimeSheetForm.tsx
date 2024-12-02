@@ -11,9 +11,11 @@ import {
 export const UpdateTimeSheetForm = ({
   timeSheet,
   onTimeSheetUpdated,
+  onTimeSheetUpdatedError,
 }: {
   timeSheet: TimeSheetRecord;
   onTimeSheetUpdated: () => void;
+  onTimeSheetUpdatedError: () => void;
 }) => {
   const { formState, handleChange } = useForm<Partial<TimeSheetRecord>>({
     ТабельныйНомер: timeSheet.ТабельныйНомер || undefined,
@@ -49,11 +51,10 @@ export const UpdateTimeSheetForm = ({
           ОтработанноеВремя: Number(formState.ОтработанноеВремя),
         } as Omit<TimeSheetRecord, "НомерЗаписи">,
         id: timeSheet.НомерЗаписи,
-      });
-
+      }).unwrap();
       onTimeSheetUpdated();
     } catch (error) {
-      console.error(error);
+      onTimeSheetUpdatedError();
     }
   };
 
@@ -79,7 +80,7 @@ export const UpdateTimeSheetForm = ({
         label="Отработанное время"
         value={Number(formState.ОтработанноеВремя) || ""}
         onChange={handleChange}
-        inputProps={{ min: 0, max: 160 }}
+        inputProps={{ min: 0, max: 170 }}
         fullWidth
         required
       />

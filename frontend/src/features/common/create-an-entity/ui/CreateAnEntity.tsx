@@ -7,14 +7,19 @@ import { useAppSelector } from "@/app/providers/StoreProvider";
 export const CreateAnEntity: FC<
   PropsWithChildren<{
     title: string;
+    tableType?: string;
   }>
-> = ({ title, children }) => {
+> = ({ title, children, tableType }) => {
   const { isOpen, openModal, closeModal } = useModalContext();
   const userDate = useAppSelector((store) => store.user.user);
 
+  const isButtonVisible =
+    userDate?.role === "admin" ||
+    ["отпуска"].includes(tableType || "");
+
   return (
     <>
-      {userDate?.role === "admin" && (
+      {isButtonVisible && (
         <Button
           sx={{ my: 2 }}
           color="primary"

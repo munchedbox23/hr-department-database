@@ -11,8 +11,10 @@ import { validateWorkedHours } from "../model/validateTimeSheetForm";
 
 export const CreateTimeSheetForm = ({
   onTimeSheetAdded,
+  onTimeSheetAddedError,
 }: {
   onTimeSheetAdded: () => void;
+  onTimeSheetAddedError: () => void;
 }) => {
   const { formState, handleChange } = useForm<Partial<TimeSheetRecord>>({
     ТабельныйНомер: undefined,
@@ -58,11 +60,12 @@ export const CreateTimeSheetForm = ({
         ...formStateWithDefaults,
         ТабельныйНомер: Number(formStateWithDefaults.ТабельныйНомер),
         ОтработанноеВремя: Number(formStateWithDefaults.ОтработанноеВремя),
-      } as Omit<TimeSheetRecord, "НомерЗаписи">);
-      closeModal();
+      } as Omit<TimeSheetRecord, "НомерЗаписи">).unwrap();
       onTimeSheetAdded();
     } catch (error) {
-      console.error(error);
+      onTimeSheetAddedError();
+    } finally {
+      closeModal();
     }
   };
 
@@ -88,7 +91,7 @@ export const CreateTimeSheetForm = ({
         label="Отработанное время"
         value={Number(formState.ОтработанноеВремя) || ""}
         onChange={handleChange}
-        inputProps={{ min: 0, max: 160 }}
+        inputProps={{ min: 0, max: 170 }}
         fullWidth
         error={!!errors.ОтработанноеВремя}
         helperText={errors.ОтработанноеВремя}

@@ -16,9 +16,11 @@ import {
 export const UpdateTripForm = ({
   trip,
   onTripUpdated,
+  onTripUpdatedError,
 }: {
   trip: ITrip;
   onTripUpdated: () => void;
+  onTripUpdatedError: () => void;
 }) => {
   const { formState, handleChange } = useForm<Omit<ITrip, "НомерЗаписи">>({
     Страна: trip.Страна,
@@ -53,10 +55,10 @@ export const UpdateTripForm = ({
           КоличествоДней: Number(formState.КоличествоДней),
         },
         id: trip.НомерЗаписи,
-      });
+      }).unwrap();
       onTripUpdated();
     } catch (error) {
-      console.error(error);
+      onTripUpdatedError();
     }
   };
 

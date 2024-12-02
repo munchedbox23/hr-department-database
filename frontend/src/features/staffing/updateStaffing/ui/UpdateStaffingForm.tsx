@@ -14,11 +14,13 @@ import { useValidation } from "@/shared/lib/hooks/useValidate";
 export const UpdateStaffingForm = ({
   staffing,
   positions,
-  onStaffingAdded,
+  onStaffingUpdated,
+  onStaffingUpdatedError,
 }: {
   staffing: StaffingRecord;
   positions: EmployeePosition[];
-  onStaffingAdded: () => void;
+  onStaffingUpdated: () => void;
+  onStaffingUpdatedError: () => void;
 }) => {
   const { formState, handleChange } =
     useForm<Omit<Partial<StaffingRecord>, "НомерЗаписи">>(staffing);
@@ -45,10 +47,10 @@ export const UpdateStaffingForm = ({
       await updateStaffing({
         staffing: staffingData as Omit<StaffingRecord, "НомерЗаписи">,
         id: staffing.НомерЗаписи,
-      });
-      onStaffingAdded();
+      }).unwrap();
+      onStaffingUpdated();
     } catch (error) {
-      console.error("Error adding staffing:", error);
+      onStaffingUpdatedError();
     }
   };
 
@@ -85,7 +87,7 @@ export const UpdateStaffingForm = ({
         value={Number(formState.КоличествоСтавок) || 1}
         variant="outlined"
         onChange={handleChange}
-        inputProps={{ min: 1, max: 10 }}
+        inputProps={{ min: 1, max: 2 }}
         fullWidth
       />
       <TextField

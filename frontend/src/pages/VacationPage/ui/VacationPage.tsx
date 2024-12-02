@@ -17,8 +17,14 @@ import { SortVacation } from "@/features/vacations/sortVacation";
 
 export const VacationPage = () => {
   const { data: vacations, isLoading } = useGetVacationsQuery();
-  const { openSnackbar, handleCloseSnackbar, handleOpenSnackbar } =
-    useSnackbar();
+  const {
+    openSnackbar,
+    handleCloseSnackbar,
+    handleOpenSnackbar,
+    handleOpenSnackbarError,
+    openSnackbarError,
+    handleCloseSnackbarError,
+  } = useSnackbar();
 
   const [searchParams, setSearchParams] = useSearchParams();
   const { formState, handleChange, setFormState } = useForm({
@@ -112,8 +118,11 @@ export const VacationPage = () => {
         <Typography variant="h5" fontWeight={700} gutterBottom>
           Отпуска
         </Typography>
-        <CreateAnEntity title="Создать новую запись">
-          <CreateVacationsForm onVacationAdded={handleOpenSnackbar} />
+        <CreateAnEntity title="Создать новую запись" tableType="отпуска">
+          <CreateVacationsForm
+            onVacationAdded={handleOpenSnackbar}
+            onVacationAddedError={handleOpenSnackbarError}
+          />
         </CreateAnEntity>
       </Stack>
       {isLoading ? (
@@ -146,6 +155,7 @@ export const VacationPage = () => {
                   <UpdateVacationsForm
                     vacation={vacation}
                     onVacationAdded={handleOpenSnackbar}
+                    onVacationAddedError={handleOpenSnackbarError}
                   />
                 </EditAnEntity>
               </VacationItem>
@@ -159,6 +169,12 @@ export const VacationPage = () => {
         onClose={handleCloseSnackbar}
         message="Операция выполнена успешно!"
         severity="success"
+      />
+      <NotificationSnackbar
+        open={openSnackbarError}
+        onClose={handleCloseSnackbarError}
+        message="Ошибка при выполнении операции!"
+        severity="error"
       />
     </Container>
   );

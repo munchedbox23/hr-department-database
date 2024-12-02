@@ -16,8 +16,10 @@ type CreateOrderFormState = {
 
 export const CreateOrderForm = ({
   onOrderAdded,
+  onOrderAddedError,
 }: {
   onOrderAdded: () => void;
+  onOrderAddedError: () => void;
 }) => {
   const { formState, handleChange } = useForm<CreateOrderFormState>({
     ТабельныйНомер: undefined,
@@ -35,6 +37,10 @@ export const CreateOrderForm = ({
     Содержание: (value) => validateContent(value as string),
   });
 
+  const filteredEmployees = employeesData?.filter(
+    (employee) => employee.ДатаУвольнения === "NULL"
+  );
+
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
@@ -44,11 +50,12 @@ export const CreateOrderForm = ({
       await addOrder({
         ...formState,
         ТабельныйНомер: Number(formState.ТабельныйНомер),
-      });
-      closeModal();
+      }).unwrap();
       onOrderAdded();
     } catch (error) {
-      console.error(error);
+      onOrderAddedError();
+    } finally {
+      closeModal();
     }
   };
 
@@ -61,10 +68,12 @@ export const CreateOrderForm = ({
       <CustomSelect
         name="ТабельныйНомер"
         label="Табельный номер"
-        options={Array.from({ length: employeesData?.length || 0 }, (_, i) => ({
-          value: (i + 1).toString(),
-          label: (i + 1).toString(),
-        }))}
+        options={
+          filteredEmployees?.map((employee) => ({
+            value: employee.ТабельныйНомер.toString(),
+            label: employee.ТабельныйНомер.toString() + " - " + employee.ФИО,
+          })) || []
+        }
         value={formState.ТабельныйНомер?.toString() || ""}
         onChange={handleChange}
       />

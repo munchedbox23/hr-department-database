@@ -20,8 +20,15 @@ import {
 import { Employee } from "@/entities/employee";
 import { CustomSelect } from "@/shared/ui/CustomSelect";
 import { SelectChangeEvent } from "@mui/material/Select";
+import { useAppSelector } from "@/app/providers/StoreProvider";
+import { useValidation } from "@/shared/lib/hooks/useValidate";
+import { validatePositionCode } from "../../createTrip/model/validationTripForm";
 
-export const ShowTrip = ({ trip }: { trip: ITrip }) => {
+export const ShowTrip = ({
+  trip,
+}: {
+  trip: ITrip;
+}) => {
   const [tripOpen, setTripOpen] = useState(false);
   const { data: employees = [] } = useGetEmployeesQuery();
   const { data: compositionBusinessTrip = [] } = useGetTripCompositionQuery();
@@ -29,6 +36,8 @@ export const ShowTrip = ({ trip }: { trip: ITrip }) => {
   const [selectedEmployee, setSelectedEmployee] = useState<Employee | null>(
     null
   );
+
+  const user = useAppSelector((state) => state.user.user);
 
   const handleChange = (e: SelectChangeEvent<string>) => {
     const employee = employees?.find(
@@ -56,14 +65,6 @@ export const ShowTrip = ({ trip }: { trip: ITrip }) => {
   const [addTripComposition, { isLoading: isLoadingAddTripComposition }] =
     useAddTripCompositionMutation();
 
-  const handleAddTripComposition = async (id: number, organization: string) => {
-    try {
-      await addTripComposition({ id, organization });
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
   const filteredEmployees = employees?.filter(
     (employee) =>
       employee.ДатаУвольнения === "NULL" &&
@@ -74,16 +75,38 @@ export const ShowTrip = ({ trip }: { trip: ITrip }) => {
       )
   );
 
+  const { errors, validateForm } = useValidation<{
+    ТабельныйНомер: string;
+  }>({
+    ТабельныйНомер: (value) => validatePositionCode(value),
+  });
+
+  const handleAddTripComposition = async (id: number, organization: string) => {
+    try {
+      if (
+        !validateForm({
+          ТабельныйНомер: selectedEmployee?.ТабельныйНомер?.toString() || "",
+        })
+      )
+        return;
+      await addTripComposition({ id, organization });
+    } catch (error) {
+      console.error(error);
+    }
+  };
+  const isButtonVisible = user?.role === "admin";
   return (
     <>
-      <Button
-        variant="contained"
-        color="primary"
-        onClick={() => setTripOpen(true)}
-        sx={{ marginTop: 2 }}
-      >
-        Показать состав
-      </Button>
+      {isButtonVisible && (
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={() => setTripOpen(true)}
+          sx={{ marginTop: 2 }}
+        >
+          Показать состав
+        </Button>
+      )}
       <ModalWithOverlay
         title="Состав командировки"
         onClose={() => setTripOpen(false)}
@@ -137,6 +160,8 @@ export const ShowTrip = ({ trip }: { trip: ITrip }) => {
           }))}
           value={selectedEmployee?.ТабельныйНомер?.toString() || ""}
           onChange={handleChange}
+          error={!!errors?.ТабельныйНомер}
+          helperText={errors?.ТабельныйНомер}
         />
         <Button
           variant="contained"
