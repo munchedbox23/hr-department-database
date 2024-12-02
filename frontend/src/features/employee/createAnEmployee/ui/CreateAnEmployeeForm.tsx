@@ -21,9 +21,11 @@ import {
 export const CreateAnEmployeeForm = ({
   positions,
   onEmployeeAdded,
+  onEmployeeAddedError,
 }: {
   positions: EmployeePosition[];
   onEmployeeAdded: () => void;
+  onEmployeeAddedError: () => void;
 }) => {
   const { formState, handleChange } = useForm<Omit<Employee, "ТабельныйНомер">>(
     {
@@ -62,10 +64,12 @@ export const CreateAnEmployeeForm = ({
     e.preventDefault();
     if (!validateForm(formState)) return;
     try {
-      await addEmployee(formState);
+      await addEmployee(formState).unwrap();
       onEmployeeAdded();
       closeModal();
     } catch (error) {
+      closeModal();
+      onEmployeeAddedError();
       console.log(error);
     }
   };

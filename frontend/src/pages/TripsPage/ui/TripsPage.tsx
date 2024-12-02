@@ -19,8 +19,14 @@ import { useSearchParams } from "react-router-dom";
 
 export const TripsPage: React.FC = () => {
   const { data: trips = [], isLoading } = useGetTripsQuery();
-  const { openSnackbar, handleCloseSnackbar, handleOpenSnackbar } =
-    useSnackbar();
+  const {
+    openSnackbar,
+    handleCloseSnackbar,
+    handleOpenSnackbar,
+    openSnackbarError,
+    handleCloseSnackbarError,
+    handleOpenSnackbarError,
+  } = useSnackbar();
   const [filteredTrips, setFilteredTrips] = useState(trips);
 
   const [searchParams, setSearchParams] = useSearchParams();
@@ -97,8 +103,11 @@ export const TripsPage: React.FC = () => {
         <Typography variant="h5" fontWeight={700} gutterBottom>
           Командировки
         </Typography>
-        <CreateAnEntity title="Создать новую запись">
-          <CreateTripForm onTripAdded={handleOpenSnackbar} />
+        <CreateAnEntity title="Создать новую запись" tableType="командировки">
+          <CreateTripForm
+            onTripAdded={handleOpenSnackbar}
+            onTripAddedError={handleOpenSnackbarError}
+          />
         </CreateAnEntity>
       </Stack>
 
@@ -134,6 +143,7 @@ export const TripsPage: React.FC = () => {
                     <UpdateTripForm
                       trip={trip}
                       onTripUpdated={handleOpenSnackbar}
+                      onTripUpdatedError={handleOpenSnackbarError}
                     />
                   </EditAnEntity>
                 </Stack>
@@ -148,6 +158,12 @@ export const TripsPage: React.FC = () => {
         onClose={handleCloseSnackbar}
         message="Операция выполнена успешно!"
         severity="success"
+      />
+      <NotificationSnackbar
+        open={openSnackbarError}
+        onClose={handleCloseSnackbarError}
+        message="Ошибка при выполнении операции!"
+        severity="error"
       />
     </Container>
   );

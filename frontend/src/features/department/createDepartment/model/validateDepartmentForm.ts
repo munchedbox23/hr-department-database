@@ -1,4 +1,9 @@
-function validateDepartmentName(name: string): string | null {
+import { DepartmentRecord } from "@/entities/staffing/model/types/types";
+
+function validateDepartmentName(
+  name: string,
+  existingDepartments: DepartmentRecord[]
+): string | null {
   if (!name) {
     return "Название отдела не может быть пустым.";
   }

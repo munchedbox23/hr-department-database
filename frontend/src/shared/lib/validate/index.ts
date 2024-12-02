@@ -3,3 +3,7 @@ import { validateName } from "./validateName";
 import { validatePassword } from "./validatePassword";
 import { validatePhoneNumber } from "./validatePhoneNumber";
 export { validateEmail, validatePassword, validateName, validatePhoneNumber };
+export {
+  validateDepartmentName,
+  validateRoomNumber,
+} from "./validateDepartment";

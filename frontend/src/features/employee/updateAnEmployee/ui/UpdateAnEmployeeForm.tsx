@@ -23,13 +23,15 @@ export const UpdateAnEmployeeForm = ({
   employee,
   positions,
   onEmployeeAdded,
+  onEmployeeAddedError,
 }: {
   employee: Employee;
   positions: EmployeePosition[];
   onEmployeeAdded: () => void;
+  onEmployeeAddedError: () => void;
 }) => {
   const { formState, handleChange } = useForm<Omit<Employee, "ТабельныйНомер">>(
-    { ...employee, ДатаУвольнения: undefined }
+    { ...employee }
   );
 
   const [updateEmployee, { isLoading }] = useUpdateEmployeeMutation();
@@ -41,8 +43,6 @@ export const UpdateAnEmployeeForm = ({
   const existingEmails = employees
     ?.map((employee) => employee.Почта)
     .filter((email) => email !== employee.Почта);
-
-  console.log(employee);
 
   const { errors, validateForm } = useValidation<
     Pick<
@@ -70,9 +70,10 @@ export const UpdateAnEmployeeForm = ({
       await updateEmployee({
         employee: payload,
         id: employee.ТабельныйНомер,
-      });
+      }).unwrap();
       onEmployeeAdded();
     } catch (error) {
+      onEmployeeAddedError();
       console.log(error);
     }
   };

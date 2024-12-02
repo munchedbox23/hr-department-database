@@ -15,9 +15,11 @@ import { useValidation } from "@/shared/lib/hooks/useValidate";
 export const CreateStaffingForm = ({
   positions,
   onStaffingAdded,
+  onStaffingAddedError,
 }: {
   positions: EmployeePosition[];
   onStaffingAdded: () => void;
+  onStaffingAddedError: () => void;
 }) => {
   const { closeModal } = useModalContext();
   const { formState, handleChange } = useForm<
@@ -48,11 +50,14 @@ export const CreateStaffingForm = ({
         Оклад: Number(formState.Оклад),
         КоличествоСтавок: Number(formState.КоличествоСтавок),
       };
-      await addStaffing(staffingData as Omit<StaffingRecord, "НомерЗаписи">);
-      closeModal();
+      await addStaffing(
+        staffingData as Omit<StaffingRecord, "НомерЗаписи">
+      ).unwrap();
       onStaffingAdded();
     } catch (error) {
-      console.error("Error adding staffing:", error);
+      onStaffingAddedError();
+    } finally {
+      closeModal();
     }
   };
 
@@ -89,7 +94,7 @@ export const CreateStaffingForm = ({
         value={Number(formState.КоличествоСтавок) || 1}
         variant="outlined"
         onChange={handleChange}
-        inputProps={{ min: 1, max: 10 }}
+        inputProps={{ min: 1, max: 2}}
         fullWidth
       />
       <TextField

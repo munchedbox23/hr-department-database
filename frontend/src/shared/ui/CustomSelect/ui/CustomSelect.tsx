@@ -13,6 +13,8 @@ interface CustomSelectProps {
   value: string;
   options: { value: string; label: string }[];
   onChange: (event: SelectChangeEvent<string>) => void;
+  error?: boolean;
+  helperText?: string;
 }
 
 export const CustomSelect: React.FC<CustomSelectProps> = ({
@@ -21,9 +23,11 @@ export const CustomSelect: React.FC<CustomSelectProps> = ({
   value,
   options,
   onChange,
+  error,
+  helperText,
 }) => {
   return (
-    <FormControl variant="outlined" fullWidth>
+    <FormControl variant="outlined" fullWidth error={error}>
       <InputLabel id={`${name}-label`}>{label}</InputLabel>
       <Select
         labelId={`${name}-label`}
@@ -33,6 +37,7 @@ export const CustomSelect: React.FC<CustomSelectProps> = ({
         onChange={onChange}
         label={label}
         fullWidth
+        error={error}
         MenuProps={{
           PaperProps: {
             style: {

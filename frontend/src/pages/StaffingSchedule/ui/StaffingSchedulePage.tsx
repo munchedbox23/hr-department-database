@@ -15,8 +15,14 @@ import { EditAnEntity } from "@/features/common/edit-an-entity";
 export const StaffingSchedulePage: React.FC = () => {
   const { data: staffingData, isLoading } = useGetStaffingQuery();
   const { data: positions } = useGetEmployeePositionQuery();
-  const { openSnackbar, handleCloseSnackbar, handleOpenSnackbar } =
-    useSnackbar();
+  const {
+    openSnackbar,
+    handleCloseSnackbar,
+    handleOpenSnackbar,
+    openSnackbarError,
+    handleCloseSnackbarError,
+    handleOpenSnackbarError,
+  } = useSnackbar();
 
   const columns = useMemo<MRT_ColumnDef<StaffingRecord>[]>(
     () => [
@@ -54,7 +60,8 @@ export const StaffingSchedulePage: React.FC = () => {
             <UpdateStaffingForm
               staffing={row.original}
               positions={positions || []}
-              onStaffingAdded={handleOpenSnackbar}
+              onStaffingUpdated={handleOpenSnackbar}
+              onStaffingUpdatedError={handleOpenSnackbarError}
             />
           </EditAnEntity>
         ),
@@ -69,6 +76,7 @@ export const StaffingSchedulePage: React.FC = () => {
         <CreateStaffingForm
           positions={positions || []}
           onStaffingAdded={handleOpenSnackbar}
+          onStaffingAddedError={handleOpenSnackbarError}
         />
       </CreateAnEntity>
       <Table columns={columns} data={staffingData || []} />
@@ -77,6 +85,12 @@ export const StaffingSchedulePage: React.FC = () => {
         onClose={handleCloseSnackbar}
         message="Операция выполнена успешно!"
         severity="success"
+      />
+      <NotificationSnackbar
+        open={openSnackbarError}
+        onClose={handleCloseSnackbarError}
+        message="Ошибка при выполнении операции!"
+        severity="error"
       />
     </Container>
   );

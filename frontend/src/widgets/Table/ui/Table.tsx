@@ -15,6 +15,7 @@ export const Table = <T extends K, K extends MRT_RowData>({
     <MaterialReactTable
       columns={columns}
       data={data}
+      enableFullScreenToggle={false}
       localization={{
         search: "Поиск",
         showHideSearch: "Показать/Скрыть поиск",
