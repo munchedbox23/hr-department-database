@@ -56,7 +56,8 @@ export const UpdateAnEmployeeForm = ({
       validatePhoneNumber(value as string, existingPhones ?? []),
     Почта: (value) => validateEmail(value as string, existingEmails ?? []),
     Прописка: (value) => validateAddress(value as string),
-    ДатаУвольнения: (value) => validateTerminationDate(value as string),
+    ДатаУвольнения: (value) =>
+      value ? validateTerminationDate(value as string) : null,
   });
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -65,6 +66,9 @@ export const UpdateAnEmployeeForm = ({
     const payload = { ...formState };
     if (payload.Стаж === "") {
       delete payload.Стаж;
+    }
+    if (payload.ДатаУвольнения === "") {
+      delete payload.ДатаУвольнения;
     }
     try {
       await updateEmployee({

@@ -14,6 +14,7 @@ import {
   validateDepartmentName,
   validateRoomNumber,
 } from "@/shared/lib/validate";
+import { validateManagerNumber } from "@/features/department/createDepartment/model/validateDepartmentForm";
 
 export const CreateDepartmentForm = ({
   onDepartmentAdded,
@@ -39,10 +40,17 @@ export const CreateDepartmentForm = ({
   const { errors, validateForm } = useValidation<
     Omit<DepartmentRecord, "КодОтдела">
   >({
+    ТабельныйНомерРуководителя: (value) =>
+      validateManagerNumber(value as string, employees),
     Название: (value) => validateDepartmentName(value as string, departments),
     НомерКабинета: (value) =>
       validateRoomNumber(value as string | number | undefined, departments),
   });
+
+  // Filter out terminated employees
+  const activeEmployees = employees.filter(
+    (employee) => employee?.ДатаУвольнения === "NULL"
+  );
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -85,13 +93,13 @@ export const CreateDepartmentForm = ({
         label="Руководитель"
         name="ТабельныйНомерРуководителя"
         value={formState.ТабельныйНомерРуководителя?.toString() || ""}
-        options={
-          employees?.map((employee) => ({
-            value: employee.ТабельныйНомер.toString(),
-            label: employee.ФИО,
-          })) || []
-        }
+        options={activeEmployees.map((employee) => ({
+          value: employee.ТабельныйНомер.toString(),
+          label: employee.ФИО,
+        }))}
         onChange={handleChange}
+        error={!!errors.ТабельныйНомерРуководителя}
+        helperText={errors.ТабельныйНомерРуководителя}
       />
       <TextField
         type="number"
