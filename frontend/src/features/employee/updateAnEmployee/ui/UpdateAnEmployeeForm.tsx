@@ -56,10 +56,15 @@ export const UpdateAnEmployeeForm = ({
       validatePhoneNumber(value as string, existingPhones ?? []),
     Почта: (value) => validateEmail(value as string, existingEmails ?? []),
     Прописка: (value) => validateAddress(value as string),
-    ДатаУвольнения: (value) =>
-      value ? validateTerminationDate(value as string) : null,
+    ДатаУвольнения: (value) => {
+      if (value === null || value === "NULL") {
+        return null; // No validation needed for null or empty values
+      }
+      return validateTerminationDate(value as string);
+    },
   });
 
+  console.log(formState);
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!validateForm(formState)) return;
@@ -67,7 +72,7 @@ export const UpdateAnEmployeeForm = ({
     if (payload.Стаж === "") {
       delete payload.Стаж;
     }
-    if (payload.ДатаУвольнения === "") {
+    if (payload.ДатаУвольнения === "NULL" || payload.ДатаУвольнения === null) {
       delete payload.ДатаУвольнения;
     }
     try {

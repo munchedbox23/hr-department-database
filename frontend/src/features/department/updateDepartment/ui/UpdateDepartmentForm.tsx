@@ -38,9 +38,18 @@ export const UpdateDepartmentForm = ({
   const { errors, validateForm } = useValidation<
     Pick<DepartmentRecord, "Название" | "НомерКабинета">
   >({
-    Название: (value) => validateDepartmentName(value as string, departments),
+    Название: (value) =>
+      validateDepartmentName(
+        value as string,
+        departments,
+        department.КодОтдела
+      ),
     НомерКабинета: (value) =>
-      validateRoomNumber(value as string | number | undefined, departments),
+      validateRoomNumber(
+        value as string | number | undefined,
+        departments,
+        department.КодОтдела
+      ),
   });
 
   const [updateDepartment, { isLoading }] = useUpdateDepartmentMutation();
