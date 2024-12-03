@@ -22,6 +22,9 @@ function validateExperience(
 }
 
 function validateTerminationDate(value: string): string | null {
+  if (value === "") {
+    return "NULL";
+  }
   const currentDate = new Date();
   const inputDate = new Date(value);
 
