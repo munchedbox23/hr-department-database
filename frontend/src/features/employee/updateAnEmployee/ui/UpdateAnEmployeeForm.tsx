@@ -57,7 +57,7 @@ export const UpdateAnEmployeeForm = ({
     Почта: (value) => validateEmail(value as string, existingEmails ?? []),
     Прописка: (value) => validateAddress(value as string),
     ДатаУвольнения: (value) => {
-      if (value === null || value === "NULL") {
+      if (value === null || value === "NULL" || value === "") {
         return null; // No validation needed for null or empty values
       }
       return validateTerminationDate(value as string);
@@ -72,7 +72,11 @@ export const UpdateAnEmployeeForm = ({
     if (payload.Стаж === "") {
       delete payload.Стаж;
     }
-    if (payload.ДатаУвольнения === "NULL" || payload.ДатаУвольнения === null) {
+    if (
+      payload.ДатаУвольнения === "NULL" ||
+      payload.ДатаУвольнения === null ||
+      payload.ДатаУвольнения === ""
+    ) {
       delete payload.ДатаУвольнения;
     }
     try {

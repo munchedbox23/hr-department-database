@@ -22,8 +22,15 @@ function validateExperience(
 }
 
 function validateTerminationDate(value: string): string | null {
+  if (value === "") {
+    return "NULL";
+  }
   const currentDate = new Date();
   const inputDate = new Date(value);
+
+  currentDate.setHours(0, 0, 0, 0);
+  inputDate.setHours(0, 0, 0, 0);
+
   return inputDate >= currentDate
     ? null
     : "Дата увольнения должна быть больше или равна текущей даты";
