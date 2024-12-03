@@ -26,4 +26,20 @@ function validateRoomNumber(
     : "Введите корректный номер кабинета";
 }
 
-export { validateDepartmentName, validateRoomNumber };
+function validateManagerNumber(
+  managerNumber: string | undefined,
+  employees: { ТабельныйНомер: number; ДатаУвольнения?: string }[]
+): string | null {
+  if (!managerNumber) {
+    return "Табельный номер руководителя не может быть пустым.";
+  }
+  const manager = employees.find(
+    (employee) => employee.ТабельныйНомер.toString() === managerNumber
+  );
+  if (manager && manager.ДатаУвольнения) {
+    return "Руководитель не может быть уволенным.";
+  }
+  return null;
+}
+
+export { validateDepartmentName, validateRoomNumber, validateManagerNumber };

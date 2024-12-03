@@ -46,6 +46,10 @@ export const UpdateDepartmentForm = ({
   const [updateDepartment, { isLoading }] = useUpdateDepartmentMutation();
   const { data: employees = [] } = useGetEmployeesQuery();
 
+  const activeEmployees = employees.filter(
+    (employee) => employee?.ДатаУвольнения === "NULL"
+  );
+
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!validateForm(formState)) return;
@@ -90,7 +94,7 @@ export const UpdateDepartmentForm = ({
         name="ТабельныйНомерРуководителя"
         value={formState.ТабельныйНомерРуководителя?.toString() || ""}
         options={
-          employees?.map((employee) => ({
+          activeEmployees?.map((employee) => ({
             value: employee.ТабельныйНомер.toString(),
             label: employee.ФИО,
           })) || []
