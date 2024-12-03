@@ -38,10 +38,8 @@ export const CreateDepartmentForm = ({
   const { data: departments = [] } = useGetDepartmentQuery();
 
   const { errors, validateForm } = useValidation<
-    Omit<DepartmentRecord, "КодОтдела">
+    Omit<DepartmentRecord, "КодОтдела" | "ТабельныйНомерРуководителя">
   >({
-    ТабельныйНомерРуководителя: (value) =>
-      validateManagerNumber(value as string, employees),
     Название: (value) => validateDepartmentName(value as string, departments),
     НомерКабинета: (value) =>
       validateRoomNumber(value as string | number | undefined, departments),
@@ -98,8 +96,6 @@ export const CreateDepartmentForm = ({
           label: employee.ФИО,
         }))}
         onChange={handleChange}
-        error={!!errors.ТабельныйНомерРуководителя}
-        helperText={errors.ТабельныйНомерРуководителя}
       />
       <TextField
         type="number"

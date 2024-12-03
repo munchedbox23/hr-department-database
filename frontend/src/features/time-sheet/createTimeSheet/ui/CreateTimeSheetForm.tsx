@@ -27,6 +27,10 @@ export const CreateTimeSheetForm = ({
   const { data: employeesData } = useGetEmployeesQuery();
   const [addTimeSheet, { isLoading }] = useAddTimeSheetMutation();
 
+  const activeEmployees = employeesData?.filter(
+    (employee) => employee?.ДатаУвольнения === "NULL"
+  );
+
   const { errors, validateForm } = useValidation<
     Pick<TimeSheetRecord, "ОтработанноеВремя">
   >({
@@ -78,10 +82,12 @@ export const CreateTimeSheetForm = ({
       <CustomSelect
         name="ТабельныйНомер"
         label="Табельный номер"
-        options={Array.from({ length: employeesData?.length || 0 }, (_, i) => ({
-          value: (i + 1).toString(),
-          label: (i + 1).toString(),
-        }))}
+        options={
+          activeEmployees?.map((employee) => ({
+            value: employee?.ТабельныйНомер.toString(),
+            label: `${employee?.ТабельныйНомер.toString()} - ${employee?.ФИО}`,
+          })) || []
+        }
         value={formState.ТабельныйНомер?.toString() || ""}
         onChange={handleChange}
       />

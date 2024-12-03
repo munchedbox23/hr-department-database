@@ -41,6 +41,10 @@ export const UpdateTimeSheetForm = ({
     "декабрь",
   ];
 
+  const activeEmployees = employeesData?.filter(
+    (employee) => employee?.ДатаУвольнения === "NULL"
+  );
+
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
@@ -67,10 +71,12 @@ export const UpdateTimeSheetForm = ({
       <CustomSelect
         name="ТабельныйНомер"
         label="Табельный номер"
-        options={Array.from({ length: employeesData?.length || 0 }, (_, i) => ({
-          value: (i + 1).toString(),
-          label: (i + 1).toString(),
-        }))}
+        options={
+          activeEmployees?.map((employee) => ({
+            value: employee?.ТабельныйНомер.toString(),
+            label: `${employee?.ТабельныйНомер.toString()} - ${employee?.ФИО}`,
+          })) || []
+        }
         value={formState.ТабельныйНомер?.toString() || ""}
         onChange={handleChange}
       />
