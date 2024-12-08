@@ -1,5 +1,9 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-import { Employee, EmployeePosition } from "../model/types/types";
+import {
+  Employee,
+  EmployeePosition,
+  FreeEmployeePosition,
+} from "../model/types/types";
 import { apiUrl } from "@/shared/const/apiUrl";
 
 export const employeesApi = createApi({
@@ -7,7 +11,7 @@ export const employeesApi = createApi({
   baseQuery: fetchBaseQuery({
     baseUrl: apiUrl.baseUrl,
   }),
-  tagTypes: ["Employee"],
+  tagTypes: ["Employee", "FreeJobTitle"],
   endpoints: (builder) => ({
     getEmployees: builder.query<Employee[], void>({
       query: () => "/get/employee",
@@ -21,6 +25,10 @@ export const employeesApi = createApi({
               { type: "Employee", id: "LIST" },
             ]
           : [{ type: "Employee", id: "LIST" }],
+    }),
+    getFreeJobTitle: builder.query<FreeEmployeePosition[], void>({
+      query: () => "/get/free-job-title",
+      providesTags: [{ type: "FreeJobTitle", id: "LIST" }],
     }),
     getEmployeePosition: builder.query<EmployeePosition[], void>({
       query: () => "/get/job-title",
@@ -52,4 +60,5 @@ export const {
   useAddEmployeeMutation,
   useGetEmployeePositionQuery,
   useUpdateEmployeeMutation,
+  useGetFreeJobTitleQuery,
 } = employeesApi;

@@ -25,9 +25,17 @@ export type Employee = {
     | "вдова"
     | "";
   ДатаУвольнения?: string;
+  ДатаРождения: string;
+  КодОтдела: string;
 };
 
 export type EmployeePosition = {
   КодДолжности: number;
   Название: string;
+};
+
+export type FreeEmployeePosition = {
+  КодДолжности: string;
+  КодОтдела: string;
+  СвободныеВакансии: number;
 };

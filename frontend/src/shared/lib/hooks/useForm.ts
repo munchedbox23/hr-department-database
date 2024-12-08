@@ -8,6 +8,7 @@ export const useForm = <T>(initialState: T) => {
     e:
       | ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
       | SelectChangeEvent<string>
+      | { target: { name: string; value: any } }
   ) => {
     setFormState({ ...formState, [e.target.name]: e.target.value });
   };

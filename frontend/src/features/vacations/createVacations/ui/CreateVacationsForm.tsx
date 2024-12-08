@@ -12,7 +12,9 @@ import {
   validateEndDate,
   validatePurpose,
   validateNumberOfDays,
+  calculateDaysBetweenDates,
 } from "../model/validationVacatioForm";
+import { useAppSelector } from "@/app/providers/StoreProvider";
 
 export const CreateVacationsForm = ({
   onVacationAdded,
@@ -22,14 +24,23 @@ export const CreateVacationsForm = ({
   onVacationAddedError: () => void;
 }) => {
   const { data: employeesData } = useGetEmployeesQuery();
-  const { formState, handleChange } = useForm<Omit<Vacation, "НомерЗаписи">>({
-    ТабельныйНомер: undefined,
+  const user = useAppSelector((state) => state.user?.user) || null;
+
+  const initialFormState = {
+    ТабельныйНомер:
+      user?.role === "employee" && employeesData?.length === 1
+        ? employeesData[0].ТабельныйНомер
+        : undefined,
     ВидОтпуска: "",
     ДатаОтпуска: "",
     ДатаОкончания: "",
     КоличествоДней: undefined,
     Основание: "",
-  });
+    Статус: user?.role === "admin" ? "принято" : "не принято" as "принято" | "не принято",
+  };
+
+  const { formState, handleChange, setFormState } =
+    useForm<Omit<Vacation, "НомерЗаписи">>(initialFormState);
   const [addVacation, { isLoading }] = useAddVacationMutation();
   const { closeModal } = useModalContext();
 
@@ -54,6 +65,41 @@ export const CreateVacationsForm = ({
   const filteredEmployees = employeesData?.filter(
     (employee) => employee.ДатаУвольнения === "NULL"
   );
+
+  const employeeOption =
+    user?.role === "employee" && filteredEmployees?.length === 1
+      ? [
+          {
+            value: filteredEmployees[0].ТабельныйНомер.toString(),
+            label: filteredEmployees[0].ТабельныйНомер.toString(),
+          },
+        ]
+      : filteredEmployees?.map((employee) => ({
+          value: employee.ТабельныйНомер.toString(),
+          label: employee.ТабельныйНомер.toString(),
+        })) || [];
+
+  const employeeValue =
+    user?.role === "employee" && filteredEmployees?.length === 1
+      ? filteredEmployees[0].ТабельныйНомер.toString()
+      : formState.ТабельныйНомер?.toString() || "";
+
+  const handleDateChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    handleChange(event);
+    const { name, value } = event.target;
+    if (name === "ДатаОтпуска" || name === "ДатаОкончания") {
+      const { ДатаОтпуска, ДатаОкончания } = formState;
+      const startDate = name === "ДатаОтпуска" ? value : ДатаОтпуска;
+      const endDate = name === "ДатаОкончания" ? value : ДатаОкончания;
+      if (startDate && endDate) {
+        const days = calculateDaysBetweenDates(startDate, endDate);
+        setFormState((prevState) => ({
+          ...prevState,
+          КоличествоДней: days,
+        }));
+      }
+    }
+  };
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -81,13 +127,8 @@ export const CreateVacationsForm = ({
       <CustomSelect
         name="ТабельныйНомер"
         label="Табельный номер"
-        options={
-          filteredEmployees?.map((employee) => ({
-            value: employee.ТабельныйНомер.toString(),
-            label: employee.ТабельныйНомер.toString(),
-          })) || []
-        }
-        value={formState.ТабельныйНомер?.toString() || ""}
+        options={employeeOption}
+        value={employeeValue}
         onChange={handleChange}
       />
       <CustomSelect
@@ -119,7 +160,7 @@ export const CreateVacationsForm = ({
         label="Дата отпуска"
         value={formState.ДатаОтпуска}
         variant="outlined"
-        onChange={handleChange}
+        onChange={handleDateChange}
         InputLabelProps={{
           shrink: true,
         }}
@@ -133,7 +174,7 @@ export const CreateVacationsForm = ({
         label="Дата окончания"
         value={formState.ДатаОкончания}
         variant="outlined"
-        onChange={handleChange}
+        onChange={handleDateChange}
         InputLabelProps={{
           shrink: true,
         }}

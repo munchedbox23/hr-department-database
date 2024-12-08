@@ -15,4 +15,5 @@ export interface TimeSheetRecord {
     | "октябрь"
     | "ноябрь"
     | "декабрь";
+  Год: string;
 }

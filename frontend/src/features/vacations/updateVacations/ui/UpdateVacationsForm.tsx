@@ -11,6 +11,7 @@ import {
   validateEndDate,
   validatePurpose,
   validateNumberOfDays,
+  calculateDaysBetweenDates,
 } from "../../createVacations/model/validationVacatioForm";
 
 export const UpdateVacationsForm = ({
@@ -23,13 +24,16 @@ export const UpdateVacationsForm = ({
   onVacationAddedError: () => void;
 }) => {
   const { data: employeesData } = useGetEmployeesQuery();
-  const { formState, handleChange } = useForm<Omit<Vacation, "НомерЗаписи">>({
+  const { formState, handleChange, setFormState } = useForm<
+    Omit<Vacation, "НомерЗаписи">
+  >({
     ТабельныйНомер: vacation.ТабельныйНомер || undefined,
     ВидОтпуска: vacation.ВидОтпуска,
     ДатаОтпуска: vacation.ДатаОтпуска,
     ДатаОкончания: vacation.ДатаОкончания,
     КоличествоДней: vacation.КоличествоДней || undefined,
     Основание: vacation.Основание,
+    Статус: vacation.Статус,
   });
   const [updateVacation, { isLoading }] = useUpdateVacationMutation();
 
@@ -54,6 +58,23 @@ export const UpdateVacationsForm = ({
   const filteredEmployees = employeesData?.filter(
     (employee) => employee.ДатаУвольнения === "NULL"
   );
+
+  const handleDateChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    handleChange(event);
+    const { name, value } = event.target;
+    if (name === "ДатаОтпуска" || name === "ДатаОкончания") {
+      const { ДатаОтпуска, ДатаОкончания } = formState;
+      const startDate = name === "ДатаОтпуска" ? value : ДатаОтпуска;
+      const endDate = name === "ДатаОкончания" ? value : ДатаОкончания;
+      if (startDate && endDate) {
+        const days = calculateDaysBetweenDates(startDate, endDate);
+        setFormState((prevState) => ({
+          ...prevState,
+          КоличествоДней: days,
+        }));
+      }
+    }
+  };
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -119,7 +140,7 @@ export const UpdateVacationsForm = ({
         label="Дата отпуска"
         value={formState.ДатаОтпуска}
         variant="outlined"
-        onChange={handleChange}
+        onChange={handleDateChange}
         InputLabelProps={{
           shrink: true,
         }}
@@ -133,7 +154,7 @@ export const UpdateVacationsForm = ({
         label="Дата окончания"
         value={formState.ДатаОкончания}
         variant="outlined"
-        onChange={handleChange}
+        onChange={handleDateChange}
         InputLabelProps={{
           shrink: true,
         }}

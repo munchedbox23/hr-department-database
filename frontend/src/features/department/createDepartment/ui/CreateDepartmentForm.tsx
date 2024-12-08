@@ -45,9 +45,16 @@ export const CreateDepartmentForm = ({
       validateRoomNumber(value as string | number | undefined, departments),
   });
 
-  // Filter out terminated employees
-  const activeEmployees = employees.filter(
-    (employee) => employee?.ДатаУвольнения === "NULL"
+  // Extract current manager IDs
+  const managerNumbers = departments
+    .map((dep) => dep.ТабельныйНомерРуководителя)
+    .filter(Boolean);
+
+  // Filter out terminated employees and those who are already managers
+  const availableEmployees = employees.filter(
+    (employee) =>
+      employee?.ДатаУвольнения === "NULL" &&
+      !managerNumbers.includes(employee.ФИО)
   );
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -55,10 +62,8 @@ export const CreateDepartmentForm = ({
     if (!validateForm(formState)) return;
     try {
       await addDepartment({
-        ...formState,
-        ТабельныйНомерРуководителя: Number(
-          formState.ТабельныйНомерРуководителя
-        ),
+          ...formState,
+          ТабельныйНомерРуководителя: Number(formState.ТабельныйНомерРуководителя),
         НомерКабинета: Number(formState.НомерКабинета),
       }).unwrap();
       onDepartmentAdded();
@@ -91,7 +96,7 @@ export const CreateDepartmentForm = ({
         label="Руководитель"
         name="ТабельныйНомерРуководителя"
         value={formState.ТабельныйНомерРуководителя?.toString() || ""}
-        options={activeEmployees.map((employee) => ({
+        options={availableEmployees.map((employee) => ({
           value: employee.ТабельныйНомер.toString(),
           label: employee.ФИО,
         }))}

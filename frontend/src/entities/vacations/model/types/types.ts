@@ -6,4 +6,5 @@ export interface Vacation {
   ДатаОкончания: string;
   КоличествоДней?: number;
   Основание: string;
+  Статус: "принято" | "не принято";
 }

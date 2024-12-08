@@ -17,7 +17,9 @@ import {
   validateAddress,
   validateTerminationDate,
   validateFullName,
+  validateDateOfBirth,
 } from "../../createAnEmployee/model/lib/validateForm";
+import { useGetDepartmentQuery } from "@/entities/staffing";
 
 export const UpdateAnEmployeeForm = ({
   employee,
@@ -43,11 +45,18 @@ export const UpdateAnEmployeeForm = ({
   const existingEmails = employees
     ?.map((employee) => employee.Почта)
     .filter((email) => email !== employee.Почта);
+  const { data: departments = [] } = useGetDepartmentQuery();
 
   const { errors, validateForm } = useValidation<
     Pick<
       Employee,
-      "ФИО" | "Стаж" | "Телефон" | "Почта" | "Прописка" | "ДатаУвольнения"
+      | "ФИО"
+      | "Стаж"
+      | "Телефон"
+      | "Почта"
+      | "Прописка"
+      | "ДатаУвольнения"
+      | "ДатаРождения"
     >
   >({
     ФИО: (value) => validateFullName(value as string),
@@ -58,13 +67,13 @@ export const UpdateAnEmployeeForm = ({
     Прописка: (value) => validateAddress(value as string),
     ДатаУвольнения: (value) => {
       if (value === null || value === "NULL" || value === "") {
-        return null; // No validation needed for null or empty values
+        return null;
       }
       return validateTerminationDate(value as string);
     },
+    ДатаРождения: (value) => validateDateOfBirth(value as string),
   });
 
-  console.log(formState);
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!validateForm(formState)) return;
@@ -119,6 +128,20 @@ export const UpdateAnEmployeeForm = ({
         ]}
         onChange={handleChange}
       />
+      <TextField
+        type="date"
+        name="ДатаРождения"
+        label="Дата Рождения"
+        value={formState.ДатаРождения}
+        variant="outlined"
+        onChange={handleChange}
+        InputLabelProps={{
+          shrink: true,
+        }}
+        fullWidth
+        error={!!errors.ДатаРождения}
+        helperText={errors.ДатаРождения}
+      />
       <CustomSelect
         label="Должность"
         name="КодДолжности"
@@ -126,6 +149,16 @@ export const UpdateAnEmployeeForm = ({
         options={positions.map((position) => ({
           value: position.Название.toString(),
           label: position.Название,
+        }))}
+        onChange={handleChange}
+      />
+      <CustomSelect
+        label="Отдел"
+        name="КодОтдела"
+        value={formState.КодОтдела.toString() || ""}
+        options={departments.map((department) => ({
+          value: department.Название.toString(),
+          label: department.Название,
         }))}
         onChange={handleChange}
       />
@@ -194,6 +227,7 @@ export const UpdateAnEmployeeForm = ({
           shrink: true,
         }}
         fullWidth
+        required
       />
       <TextField
         type="email"

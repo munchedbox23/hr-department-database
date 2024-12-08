@@ -16,7 +16,11 @@ import {
   validateExperience,
   validateAddress,
   validateFullName,
+  validateDateOfBirth,
 } from "../model/lib/validateForm";
+import { useGetDepartmentQuery } from "@/entities/staffing";
+import { useGetFreeJobTitleQuery } from "@/entities/employee";
+import { useState } from "react";
 
 export const CreateAnEmployeeForm = ({
   positions,
@@ -38,19 +42,26 @@ export const CreateAnEmployeeForm = ({
       ДатаПриема: new Date().toISOString().split("T")[0],
       Почта: "",
       СемейноеПоложение: "холост",
+      ДатаРождения: "",
+      КодОтдела: "",
     }
   );
 
   const { closeModal } = useModalContext();
 
   const [addEmployee, { isLoading }] = useAddEmployeeMutation();
-  const { data: employees } = useGetEmployeesQuery();
+  const { data: employees = [] } = useGetEmployeesQuery();
+  const { data: departments = [] } = useGetDepartmentQuery();
+  const { data: freeJobTitles = [] } = useGetFreeJobTitleQuery();
 
   const existingPhones = employees?.map((employee) => employee.Телефон);
   const existingEmails = employees?.map((employee) => employee.Почта);
 
   const { errors, validateForm } = useValidation<
-    Pick<Employee, "ФИО" | "Стаж" | "Телефон" | "Почта" | "Прописка">
+    Pick<
+      Employee,
+      "ФИО" | "Стаж" | "Телефон" | "Почта" | "Прописка" | "ДатаРождения"
+    >
   >({
     ФИО: (value) => validateFullName(value as string),
     Стаж: (value) => validateExperience(value as string | number | undefined),
@@ -58,11 +69,30 @@ export const CreateAnEmployeeForm = ({
       validatePhoneNumber(value as string, existingPhones ?? []),
     Почта: (value) => validateEmail(value as string, existingEmails ?? []),
     Прописка: (value) => validateAddress(value as string),
+    ДатаРождения: (value) => validateDateOfBirth(value as string),
   });
+
+  const [selectedPosition, setSelectedPosition] = useState<string>("");
+  const [selectedDepartment, setSelectedDepartment] = useState<string>("");
+
+  const availableDepartments = Array.from(
+    new Set(
+      freeJobTitles
+        .filter((job) =>
+          selectedPosition ? job.КодДолжности === selectedPosition : true
+        )
+        .map((job) => job.КодОтдела)
+    )
+  );
+
+  const filteredPositions = freeJobTitles
+    .filter((job) => selectedDepartment ? job.КодОтдела === selectedDepartment : true)
+    .map((job) => job.КодДолжности);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!validateForm(formState)) return;
+
     try {
       await addEmployee(formState).unwrap();
       onEmployeeAdded();
@@ -102,19 +132,47 @@ export const CreateAnEmployeeForm = ({
         ]}
         onChange={handleChange}
       />
+      <TextField
+        type="date"
+        name="ДатаРождения"
+        label="Дата Рождения"
+        value={formState.ДатаРождения}
+        variant="outlined"
+        onChange={handleChange}
+        InputLabelProps={{
+          shrink: true,
+        }}
+        fullWidth
+        error={!!errors.ДатаРождения}
+        helperText={errors.ДатаРождения}
+      />
       <CustomSelect
         label="Должность"
         name="КодДолжности"
-        value={
-          formState.КодДолжности !== null
-            ? formState.КодДолжности.toString()
-            : ""
-        }
-        options={positions.map((position) => ({
-          value: position.Название.toString(),
-          label: position.Название,
+        value={formState.КодДолжности.toString()}
+        options={positions
+          .filter((position) => filteredPositions.includes(position.Название))
+          .map((position) => ({
+            value: position.Название,
+            label: position.Название,
+          }))}
+        onChange={(e) => {
+          handleChange(e);
+          setSelectedPosition(e.target.value);
+        }}
+      />
+      <CustomSelect
+        label="Отдел"
+        name="КодОтдела"
+        value={formState.КодОтдела}
+        options={availableDepartments.map((department) => ({
+          value: department,
+          label: department,
         }))}
-        onChange={handleChange}
+        onChange={(e) => {
+          handleChange(e);
+          setSelectedDepartment(e.target.value);
+        }}
       />
       <TextField
         type="number"
@@ -180,6 +238,7 @@ export const CreateAnEmployeeForm = ({
         InputLabelProps={{
           shrink: true,
         }}
+        required
         fullWidth
       />
       <TextField

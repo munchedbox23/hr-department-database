@@ -5,7 +5,10 @@ import { TextField } from "@mui/material";
 import { useGetEmployeesQuery } from "@/entities/employee";
 import { useUpdateOrderMutation } from "@/entities/orders/api/ordersApi";
 import { Order } from "@/entities/orders";
-import { validateContent } from "../../createOrder/model/validateOrderForm";
+import {
+  validateContent,
+  validateOrderDate,
+} from "../../createOrder/model/validateOrderForm";
 import { useValidation } from "@/shared/lib/hooks/useValidate";
 
 type CreateOrderFormState = {
@@ -29,9 +32,10 @@ export const UpdateOrderForm = ({
   const [updateOrder, { isLoading }] = useUpdateOrderMutation();
 
   const { errors, validateForm } = useValidation<
-    Pick<CreateOrderFormState, "Содержание">
+    Pick<CreateOrderFormState, "Содержание" | "ДатаОформления">
   >({
-    Содержание: (value) => validateContent(value as string),
+    Содержание: (value: string) => validateContent(value),
+    ДатаОформления: (value: string) => validateOrderDate(value),
   });
 
   const filteredEmployees = employeesData?.filter(
@@ -84,6 +88,8 @@ export const UpdateOrderForm = ({
           shrink: true,
         }}
         fullWidth
+        error={!!errors.ДатаОформления}
+        helperText={errors.ДатаОформления}
       />
       <TextField
         name="Содержание"

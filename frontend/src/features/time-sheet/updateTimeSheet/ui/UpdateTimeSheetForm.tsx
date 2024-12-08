@@ -83,7 +83,7 @@ export const UpdateTimeSheetForm = ({
       <TextField
         type="number"
         name="ОтработанноеВремя"
-        label="Отработанное время"
+        label="Отработанное время в часах"
         value={Number(formState.ОтработанноеВремя) || ""}
         onChange={handleChange}
         inputProps={{ min: 0, max: 170 }}
