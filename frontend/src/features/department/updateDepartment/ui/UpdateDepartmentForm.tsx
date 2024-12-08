@@ -30,15 +30,12 @@ export const UpdateDepartmentForm = ({
   const leaderEmployee = useMemo(
     () =>
       employees.find(
-        (employee) =>
-          employee.ФИО === department.ТабельныйНомерРуководителя
+        (employee) => employee.ФИО === department.ТабельныйНомерРуководителя
       ),
     [employees, department.ТабельныйНомерРуководителя]
   );
 
-  const initialTabNumber = leaderEmployee
-    ? leaderEmployee.ТабельныйНомер.toString()
-    : "";
+  const initialTabNumber = leaderEmployee ? leaderEmployee.ФИО.toString() : "";
 
   const { formState, handleChange } = useForm<
     Omit<DepartmentRecord, "КодОтдела">
@@ -69,8 +66,18 @@ export const UpdateDepartmentForm = ({
 
   const [updateDepartment, { isLoading }] = useUpdateDepartmentMutation();
 
-  const activeEmployees = employees.filter(
-    (employee) => employee?.ДатаУвольнения === "NULL"
+  // Extract manager numbers from all departments except the current one
+  const managerNumbers = departments
+    .filter((dep) => dep.КодОтдела !== department.КодОтдела)
+    .map((dep) => dep.ТабельныйНомерРуководителя)
+    .filter(Boolean);
+
+  // Filter out terminated employees and those who are already managers in other departments
+  const availableEmployees = employees.filter(
+    (employee) =>
+      employee?.ДатаУвольнения === "NULL" &&
+      (employee.ФИО === department.ТабельныйНомерРуководителя ||
+        !managerNumbers.includes(employee.ФИО))
   );
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -91,7 +98,7 @@ export const UpdateDepartmentForm = ({
       onDepartmentUpdatedError();
     }
   };
-  console.log(department);
+  console.log(availableEmployees);
   return (
     <BaseForm
       buttonText="Обновить"
@@ -115,8 +122,8 @@ export const UpdateDepartmentForm = ({
         name="ТабельныйНомерРуководителя"
         value={formState.ТабельныйНомерРуководителя?.toString() || ""}
         options={
-          activeEmployees?.map((employee) => ({
-            value: employee.ТабельныйНомер.toString(),
+          availableEmployees?.map((employee) => ({
+            value: employee.ФИО,
             label: employee.ФИО,
           })) || []
         }
