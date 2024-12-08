@@ -12,9 +12,10 @@ import {
 import { useValidation } from "@/shared/lib/hooks/useValidate";
 
 type CreateOrderFormState = {
-  ТабельныйНомер?: number;
+  ТабельныйНомер: number;
   ДатаОформления: string;
   Содержание: string;
+  НомерПриказа: number;
 };
 
 export const UpdateOrderForm = ({
@@ -26,10 +27,17 @@ export const UpdateOrderForm = ({
   onOrderUpdated: () => void;
   onOrderUpdatedError: () => void;
 }) => {
-  const { formState, handleChange } = useForm<CreateOrderFormState>(order);
-
   const { data: employeesData } = useGetEmployeesQuery();
   const [updateOrder, { isLoading }] = useUpdateOrderMutation();
+  const filteredEmployees = employeesData?.filter(
+    (employee) => employee.ДатаУвольнения === "NULL"
+  );
+  const { formState, handleChange } = useForm<CreateOrderFormState>({
+    ДатаОформления: order.ДатаОформления,
+    Содержание: order.Содержание,
+    ТабельныйНомер: order.ТабельныйНомер <= 101 ? order.ТабельныйНомер : 1,
+    НомерПриказа: order.НомерПриказа,
+  });
 
   const { errors, validateForm } = useValidation<
     Pick<CreateOrderFormState, "Содержание" | "ДатаОформления">
@@ -37,10 +45,6 @@ export const UpdateOrderForm = ({
     Содержание: (value: string) => validateContent(value),
     ДатаОформления: (value: string) => validateOrderDate(value),
   });
-
-  const filteredEmployees = employeesData?.filter(
-    (employee) => employee.ДатаУвольнения === "NULL"
-  );
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -58,7 +62,7 @@ export const UpdateOrderForm = ({
       onOrderUpdatedError();
     }
   };
-
+  console.log(order);
   return (
     <BaseForm
       buttonText="Изменить"
@@ -71,10 +75,10 @@ export const UpdateOrderForm = ({
         options={
           filteredEmployees?.map((employee) => ({
             value: employee.ТабельныйНомер.toString(),
-            label: employee.ТабельныйНомер.toString() + " - " + employee.ФИО,
+            label: `${employee.ТабельныйНомер} - ${employee.ФИО}`,
           })) || []
         }
-        value={formState.ТабельныйНомер?.toString() || ""}
+        value={formState.ТабельныйНомер.toString()}
         onChange={handleChange}
       />
       <TextField

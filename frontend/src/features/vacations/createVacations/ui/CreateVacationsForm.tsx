@@ -71,12 +71,12 @@ export const CreateVacationsForm = ({
       ? [
           {
             value: filteredEmployees[0].ТабельныйНомер.toString(),
-            label: filteredEmployees[0].ТабельныйНомер.toString(),
+            label: `${filteredEmployees[0].ТабельныйНомер} - ${filteredEmployees[0].ФИО}`,
           },
         ]
       : filteredEmployees?.map((employee) => ({
           value: employee.ТабельныйНомер.toString(),
-          label: employee.ТабельныйНомер.toString(),
+          label: `${employee.ТабельныйНомер} - ${employee.ФИО}`,
         })) || [];
 
   const employeeValue =

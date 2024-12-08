@@ -24,7 +24,6 @@ export const CustomSelect: React.FC<CustomSelectProps> = ({
   options,
   onChange,
   error,
-  helperText,
 }) => {
   return (
     <FormControl variant="outlined" fullWidth error={error}>
