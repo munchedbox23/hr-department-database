@@ -47,7 +47,9 @@ export const OrdersPage: React.FC = () => {
     });
     const newFilteredOrders = orders.filter((order) => {
       const orderDate = new Date(order.ДатаОформления);
-      const startDate = formState.startDate ? new Date(formState.startDate) : null;
+      const startDate = formState.startDate
+        ? new Date(formState.startDate)
+        : null;
       const endDate = formState.endDate ? new Date(formState.endDate) : null;
       const matchesEmployeeId = formState.employeeId
         ? order.ТабельныйНомер.toString() === formState.employeeId.toString()
@@ -90,9 +92,9 @@ export const OrdersPage: React.FC = () => {
         alignItems="center"
       >
         <Typography variant="h5" fontWeight={700} gutterBottom>
-          Трудовые договоры
+          Приказы
         </Typography>
-        <CreateAnEntity title="Добавить трудовой договор">
+        <CreateAnEntity title="Добавить приказ">
           <CreateOrderForm
             onOrderAdded={handleOpenSnackbar}
             onOrderAddedError={handleOpenSnackbarError}
@@ -126,7 +128,7 @@ export const OrdersPage: React.FC = () => {
             items={filteredOrders}
             renderItem={(order) => (
               <OrderListItem order={order}>
-                <EditAnEntity title="Изменить договор">
+                <EditAnEntity title="Изменить приказ">
                   <UpdateOrderForm
                     order={order}
                     onOrderUpdated={handleOpenSnackbar}

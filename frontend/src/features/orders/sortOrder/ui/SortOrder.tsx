@@ -26,8 +26,10 @@ export const SortOrder = ({
           new Date(b.ДатаОформления).getTime() -
           new Date(a.ДатаОформления).getTime()
         );
-      if (value === "numberAsc") return a.ТабельныйНомер - b.ТабельныйНомер;
-      if (value === "numberDesc") return b.ТабельныйНомер - a.ТабельныйНомер;
+      if (value === "numberAsc")
+        return Number(a.ТабельныйНомер) - Number(b.ТабельныйНомер);
+      if (value === "numberDesc")
+        return Number(b.ТабельныйНомер) - Number(a.ТабельныйНомер);
       return 0;
     });
     setFilteredOrders(sortedOrders);

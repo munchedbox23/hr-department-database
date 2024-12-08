@@ -21,6 +21,7 @@ export const UpdateTimeSheetForm = ({
     ТабельныйНомер: timeSheet.ТабельныйНомер || undefined,
     ОтработанноеВремя: timeSheet.ОтработанноеВремя || undefined,
     Месяц: timeSheet.Месяц || undefined,
+    Год: timeSheet.Год || undefined,
   });
 
   const { data: employeesData } = useGetEmployeesQuery();
@@ -62,6 +63,9 @@ export const UpdateTimeSheetForm = ({
     }
   };
 
+  const currentYear = new Date().getFullYear();
+  const yearOptions = Array.from({ length: 1 }, (_, i) => currentYear - i);
+
   return (
     <BaseForm
       isLoading={isLoading}
@@ -98,6 +102,16 @@ export const UpdateTimeSheetForm = ({
           label: month.charAt(0).toUpperCase() + month.slice(1),
         }))}
         value={formState.Месяц || ""}
+        onChange={handleChange}
+      />
+      <CustomSelect
+        name="Год"
+        label="Год"
+        options={yearOptions.map((year) => ({
+          value: year.toString(),
+          label: year.toString(),
+        }))}
+        value={formState.Год?.toString() || ""}
         onChange={handleChange}
       />
     </BaseForm>

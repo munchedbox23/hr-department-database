@@ -71,6 +71,11 @@ export const EmployeeTablePage = () => {
         accessorKey: "Стаж",
         header: "Стаж",
         size: 100,
+        Cell: ({ cell }) => {
+          return (
+            <>{cell.getValue() === "NULL" ? "нет опыта" : cell.getValue()}</>
+          );
+        },
       },
       {
         accessorKey: "Телефон",
@@ -140,13 +145,13 @@ export const EmployeeTablePage = () => {
     <Container maxWidth="xl" sx={{ py: 5 }}>
       {user?.role === "admin" ? (
         <>
-        <CreateAnEntity title="Добавить сотрудника" pageName="сотрудники">
-          <CreateAnEmployeeForm
-          positions={positions}
-          onEmployeeAdded={handleOpenSnackbar}
-            onEmployeeAddedError={handleOpenSnackbarError}
-          />
-        </CreateAnEntity>
+          <CreateAnEntity title="Добавить сотрудника" pageName="сотрудники">
+            <CreateAnEmployeeForm
+              positions={positions}
+              onEmployeeAdded={handleOpenSnackbar}
+              onEmployeeAddedError={handleOpenSnackbarError}
+            />
+          </CreateAnEntity>
           <Table data={data} columns={columns} />
         </>
       ) : (

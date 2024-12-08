@@ -48,7 +48,7 @@ export const EmployeeProfile: React.FC<{ employee: Employee }> = ({
         </Grid>
         <Grid item xs={12} sm={6}>
           <Typography variant="body1">
-            <strong>Стаж:</strong> {employee.Стаж}
+            <strong>Стаж:</strong> {employee.Стаж ?? "нет опыта"}
           </Typography>
         </Grid>
         <Grid item xs={12} sm={6}>
@@ -82,16 +82,6 @@ export const EmployeeProfile: React.FC<{ employee: Employee }> = ({
             <strong>Семейное Положение:</strong> {employee.СемейноеПоложение}
           </Typography>
         </Grid>
-        {employee.ДатаУвольнения && (
-          <Grid item xs={12} sm={6}>
-            <Typography variant="body1">
-              <strong>Дата Увольнения:</strong>{" "}
-              {employee.ДатаУвольнения !== "NULL"
-                ? new Date(employee.ДатаУвольнения).toLocaleDateString()
-                : "Не уволен"}
-            </Typography>
-          </Grid>
-        )}
       </Grid>
     </Paper>
   );

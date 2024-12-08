@@ -7,6 +7,7 @@ import {
   Chip,
   Button,
   Box,
+  Stack,
 } from "@mui/material";
 import { Vacation } from "../model/types/types";
 import { IUser } from "@/entities/user";
@@ -73,26 +74,28 @@ export const VacationItem: React.FC<{
         <Typography variant="body2" color="text.secondary">
           Табельный номер: {vacation.ТабельныйНомер}
         </Typography>
-        {!isAccepted && userRole === "admin" && (
-          <Box sx={{ display: 'flex', alignItems: 'center', marginTop: 2 }}>
-            <Button
-              variant="contained"
-              color="primary"
-              onClick={handleApproveVacation}
-            >
-              Одобрить
-            </Button>
-            <Button
-              variant="contained"
-              color="secondary"
-              onClick={handleDeleteVacation}
-              sx={{ marginLeft: 1 }}
-            >
-              Отклонить
-            </Button>
-            {children}
-          </Box>
-        )}
+        <Stack direction="row" spacing={2} sx={{ marginTop: 2 }}>
+          {!isAccepted && userRole === "admin" && (
+            <>
+              <Button
+                variant="contained"
+                color="success"
+                onClick={handleApproveVacation}
+              >
+                Одобрить
+              </Button>
+              <Button
+                variant="contained"
+                color="error"
+                onClick={handleDeleteVacation}
+                sx={{ marginLeft: 1 }}
+              >
+                Отклонить
+              </Button>
+            </>
+          )}
+          {children}
+        </Stack>
       </CardContent>
     </Card>
   );

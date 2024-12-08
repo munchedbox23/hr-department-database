@@ -26,8 +26,8 @@ export const StaffingSchedulePage: React.FC = () => {
   } = useSnackbar();
   const user = useAppSelector((state) => state.user?.user) || null;
 
-  const columns = useMemo<MRT_ColumnDef<StaffingRecord>[]>(
-    () => [
+  const columns = useMemo<MRT_ColumnDef<StaffingRecord>[]>(() => {
+    const baseColumns: MRT_ColumnDef<StaffingRecord>[] = [
       {
         accessorKey: "НомерЗаписи",
         header: "Номер Записи",
@@ -53,27 +53,28 @@ export const StaffingSchedulePage: React.FC = () => {
         header: "Оклад",
         size: 100,
       },
-    ],
-    []
-  );
+    ];
 
-  if (user && user.role !== "employee") {
-    columns.push({
-      accessorKey: "Действия",
-      header: "Действия",
-      size: 150,
-      Cell: ({ row }) => (
-        <EditAnEntity title="Изменить расписание">
-          <UpdateStaffingForm
-            staffing={row.original}
-            positions={positions || []}
-            onStaffingUpdated={handleOpenSnackbar}
-            onStaffingUpdatedError={handleOpenSnackbarError}
-          />
-        </EditAnEntity>
-      ),
-    });
-  }
+    if (user && user.role !== "employee") {
+      baseColumns.push({
+        accessorKey: "Действия",
+        header: "Действия",
+        size: 150,
+        Cell: ({ row }) => (
+          <EditAnEntity title="Изменить расписание">
+            <UpdateStaffingForm
+              staffing={row.original}
+              positions={positions || []}
+              onStaffingUpdated={handleOpenSnackbar}
+              onStaffingUpdatedError={handleOpenSnackbarError}
+            />
+          </EditAnEntity>
+        ),
+      });
+    }
+
+    return baseColumns;
+  }, [user, positions]);
 
   return (
     <Container maxWidth="lg" sx={{ py: 5 }}>

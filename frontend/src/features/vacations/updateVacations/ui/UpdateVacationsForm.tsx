@@ -105,7 +105,7 @@ export const UpdateVacationsForm = ({
         options={
           filteredEmployees?.map((employee) => ({
             value: employee.ТабельныйНомер.toString(),
-            label: employee.ТабельныйНомер.toString() + " - " + employee.ФИО,
+            label: `${employee.ТабельныйНомер} - ${employee.ФИО}`,
           })) || []
         }
         value={formState.ТабельныйНомер?.toString() || ""}
