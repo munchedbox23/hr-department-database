@@ -13,6 +13,7 @@ import {
   validateEndDate,
   validateNumberOfDays,
 } from "../model/validationTripForm";
+import { calculateDaysBetweenDates } from "@/features/vacations/createVacations/model/validationVacatioForm";
 
 export const CreateTripForm = ({
   onTripAdded,
@@ -21,7 +22,9 @@ export const CreateTripForm = ({
   onTripAdded: () => void;
   onTripAddedError: () => void;
 }) => {
-  const { formState, handleChange } = useForm<Omit<ITrip, "НомерЗаписи">>({
+  const { formState, handleChange, setFormState } = useForm<
+    Omit<ITrip, "НомерЗаписи">
+  >({
     Страна: "Россия",
     Город: "",
     Организация: "",
@@ -58,6 +61,23 @@ export const CreateTripForm = ({
     } catch (error) {
       closeModal();
       onTripAddedError();
+    }
+  };
+
+  const handleDateChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    handleChange(event);
+    const { name, value } = event.target;
+    if (name === "СДата" || name === "ПоДату") {
+      const { СДата, ПоДату } = formState;
+      const startDate = name === "СДата" ? value : СДата;
+      const endDate = name === "ПоДату" ? value : ПоДату;
+      if (startDate && endDate) {
+        const days = calculateDaysBetweenDates(startDate, endDate);
+        setFormState((prevState) => ({
+          ...prevState,
+          КоличествоДней: days,
+        }));
+      }
     }
   };
 
@@ -101,7 +121,7 @@ export const CreateTripForm = ({
         type="date"
         name="СДата"
         value={formState.СДата}
-        onChange={handleChange}
+        onChange={handleDateChange}
         fullWidth
         error={!!errors.СДата}
         helperText={errors.СДата}
@@ -110,7 +130,7 @@ export const CreateTripForm = ({
         type="date"
         name="ПоДату"
         value={formState.ПоДату}
-        onChange={handleChange}
+        onChange={handleDateChange}
         fullWidth
         error={!!errors.ПоДату}
         helperText={errors.ПоДату}

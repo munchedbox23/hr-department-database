@@ -20,6 +20,7 @@ export const CreateTimeSheetForm = ({
     ТабельныйНомер: undefined,
     ОтработанноеВремя: 0,
     Месяц: undefined,
+    Год: "2024",
   });
 
   const { closeModal } = useModalContext();
@@ -51,6 +52,9 @@ export const CreateTimeSheetForm = ({
     "ноябрь",
     "декабрь",
   ];
+
+  const currentYear = new Date().getFullYear();
+  const yearOptions = Array.from({ length: 1 }, (_, i) => currentYear - i);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -94,7 +98,7 @@ export const CreateTimeSheetForm = ({
       <TextField
         type="number"
         name="ОтработанноеВремя"
-        label="Отработанное время"
+        label="Отработанное время в часах"
         value={Number(formState.ОтработанноеВремя) || ""}
         onChange={handleChange}
         inputProps={{ min: 0, max: 170 }}
@@ -111,6 +115,16 @@ export const CreateTimeSheetForm = ({
           label: month.charAt(0).toUpperCase() + month.slice(1),
         }))}
         value={formState.Месяц || ""}
+        onChange={handleChange}
+      />
+      <CustomSelect
+        name="Год"
+        label="Год"
+        options={yearOptions.map((year) => ({
+          value: year.toString(),
+          label: year.toString(),
+        }))}
+        value={formState.Год?.toString() || ""}
         onChange={handleChange}
       />
     </BaseForm>

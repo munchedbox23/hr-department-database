@@ -14,10 +14,14 @@ import { NotificationSnackbar } from "@/shared/ui/NotificationSnackbar";
 import { useSnackbar } from "@/shared/lib/hooks/useSnackbar";
 import { EditAnEntity } from "@/features/common/edit-an-entity";
 import { UpdateAnEmployeeForm } from "@/features/employee/updateAnEmployee";
+import { EmployeeProfile } from "@/widgets/EmployeeProfile";
+import { useAppSelector } from "@/app/providers/StoreProvider";
 
 export const EmployeeTablePage = () => {
   const { data = [], isLoading } = useGetEmployeesQuery();
   const { data: positions = [] } = useGetEmployeePositionQuery();
+
+  const user = useAppSelector((state) => state.user.user);
 
   const {
     openSnackbar,
@@ -49,8 +53,18 @@ export const EmployeeTablePage = () => {
         size: 100,
       },
       {
+        accessorKey: "ДатаРождения",
+        header: "Дата Рождения",
+        size: 150,
+      },
+      {
         accessorKey: "КодДолжности",
         header: "Должность",
+        size: 150,
+      },
+      {
+        accessorKey: "КодОтдела",
+        header: "Отдел",
         size: 150,
       },
       {
@@ -124,14 +138,21 @@ export const EmployeeTablePage = () => {
     <Loader />
   ) : (
     <Container maxWidth="xl" sx={{ py: 5 }}>
-      <CreateAnEntity title="Добавить сотрудника">
-        <CreateAnEmployeeForm
+      {user?.role === "admin" ? (
+        <>
+        <CreateAnEntity title="Добавить сотрудника" pageName="сотрудники">
+          <CreateAnEmployeeForm
           positions={positions}
           onEmployeeAdded={handleOpenSnackbar}
-          onEmployeeAddedError={handleOpenSnackbarError}
-        />
-      </CreateAnEntity>
-      <Table data={data} columns={columns} />
+            onEmployeeAddedError={handleOpenSnackbarError}
+          />
+        </CreateAnEntity>
+          <Table data={data} columns={columns} />
+        </>
+      ) : (
+        <EmployeeProfile employee={data[0]} />
+      )}
+
       <NotificationSnackbar
         open={openSnackbar}
         onClose={handleCloseSnackbar}

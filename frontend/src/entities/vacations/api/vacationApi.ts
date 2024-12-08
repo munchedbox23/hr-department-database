@@ -39,6 +39,17 @@ export const vacationApi = createApi({
       }),
       invalidatesTags: [{ type: "Vacation", id: "LIST" }],
     }),
+    deleteVacation: builder.mutation<
+      Vacation,
+      { vacation: Omit<Vacation, "НомерЗаписи" | "Статус">; id: number }
+    >({
+      query: ({ vacation, id }) => ({
+        url: `/delete/vacation/${id}`,
+        method: "DELETE",
+        body: JSON.stringify(vacation),
+      }),
+      invalidatesTags: [{ type: "Vacation", id: "LIST" }],
+    }),
   }),
 });
 
@@ -46,4 +57,5 @@ export const {
   useGetVacationsQuery,
   useAddVacationMutation,
   useUpdateVacationMutation,
+  useDeleteVacationMutation,
 } = vacationApi;

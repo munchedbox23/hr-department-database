@@ -8,4 +8,12 @@ function validateContent(content: string): string | null {
   return null;
 }
 
-export { validateContent };
+function validateOrderDate(orderDate: string): string | null {
+  const currentDate = new Date().toISOString().split("T")[0];
+  if (orderDate < currentDate) {
+    return "Дата оформления должна быть больше или равна текущей дате.";
+  }
+  return null;
+}
+
+export { validateContent, validateOrderDate };

@@ -94,7 +94,7 @@ export const CreateStaffingForm = ({
         value={Number(formState.КоличествоСтавок) || 1}
         variant="outlined"
         onChange={handleChange}
-        inputProps={{ min: 1, max: 2}}
+        inputProps={{ min: 1, max: 5 }}
         fullWidth
       />
       <TextField

@@ -14,6 +14,7 @@ import { useForm } from "@/shared/lib/hooks/useForm";
 import { useSearchParams } from "react-router-dom";
 import { useCallback, useEffect, useState } from "react";
 import { SortVacation } from "@/features/vacations/sortVacation";
+import { useAppSelector } from "@/app/providers/StoreProvider";
 
 export const VacationPage = () => {
   const { data: vacations, isLoading } = useGetVacationsQuery();
@@ -25,6 +26,7 @@ export const VacationPage = () => {
     openSnackbarError,
     handleCloseSnackbarError,
   } = useSnackbar();
+  const user = useAppSelector((state) => state.user?.user) || null;
 
   const [searchParams, setSearchParams] = useSearchParams();
   const { formState, handleChange, setFormState } = useForm({
@@ -150,7 +152,10 @@ export const VacationPage = () => {
           <ListOfItem
             items={filteredVacations || []}
             renderItem={(vacation) => (
-              <VacationItem vacation={vacation}>
+              <VacationItem
+                vacation={vacation}
+                userRole={user?.role || null}
+              >
                 <EditAnEntity title="Изменить запись">
                   <UpdateVacationsForm
                     vacation={vacation}

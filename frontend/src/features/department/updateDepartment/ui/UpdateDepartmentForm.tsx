@@ -14,6 +14,7 @@ import {
   validateDepartmentName,
   validateRoomNumber,
 } from "@/shared/lib/validate/validateDepartment";
+import { useMemo } from "react";
 
 export const UpdateDepartmentForm = ({
   department,
@@ -24,11 +25,25 @@ export const UpdateDepartmentForm = ({
   onDepartmentAdded: () => void;
   onDepartmentUpdatedError: () => void;
 }) => {
+  const { data: employees = [] } = useGetEmployeesQuery();
+
+  const leaderEmployee = useMemo(
+    () =>
+      employees.find(
+        (employee) =>
+          employee.ФИО === department.ТабельныйНомерРуководителя
+      ),
+    [employees, department.ТабельныйНомерРуководителя]
+  );
+
+  const initialTabNumber = leaderEmployee
+    ? leaderEmployee.ТабельныйНомер.toString()
+    : "";
+
   const { formState, handleChange } = useForm<
     Omit<DepartmentRecord, "КодОтдела">
   >({
-    ТабельныйНомерРуководителя:
-      department.ТабельныйНомерРуководителя || undefined,
+    ТабельныйНомерРуководителя: initialTabNumber,
     Название: department.Название,
     НомерКабинета: department.НомерКабинета || undefined,
   });
@@ -53,7 +68,6 @@ export const UpdateDepartmentForm = ({
   });
 
   const [updateDepartment, { isLoading }] = useUpdateDepartmentMutation();
-  const { data: employees = [] } = useGetEmployeesQuery();
 
   const activeEmployees = employees.filter(
     (employee) => employee?.ДатаУвольнения === "NULL"
@@ -66,9 +80,7 @@ export const UpdateDepartmentForm = ({
       await updateDepartment({
         department: {
           ...formState,
-          ТабельныйНомерРуководителя: Number(
-            formState.ТабельныйНомерРуководителя
-          ),
+          ТабельныйНомерРуководителя: formState.ТабельныйНомерРуководителя,
           НомерКабинета: Number(formState.НомерКабинета),
         },
         id: department.КодОтдела,
@@ -79,7 +91,7 @@ export const UpdateDepartmentForm = ({
       onDepartmentUpdatedError();
     }
   };
-
+  console.log(department);
   return (
     <BaseForm
       buttonText="Обновить"

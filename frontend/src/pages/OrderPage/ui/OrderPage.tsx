@@ -29,31 +29,55 @@ export const OrdersPage: React.FC = () => {
   const [searchParams, setSearchParams] = useSearchParams();
 
   const { formState, handleChange, setFormState } = useForm({
-    date: searchParams.get("date") || "",
+    startDate: searchParams.get("startDate") || "",
+    endDate: searchParams.get("endDate") || "",
+    employeeId: searchParams.get("employeeId") || "",
   });
 
   const handleReset = () => {
-    setFormState({ date: "" });
+    setFormState({ startDate: "", endDate: "", employeeId: "" });
     setSearchParams({});
   };
 
   const handleSearch = () => {
-    setSearchParams({ date: formState.date });
+    setSearchParams({
+      startDate: formState.startDate,
+      endDate: formState.endDate,
+      employeeId: formState.employeeId,
+    });
     const newFilteredOrders = orders.filter((order) => {
       const orderDate = new Date(order.ДатаОформления);
-      const filterDate = formState.date ? new Date(formState.date) : null;
-      return filterDate ? orderDate.toDateString() === filterDate.toDateString() : true;
+      const startDate = formState.startDate ? new Date(formState.startDate) : null;
+      const endDate = formState.endDate ? new Date(formState.endDate) : null;
+      const matchesEmployeeId = formState.employeeId
+        ? order.ТабельныйНомер.toString() === formState.employeeId.toString()
+        : true;
+      return (
+        (!startDate || orderDate >= startDate) &&
+        (!endDate || orderDate <= endDate) &&
+        matchesEmployeeId
+      );
     });
     setFilteredOrders(newFilteredOrders);
   };
 
   useEffect(() => {
-    const date = searchParams.get("date") || "";
+    const startDate = searchParams.get("startDate") || "";
+    const endDate = searchParams.get("endDate") || "";
+    const employeeId = searchParams.get("employeeId") || "";
     setFilteredOrders(
       orders.filter((order) => {
         const orderDate = new Date(order.ДатаОформления);
-        const filterDate = date ? new Date(date) : null;
-        return filterDate ? orderDate.toDateString() === filterDate.toDateString() : true;
+        const start = startDate ? new Date(startDate) : null;
+        const end = endDate ? new Date(endDate) : null;
+        const matchesEmployeeId = employeeId
+          ? order.ТабельныйНомер.toString() === employeeId.toString()
+          : true;
+        return (
+          (!start || orderDate >= start) &&
+          (!end || orderDate <= end) &&
+          matchesEmployeeId
+        );
       })
     );
   }, [searchParams, orders]);
