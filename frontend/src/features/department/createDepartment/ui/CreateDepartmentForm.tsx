@@ -62,8 +62,8 @@ export const CreateDepartmentForm = ({
     if (!validateForm(formState)) return;
     try {
       await addDepartment({
-          ...formState,
-          ТабельныйНомерРуководителя: Number(formState.ТабельныйНомерРуководителя),
+        ...formState,
+        ТабельныйНомерРуководителя: formState.ТабельныйНомерРуководителя,
         НомерКабинета: Number(formState.НомерКабинета),
       }).unwrap();
       onDepartmentAdded();
@@ -97,7 +97,7 @@ export const CreateDepartmentForm = ({
         name="ТабельныйНомерРуководителя"
         value={formState.ТабельныйНомерРуководителя?.toString() || ""}
         options={availableEmployees.map((employee) => ({
-          value: employee.ТабельныйНомер.toString(),
+          value: employee.ФИО.toString(),
           label: employee.ФИО,
         }))}
         onChange={handleChange}

@@ -10,6 +10,7 @@ import { CreateDepartmentForm } from "@/features/department/createDepartment";
 import { useSnackbar } from "@/shared/lib/hooks/useSnackbar";
 import { EditAnEntity } from "@/features/common/edit-an-entity";
 import { UpdateDepartmentForm } from "@/features/department/updateDepartment";
+import { useAppSelector } from "@/app/providers/StoreProvider";
 
 export const DepartmentPage = () => {
   const { data: departments = [], isLoading } = useGetDepartmentQuery();
@@ -21,45 +22,53 @@ export const DepartmentPage = () => {
     handleCloseSnackbarError,
     handleOpenSnackbarError,
   } = useSnackbar();
+  const user = useAppSelector((state) => state.user?.user) || null;
 
   const columns = useMemo<MRT_ColumnDef<DepartmentRecord>[]>(
-    () => [
-      {
-        accessorKey: "КодОтдела",
-        header: "Код отдела",
-        size: 100,
-      },
-      {
-        accessorKey: "ТабельныйНомерРуководителя",
-        header: "Табельный номер руководителя",
-        size: 250,
-      },
-      {
-        accessorKey: "Название",
-        header: "Название отдела",
-        size: 250,
-      },
-      {
-        accessorKey: "НомерКабинета",
-        header: "Номер кабинета",
-        size: 250,
-      },
-      {
-        accessorKey: "Действия",
-        header: "Действия",
-        size: 150,
-        Cell: ({ row }) => (
-          <EditAnEntity title="Изменить отдел">
-            <UpdateDepartmentForm
-              department={row.original}
-              onDepartmentAdded={handleOpenSnackbar}
-              onDepartmentUpdatedError={handleOpenSnackbarError}
-            />
-          </EditAnEntity>
-        ),
-      },
-    ],
-    [departments]
+    () => {
+      const baseColumns: MRT_ColumnDef<DepartmentRecord>[] = [
+        {
+          accessorKey: "КодОтдела",
+          header: "Код отдела",
+          size: 100,
+        },
+        {
+          accessorKey: "ТабельныйНомерРуководителя",
+          header: "Табельный номер руководителя",
+          size: 250,
+        },
+        {
+          accessorKey: "Название",
+          header: "Название отдела",
+          size: 250,
+        },
+        {
+          accessorKey: "НомерКабинета",
+          header: "Номер кабинета",
+          size: 250,
+        },
+      ];
+
+      if (user && user.role !== "employee") {
+        baseColumns.push({
+          accessorKey: "Действия",
+          header: "Действия",
+          size: 150,
+          Cell: ({ row }) => (
+            <EditAnEntity title="Изменить отдел">
+              <UpdateDepartmentForm
+                department={row.original}
+                onDepartmentAdded={handleOpenSnackbar}
+                onDepartmentUpdatedError={handleOpenSnackbarError}
+              />
+            </EditAnEntity>
+          ),
+        });
+      }
+
+      return baseColumns;
+    },
+    [user]
   );
 
   return isLoading ? (

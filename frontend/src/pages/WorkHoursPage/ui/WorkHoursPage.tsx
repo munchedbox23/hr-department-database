@@ -42,20 +42,6 @@ export const WorkHoursPage: React.FC = () => {
         header: "Год",
         size: 100,
       },
-      {
-        accessorKey: "Действия",
-        header: "Действия",
-        size: 150,
-        Cell: ({ row }) => (
-          <EditAnEntity title="Изменить запись">
-            <UpdateTimeSheetForm
-              timeSheet={row.original}
-              onTimeSheetUpdated={handleOpenSnackbar}
-              onTimeSheetUpdatedError={handleOpenSnackbarError}
-            />
-          </EditAnEntity>
-        ),
-      },
     ];
 
     if (user && user.role === "admin") {
@@ -71,6 +57,22 @@ export const WorkHoursPage: React.FC = () => {
           size: 100,
         }
       );
+    }
+    if (user && user.role !== "employee") {
+      baseColumns.push({
+        accessorKey: "Действия",
+        header: "Действия",
+        size: 150,
+        Cell: ({ row }) => (
+          <EditAnEntity title="Изменить запись">
+            <UpdateTimeSheetForm
+              timeSheet={row.original}
+              onTimeSheetUpdated={handleOpenSnackbar}
+              onTimeSheetUpdatedError={handleOpenSnackbarError}
+            />
+          </EditAnEntity>
+        ),
+      });
     }
 
     return baseColumns;
