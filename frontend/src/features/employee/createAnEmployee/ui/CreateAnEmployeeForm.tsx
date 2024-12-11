@@ -52,7 +52,8 @@ export const CreateAnEmployeeForm = ({
   const [addEmployee, { isLoading }] = useAddEmployeeMutation();
   const { data: employees = [] } = useGetEmployeesQuery();
   const { data: departments = [] } = useGetDepartmentQuery();
-  const { data: freeJobTitles = [] } = useGetFreeJobTitleQuery();
+  const { data: freeJobTitles = [], refetch: refetchFreeJobTitles } =
+    useGetFreeJobTitleQuery();
 
   const existingPhones = employees?.map((employee) => employee.Телефон);
   const existingEmails = employees?.map((employee) => employee.Почта);
@@ -86,7 +87,9 @@ export const CreateAnEmployeeForm = ({
   );
 
   const filteredPositions = freeJobTitles
-    .filter((job) => selectedDepartment ? job.КодОтдела === selectedDepartment : true)
+    .filter((job) =>
+      selectedDepartment ? job.КодОтдела === selectedDepartment : true
+    )
     .map((job) => job.КодДолжности);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -97,6 +100,7 @@ export const CreateAnEmployeeForm = ({
       await addEmployee(formState).unwrap();
       onEmployeeAdded();
       closeModal();
+      refetchFreeJobTitles();
     } catch (error) {
       closeModal();
       onEmployeeAddedError();
